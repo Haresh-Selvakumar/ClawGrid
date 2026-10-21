@@ -1,0 +1,121 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "published_utc": "2026-10-21T10:17:45.599859+00:00",
+  "status": "COMPLETED",
+  "trials_passed": 3,
+  "trials_total": 3,
+  "trial_check_rows_passed": 69,
+  "restoration_checks_passed": 16,
+  "host_tests": {
+    "source": "HOST_MEASURED",
+    "passed": 144
+  },
+  "final_ports": {
+    "A": "COM9 CH343 USB UART0",
+    "B": "COM8 native USB"
+  },
+  "credentials_preserved": true,
+  "nvs_erased": false,
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "serial_handles_released": true,
+  "manual_reset_during_trials": false,
+  "files": [
+    {
+      "path": "COM9-identity.log",
+      "sha256": "e662b4ff707d3a9a934e10071e08264f76eb475fc66f85789dd6792e5cebb6ac"
+    },
+    {
+      "path": "diagnostic-guards.json",
+      "sha256": "6ff74a57f4f1cb2a8d8376d43a8fe5b4c161edc7a8560b05f23a16fe18e2d3a0"
+    },
+    {
+      "path": "flash_native_voice_uart_20261021T101154Z.json",
+      "sha256": "f3454c4163c51279873bcc5917eca6a974e3bce278825de13d5680463afaf916"
+    },
+    {
+      "path": "flash_native_voice_uart_20261021T101154Z.log",
+      "sha256": "1f0be3c82080c868b82675efeaddb7ca72f515aa085104f65ba1837549311b35"
+    },
+    {
+      "path": "flash_native_voice_uart_diagnostic_20261021T100839Z.json",
+      "sha256": "eda05d960504d1059ee9c2fbb3ff3dc9547d931deb83cfce0f64792fd2390d4a"
+    },
+    {
+      "path": "flash_native_voice_uart_diagnostic_20261021T100839Z.log",
+      "sha256": "870666849e6997f98a2920e7e4ff8b06dce590729b30c3b215dd3ce2f906c2d2"
+    },
+    {
+      "path": "flash_speech_intelligence_20261021T101212Z.json",
+      "sha256": "a1af465c497f24cc7afddba481a121f41371d163f1a1653fabbcc2a02b5ef205"
+    },
+    {
+      "path": "flash_speech_intelligence_20261021T101212Z.log",
+      "sha256": "e9bd51d812e6211d61f88195954f767fba76bfd17fa95122ee30ce51a1a737cc"
+    },
+    {
+      "path": "flash_speech_intelligence_diagnostic_20261021T100857Z.json",
+      "sha256": "9cfa616a36de88ddb423c0e83ba263103de123230381e5256e3756359b78946b"
+    },
+    {
+      "path": "flash_speech_intelligence_diagnostic_20261021T100857Z.log",
+      "sha256": "133d1e97857c7a05017f69d13b6852f3fcdc75f7268c92ae980d728a1b0f993d"
+    },
+    {
+      "path": "host-uart.log",
+      "sha256": "244ac193e31eafc2d625c015ab700904b9659dd87523723d10d45b3df979b7fd"
+    },
+    {
+      "path": "host-uart.xml",
+      "sha256": "fb232e56a9c14d19c3efa12a6acb72e4f0a70f6d64fb9f2da3d2c0ed392795d9"
+    },
+    {
+      "path": "model-check.json",
+      "sha256": "8f41d4b1514c3ffd219c47f6d8b522155bc04823f6093fba1f2720f7b3444988"
+    },
+    {
+      "path": "preflight-blockers.json",
+      "sha256": "80d85e5d47df9ddb25b7a6dfcccc9f7bcea410ead13b74dc01f674e89931e8c6"
+    },
+    {
+      "path": "preflight.json",
+      "sha256": "230832fc66cc6e77183bb2bf53772d4c7a3407324db8aea874261a0469dc1aa3"
+    },
+    {
+      "path": "restoration-run.log",
+      "sha256": "b097c09d702b3ed485f46894760b9f7048638b9cf54bc857b03013daf695bc4b"
+    },
+    {
+      "path": "restored-default-guards.json",
+      "sha256": "e5a65094f0dc94b157621d1affc1a4a88cbcd96728062920f0c3857f0e311179"
+    },
+    {
+      "path": "restored-serial.log",
+      "sha256": "c70abec89df41a39dd02c46df75a304f0ff01dfc248d869d689bc4474fedbfbb"
+    },
+    {
+      "path": "restored-verification.json",
+      "sha256": "8772e838b06e326d63bc376b3378df3d27db6275eb4b9bc287c69731830c1b56"
+    },
+    {
+      "path": "results.json",
+      "sha256": "63fa6baf40ea3b729baa674464f574fbda709dfbfb54379903761073d96c6a88"
+    },
+    {
+      "path": "runtime-configuration.json",
+      "sha256": "14698ccac604cb59231c69f119893639673f6a9d37664a8de5eaf6f3f35d6300"
+    },
+    {
+      "path": "serial.log",
+      "sha256": "e99e9ba01fa603ea0df5b61e63eefa5107ca49110e144c6e957971988e59f809"
+    },
+    {
+      "path": "trials-run.log",
+      "sha256": "ac05a6c131e948e9f5b0e0c192b24cd2f8740c770c45cce2cecdd836538b5dd3"
+    },
+    {
+      "path": "uart-build-commands.json",
+      "sha256": "9bedb7e666a85c4fd2a85f701c7d5dceb10e74945884db8a7ca431ac925ad60f"
+    }
+  ]
+}

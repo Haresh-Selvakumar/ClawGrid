@@ -1,0 +1,18 @@
+[
+  {
+    "role": "A",
+    "environment": "native_voice",
+    "sha256": "990db651460832081e3fd2d086391c8ff5fa348f331f81c77a0674e64e9a5d55",
+    "physical_outputs_enabled": false,
+    "credentials_match_installed": true,
+    "partition_unchanged": true
+  },
+  {
+    "role": "B-speech",
+    "environment": "speech_intelligence",
+    "sha256": "79fda2a3000f63f09654f2278eb728113ce9a26ccc6b571276bab7dba099dcb9",
+    "physical_outputs_enabled": false,
+    "credentials_match_installed": true,
+    "partition_unchanged": true
+  }
+]

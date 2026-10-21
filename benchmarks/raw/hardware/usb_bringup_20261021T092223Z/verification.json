@@ -1,0 +1,410 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "utc": "20261021T092223Z",
+  "ports": {
+    "A": "COM7",
+    "B": "COM8"
+  },
+  "observations": {
+    "A_selftest": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "A",
+      "passed": true,
+      "rtos_ready": true
+    },
+    "B_selftest": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "B",
+      "passed": true,
+      "rtos_ready": true
+    },
+    "policy": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "policy_saved",
+      "boot": 15,
+      "reset_reason": 0,
+      "grace_ms": 120000,
+      "auto_flags": 1,
+      "away": false,
+      "physical_outputs_enabled": false
+    },
+    "authenticated_read": {
+      "kind": "bridge",
+      "id": 4,
+      "status": 200,
+      "body": {
+        "source": "HARDWARE_MEASURED",
+        "id": 0,
+        "phase": 0,
+        "status": 2,
+        "light": false,
+        "fan": false,
+        "attempts": 0,
+        "rtt_us": 0,
+        "processing_us": 0,
+        "outcome_known": false
+      }
+    },
+    "B_memory": {
+      "kind": "bridge",
+      "id": 9,
+      "status": 200,
+      "body": {
+        "source": "HARDWARE_MEASURED",
+        "internal_free": 105491,
+        "internal_min": 55179,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4088263,
+        "psram_largest": 3866624,
+        "stack_task": "http",
+        "stack_free_bytes": 4088,
+        "rx_dropped": 0,
+        "memory_config_ok": true
+      }
+    },
+    "state_samples": [
+      {
+        "kind": "bridge",
+        "id": 13,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 12,
+          "reports": 55,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      },
+      {
+        "kind": "bridge",
+        "id": 14,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 512,
+          "reports": 56,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      },
+      {
+        "kind": "bridge",
+        "id": 15,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 12,
+          "reports": 58,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      },
+      {
+        "kind": "bridge",
+        "id": 23,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 737,
+          "reports": 59,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    ],
+    "speech": {
+      "kind": "bridge",
+      "id": 24,
+      "status": 200,
+      "body": {
+        "processing_source": "HARDWARE_MEASURED",
+        "supported": true,
+        "engine": "ESP-SR 1.7.0 MultiNet6 English",
+        "phase": 1,
+        "job": 0,
+        "command_id": 0,
+        "confidence": 0.0,
+        "samples": 0,
+        "inference_us": 0,
+        "max_frame_us": 0,
+        "frames": 0,
+        "stack_free_bytes": 0,
+        "pcm_crc32": 0,
+        "diagnostic_text": "",
+        "error_code": 0,
+        "last_state": 0,
+        "candidate_id": 0,
+        "candidate_score": 0.0,
+        "peak": 0,
+        "clipped_samples": 0,
+        "nonzero_samples": 0,
+        "chunk_samples": 0,
+        "padded_samples": 0,
+        "detecting_frames": 0,
+        "engine_errors": 0,
+        "authorized": false
+      }
+    },
+    "proposal": {
+      "kind": "bridge",
+      "id": 25,
+      "status": 200,
+      "body": {
+        "proposal_id": 125954210,
+        "target": "virtual_rooms",
+        "room": "bedroom",
+        "device": "light",
+        "action": "OFF",
+        "expires_in_ms": 15000,
+        "authorized": false
+      }
+    },
+    "confirm": {
+      "kind": "bridge",
+      "id": 26,
+      "status": 202,
+      "body": {
+        "queued": true,
+        "id": 1,
+        "message": "Confirmed and submitted; awaiting software ACK",
+        "physical_state": "not measured"
+      }
+    },
+    "transaction": {
+      "kind": "bridge",
+      "id": 28,
+      "status": 200,
+      "body": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 17274,
+        "processing_us": 26,
+        "outcome_known": true
+      }
+    },
+    "duplicate_confirmation": {
+      "kind": "bridge",
+      "id": 30,
+      "status": 409,
+      "body": {
+        "error": "Proposal already submitted or missing",
+        "authorized": false
+      }
+    },
+    "final_state": {
+      "kind": "bridge",
+      "id": 31,
+      "status": 200,
+      "body": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 762,
+        "reports": 63,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 1,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      }
+    }
+  },
+  "cases": [
+    {
+      "test": "A_role_and_selftest",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_role_and_selftest",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "A_outputs_inhibited",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "NVS_policy_preserved",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "installed_token_preserved",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_N16R8_memory",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_inhibited_telemetry_1",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_inhibited_telemetry_2",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_inhibited_telemetry_3",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_inhibited_telemetry_4",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "telemetry_advances",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "speech_engine_initialized_only",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_proposal_prepared",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirmation_submitted",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "authenticated_B_A_B_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "confirmation_one_shot",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "physical_commanded_outputs_still_off",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    }
+  ],
+  "limitations": "USB-only, outputs inhibited. Virtual input is synthetic; ACK and radio processing measured on hardware. No physical switching, recognition accuracy or fault injection tested."
+}

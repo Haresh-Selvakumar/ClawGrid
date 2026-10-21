@@ -1,0 +1,5231 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "utc": "20261021T101022Z",
+  "ports": {
+    "A": "COM9",
+    "B": "COM8"
+  },
+  "trials": [
+    {
+      "trial": 1,
+      "completed": true,
+      "before_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 20,
+        "reset_reason": 1,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "pre_reset_command": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 12340,
+        "processing_us": 28,
+        "outcome_known": true
+      },
+      "pre_reset_proposal": {
+        "kind": "bridge",
+        "id": 17,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905922,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      },
+      "injected_ns": 348354673704300,
+      "armed": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      },
+      "during_stall_health": [
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 20,
+          "control_jobs": 18240,
+          "link_jobs": 18296,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        },
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 20,
+          "control_jobs": 18240,
+          "link_jobs": 18432,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        }
+      ],
+      "B_during_fault": {
+        "kind": "bridge",
+        "id": 21,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 14518,
+          "max_exec_us": 834,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      },
+      "during_fault_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 432,
+        "reports": 75,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 1,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "boot": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 21,
+        "physical_outputs_enabled": false
+      },
+      "boot_observed_ns": 348360466596500,
+      "watchdog_text_observed_ns": 348359699660800,
+      "after_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 21,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "fresh_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 1927,
+        "reports": 76,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 1,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "fresh_observed_ns": 348360940445500,
+      "recovery_seconds": 6.2667412,
+      "stale_confirmation": {
+        "kind": "bridge",
+        "id": 36,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      },
+      "replay": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      },
+      "stale_command_result": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 4,
+        "processing_us": 3,
+        "light": false,
+        "fan": false
+      },
+      "post_replay_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 913,
+        "reports": 77,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 0,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "recovered_health": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 21,
+        "control_jobs": 285,
+        "link_jobs": 285,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      },
+      "normal_command_after": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 17231,
+        "processing_us": 28,
+        "outcome_known": true
+      }
+    },
+    {
+      "trial": 2,
+      "completed": true,
+      "before_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 21,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "pre_reset_command": {
+        "source": "HARDWARE_MEASURED",
+        "id": 2,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 17281,
+        "processing_us": 28,
+        "outcome_known": true
+      },
+      "pre_reset_proposal": {
+        "kind": "bridge",
+        "id": 61,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905925,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      },
+      "injected_ns": 348366174336300,
+      "armed": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      },
+      "during_stall_health": [
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 21,
+          "control_jobs": 1133,
+          "link_jobs": 1187,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        },
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 21,
+          "control_jobs": 1133,
+          "link_jobs": 1325,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        }
+      ],
+      "B_during_fault": {
+        "kind": "bridge",
+        "id": 68,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 16818,
+          "max_exec_us": 834,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      },
+      "during_fault_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 912,
+        "reports": 85,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 2,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "boot": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 22,
+        "physical_outputs_enabled": false
+      },
+      "boot_observed_ns": 348371969920000,
+      "watchdog_text_observed_ns": 348371203248300,
+      "after_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 22,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "fresh_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 1412,
+        "reports": 87,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 2,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "fresh_observed_ns": 348372441089100,
+      "recovery_seconds": 6.2667528,
+      "stale_confirmation": {
+        "kind": "bridge",
+        "id": 82,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      },
+      "replay": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      },
+      "stale_command_result": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 4,
+        "processing_us": 3,
+        "light": false,
+        "fan": false
+      },
+      "post_replay_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 908,
+        "reports": 88,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 0,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "recovered_health": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 22,
+        "control_jobs": 283,
+        "link_jobs": 283,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      },
+      "normal_command_after": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 17249,
+        "processing_us": 26,
+        "outcome_known": true
+      }
+    },
+    {
+      "trial": 3,
+      "completed": true,
+      "before_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 22,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "pre_reset_command": {
+        "source": "HARDWARE_MEASURED",
+        "id": 2,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 17252,
+        "processing_us": 29,
+        "outcome_known": true
+      },
+      "pre_reset_proposal": {
+        "kind": "bridge",
+        "id": 105,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905928,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      },
+      "injected_ns": 348377671701400,
+      "armed": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      },
+      "during_stall_health": [
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 22,
+          "control_jobs": 1131,
+          "link_jobs": 1186,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        },
+        {
+          "source": "HARDWARE_MEASURED",
+          "kind": "task_health",
+          "boot": 22,
+          "control_jobs": 1131,
+          "link_jobs": 1323,
+          "control_stalled": true,
+          "diagnostic_faults_enabled": true,
+          "physical_outputs_enabled": false
+        }
+      ],
+      "B_during_fault": {
+        "kind": "bridge",
+        "id": 112,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 19118,
+          "max_exec_us": 837,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      },
+      "during_fault_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 907,
+        "reports": 96,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 2,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "boot": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 23,
+        "physical_outputs_enabled": false
+      },
+      "boot_observed_ns": 348383461476700,
+      "watchdog_text_observed_ns": 348382691801300,
+      "after_policy": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 23,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      },
+      "fresh_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 1407,
+        "reports": 98,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 2,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "fresh_observed_ns": 348383941620300,
+      "recovery_seconds": 6.2699189,
+      "stale_confirmation": {
+        "kind": "bridge",
+        "id": 127,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      },
+      "replay": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      },
+      "stale_command_result": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 4,
+        "processing_us": 2,
+        "light": false,
+        "fan": false
+      },
+      "post_replay_state": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 913,
+        "reports": 99,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 0,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "recovered_health": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 23,
+        "control_jobs": 287,
+        "link_jobs": 287,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      },
+      "normal_command_after": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 12292,
+        "processing_us": 27,
+        "outcome_known": true
+      }
+    }
+  ],
+  "original_policy": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "policy_saved",
+    "boot": 20,
+    "reset_reason": 1,
+    "grace_ms": 120000,
+    "auto_flags": 1,
+    "away": false,
+    "physical_outputs_enabled": false
+  },
+  "final_policy": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "policy_saved",
+    "boot": 23,
+    "reset_reason": 6,
+    "grace_ms": 120000,
+    "auto_flags": 1,
+    "away": false,
+    "physical_outputs_enabled": false
+  },
+  "cases": [
+    {
+      "test": "initial_inhibited",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "explicit_diagnostic_build",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_unchanged_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "pending_pre_reset_proposal",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_stall_armed",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "only_control_stalled_link_and_diagnostics_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_unrelated_activity_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "task_watchdog_panic_and_reset",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "boot_inhibited",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_confirmation_boot_mismatch_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_exact_command_replayed_for_test",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_command_wrong_boot_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "stale_replay_no_gate_or_output_change",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fault_cleared_by_reboot",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_and_link_progress_again",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_unchanged_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "pending_pre_reset_proposal",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_stall_armed",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "only_control_stalled_link_and_diagnostics_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_unrelated_activity_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "task_watchdog_panic_and_reset",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "boot_inhibited",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_confirmation_boot_mismatch_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_exact_command_replayed_for_test",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_command_wrong_boot_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "stale_replay_no_gate_or_output_change",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fault_cleared_by_reboot",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_and_link_progress_again",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_unchanged_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_before",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "pending_pre_reset_proposal",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_stall_armed",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "only_control_stalled_link_and_diagnostics_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_unrelated_activity_live",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "task_watchdog_panic_and_reset",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "boot_inhibited",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_schema3_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_confirmation_boot_mismatch_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_exact_command_replayed_for_test",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "old_command_wrong_boot_rejected",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "stale_replay_no_gate_or_output_change",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fault_cleared_by_reboot",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "control_and_link_progress_again",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_prepare",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_confirm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "virtual_ACK",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "original_policy_preserved_at_end",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    }
+  ],
+  "errors": [],
+  "records": [
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348352128994700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 70020,
+        "flash_bytes": 16777216,
+        "internal_free": 107083,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 4016,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348352134442900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 69,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348352137847300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 13764,
+        "max_exec_us": 834,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4164,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352149062800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 20,
+        "reset_reason": 1,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352177198800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 20,
+        "control_jobs": 17737,
+        "link_jobs": 17737,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352211144400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 20,
+        "reset_reason": 1,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348352680039900,
+      "device": {
+        "kind": "bridge",
+        "id": 7,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 677,
+          "reports": 69,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352797016600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 90055,
+        "flash_bytes": 16777216,
+        "internal_free": 182839,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 3840,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352813745100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 0,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352830398700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 17864,
+        "max_exec_us": 182,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 5216,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348352847396000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 17868,
+        "max_exec_us": 722,
+        "max_late_us": 377,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4256,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348353163993300,
+      "device": {
+        "kind": "bridge",
+        "id": 8,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905921,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348353425199100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 0,
+        "processing_us": 28,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348353660976600,
+      "device": {
+        "kind": "bridge",
+        "id": 13,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 1,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348353671436300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 12340,
+        "processing_us": 28,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348354167681700,
+      "device": {
+        "kind": "bridge",
+        "id": 15,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 1,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 12340,
+          "processing_us": 28,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348354663240400,
+      "device": {
+        "kind": "bridge",
+        "id": 17,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905922,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348354684883200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348354978877000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 20,
+        "control_jobs": 18240,
+        "link_jobs": 18296,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348355657696300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 20,
+        "control_jobs": 18240,
+        "link_jobs": 18432,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348356167762700,
+      "device": {
+        "kind": "bridge",
+        "id": 21,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 14518,
+          "max_exec_us": 834,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348357129909100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 75023,
+        "flash_bytes": 16777216,
+        "internal_free": 105811,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348357135624000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 74,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348357135712700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 14765,
+        "max_exec_us": 834,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348357800619300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 95058,
+        "flash_bytes": 16777216,
+        "internal_free": 182839,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 3840,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348357816815700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 1,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348357833056900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 18240,
+        "max_exec_us": 265,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4000,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348357849528000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 18869,
+        "max_exec_us": 722,
+        "max_late_us": 377,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4256,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348358425912000,
+      "device": {
+        "kind": "bridge",
+        "id": 29,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 432,
+          "reports": 75,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 1,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348360444029100,
+      "device": {
+        "kind": "firmware_mode",
+        "node": "A",
+        "schema": 3,
+        "build_mode": "ClawGrid:outputs=inhibited;faults=diagnostic"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348360450199600,
+      "device": {
+        "kind": "console_transport",
+        "transport": "ClawGrid:console=uart0"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348360461060800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "persistence_boot",
+        "ok": true,
+        "boot": 21
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348360466596500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 21,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348360537738300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 21,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348360929786400,
+      "device": {
+        "kind": "bridge",
+        "id": 35,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 1927,
+          "reports": 76,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 1,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348361406473900,
+      "device": {
+        "kind": "bridge",
+        "id": 36,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348361417504300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348361434109600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 4,
+        "processing_us": 3,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348361929221100,
+      "device": {
+        "kind": "bridge",
+        "id": 39,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 913,
+          "reports": 77,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348361956971000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 21,
+        "control_jobs": 285,
+        "link_jobs": 285,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348362135417000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 80025,
+        "flash_bytes": 16777216,
+        "internal_free": 104963,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348362135569900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 78,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348362141094100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 15765,
+        "max_exec_us": 834,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348362290963600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 21,
+        "control_jobs": 352,
+        "link_jobs": 352,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348362663877700,
+      "device": {
+        "kind": "bridge",
+        "id": 45,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905923,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348362919027000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 0,
+        "processing_us": 28,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348363161686300,
+      "device": {
+        "kind": "bridge",
+        "id": 46,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 1,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348363167461300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 17231,
+        "processing_us": 28,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348363663457000,
+      "device": {
+        "kind": "bridge",
+        "id": 49,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 1,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 17231,
+          "processing_us": 28,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348363696141900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 21,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348364180606400,
+      "device": {
+        "kind": "bridge",
+        "id": 51,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 138,
+          "reports": 80,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 1,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348364663099800,
+      "device": {
+        "kind": "bridge",
+        "id": 52,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905924,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348364766867400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 5002,
+        "flash_bytes": 16777216,
+        "internal_free": 182839,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 4160,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348364783330900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 1,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348364799742300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 850,
+        "max_exec_us": 382,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4000,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348364816456300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 854,
+        "max_exec_us": 962,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4288,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348364925182900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 0,
+        "processing_us": 28,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348365162205600,
+      "device": {
+        "kind": "bridge",
+        "id": 53,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 2,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348365172227700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 2,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 17281,
+        "processing_us": 28,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348365667569700,
+      "device": {
+        "kind": "bridge",
+        "id": 59,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 2,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 17281,
+          "processing_us": 28,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348366163469900,
+      "device": {
+        "kind": "bridge",
+        "id": 61,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905925,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348366190914700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348366470660300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 21,
+        "control_jobs": 1133,
+        "link_jobs": 1187,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348367136881900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 85025,
+        "flash_bytes": 16777216,
+        "internal_free": 104327,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348367137023800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 83,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348367142478400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 16765,
+        "max_exec_us": 834,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348367159444000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 21,
+        "control_jobs": 1133,
+        "link_jobs": 1325,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348367669518300,
+      "device": {
+        "kind": "bridge",
+        "id": 68,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 16818,
+          "max_exec_us": 834,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348369769297000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 10004,
+        "flash_bytes": 16777216,
+        "internal_free": 182843,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 4016,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348369780475800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 2,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348369801714800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 1133,
+        "max_exec_us": 382,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4000,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348369817713000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 1855,
+        "max_exec_us": 962,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4288,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348369929942700,
+      "device": {
+        "kind": "bridge",
+        "id": 69,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 912,
+          "reports": 85,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 2,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348371948128900,
+      "device": {
+        "kind": "firmware_mode",
+        "node": "A",
+        "schema": 3,
+        "build_mode": "ClawGrid:outputs=inhibited;faults=diagnostic"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348371953676000,
+      "device": {
+        "kind": "console_transport",
+        "transport": "ClawGrid:console=uart0"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348371964451600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "persistence_boot",
+        "ok": true,
+        "boot": 22
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348371969920000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 22,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348372040894600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 22,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372430391800,
+      "device": {
+        "kind": "bridge",
+        "id": 79,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 1412,
+          "reports": 87,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 2,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372435833700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 90325,
+        "flash_bytes": 16777216,
+        "internal_free": 104335,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372435930400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 88,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372446231700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 17825,
+        "max_exec_us": 834,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372910620700,
+      "device": {
+        "kind": "bridge",
+        "id": 82,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348372932583700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348372943249500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 4,
+        "processing_us": 3,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348373426457400,
+      "device": {
+        "kind": "bridge",
+        "id": 86,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 908,
+          "reports": 88,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348373453418500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 22,
+        "control_jobs": 283,
+        "link_jobs": 283,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348373790845000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 22,
+        "control_jobs": 351,
+        "link_jobs": 351,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348374164473300,
+      "device": {
+        "kind": "bridge",
+        "id": 89,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905926,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348374419539400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 0,
+        "processing_us": 26,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348374660537700,
+      "device": {
+        "kind": "bridge",
+        "id": 90,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 1,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348374666445400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 17249,
+        "processing_us": 26,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348375163679100,
+      "device": {
+        "kind": "bridge",
+        "id": 93,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 1,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 17249,
+          "processing_us": 26,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348375196151300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 22,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348375676692400,
+      "device": {
+        "kind": "bridge",
+        "id": 95,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 158,
+          "reports": 91,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 1,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348376164148600,
+      "device": {
+        "kind": "bridge",
+        "id": 96,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905927,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348376270429700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 5003,
+        "flash_bytes": 16777216,
+        "internal_free": 182839,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 4160,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348376287138700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 1,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348376303362000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 850,
+        "max_exec_us": 273,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4000,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348376324891500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 854,
+        "max_exec_us": 762,
+        "max_late_us": 3,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4288,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348376421660600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 0,
+        "processing_us": 29,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348376662950600,
+      "device": {
+        "kind": "bridge",
+        "id": 97,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 2,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348376668438300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 2,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 17252,
+        "processing_us": 29,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348377167177700,
+      "device": {
+        "kind": "bridge",
+        "id": 104,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 2,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 17252,
+          "processing_us": 29,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348377660805000,
+      "device": {
+        "kind": "bridge",
+        "id": 105,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905928,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348377666281700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 95559,
+        "flash_bytes": 16777216,
+        "internal_free": 104335,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348377672245700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 93,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348377672378600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 18872,
+        "max_exec_us": 837,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348377683163400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "watchdog_injection",
+        "armed": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348377968400800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 22,
+        "control_jobs": 1131,
+        "link_jobs": 1186,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348378655058400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 22,
+        "control_jobs": 1131,
+        "link_jobs": 1323,
+        "control_stalled": true,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348379167549600,
+      "device": {
+        "kind": "bridge",
+        "id": 112,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "task": "LinkTask",
+          "core": 0,
+          "priority": 3,
+          "period_ms": 5,
+          "jobs": 19118,
+          "max_exec_us": 837,
+          "max_late_us": 1,
+          "deadline_misses": 0,
+          "stack_free_bytes": 3524,
+          "watchdog": true,
+          "task_count": 12
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348381271308100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 10005,
+        "flash_bytes": 16777216,
+        "internal_free": 182843,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 4016,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348381287672000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 2,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348381304363200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 1131,
+        "max_exec_us": 279,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4000,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348381327336400,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 1855,
+        "max_exec_us": 762,
+        "max_late_us": 3,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4288,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348381430490800,
+      "device": {
+        "kind": "bridge",
+        "id": 113,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 907,
+          "reports": 96,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 2,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348382669498900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 100560,
+        "flash_bytes": 16777216,
+        "internal_free": 104327,
+        "internal_min": 55775,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3696,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348382669656800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 98,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348382675388600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 19872,
+        "max_exec_us": 837,
+        "max_late_us": 1,
+        "deadline_misses": 0,
+        "stack_free_bytes": 3524,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348383439217700,
+      "device": {
+        "kind": "firmware_mode",
+        "node": "A",
+        "schema": 3,
+        "build_mode": "ClawGrid:outputs=inhibited;faults=diagnostic"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348383444802900,
+      "device": {
+        "kind": "console_transport",
+        "transport": "ClawGrid:console=uart0"
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348383455760500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "persistence_boot",
+        "ok": true,
+        "boot": 23
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348383461476700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "boot_recovery",
+        "reset_reason": 6,
+        "boot": 23,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348383527192100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 23,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348383930775100,
+      "device": {
+        "kind": "bridge",
+        "id": 126,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 1407,
+          "reports": 98,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 2,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348384406174100,
+      "device": {
+        "kind": "bridge",
+        "id": 127,
+        "status": 409,
+        "body": {
+          "error": "Controller unavailable or stale",
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348384423536900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "injection",
+        "type": "R",
+        "sent": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348384434622200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 2,
+        "status": 4,
+        "processing_us": 2,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348384931528000,
+      "device": {
+        "kind": "bridge",
+        "id": 130,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 913,
+          "reports": 99,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348384958884500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 23,
+        "control_jobs": 287,
+        "link_jobs": 287,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348385300472700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 23,
+        "control_jobs": 355,
+        "link_jobs": 355,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": true,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348385663863100,
+      "device": {
+        "kind": "bridge",
+        "id": 133,
+        "status": 200,
+        "body": {
+          "proposal_id": 586905929,
+          "target": "virtual_rooms",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348385914355000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "actuation",
+        "id": 1,
+        "status": 0,
+        "processing_us": 27,
+        "light": false,
+        "fan": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348386159134900,
+      "device": {
+        "kind": "bridge",
+        "id": 134,
+        "status": 202,
+        "body": {
+          "queued": true,
+          "id": 1,
+          "message": "Confirmed and submitted; awaiting software ACK",
+          "physical_state": "not measured"
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348386165885800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "transaction",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "attempts": 1,
+        "rtt_us": 12292,
+        "processing_us": 27,
+        "light": false,
+        "fan": false,
+        "outcome_known": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348386667182200,
+      "device": {
+        "kind": "bridge",
+        "id": 136,
+        "status": 200,
+        "body": {
+          "source": "HARDWARE_MEASURED",
+          "id": 1,
+          "phase": 2,
+          "status": 0,
+          "light": false,
+          "fan": false,
+          "attempts": 1,
+          "rtt_us": 12292,
+          "processing_us": 27,
+          "outcome_known": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348386700889600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 23,
+        "reset_reason": 6,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    }
+  ],
+  "timed_lines": [
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptim"
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":70020,\"flash_bytes\":16777216,\"internal_free\":107083,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":4016,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":69,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348352143119800,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":13764,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":4164,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348352154647700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352154647700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":20,\"reset_reason\":1,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348352177009000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352188213700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":20,\"control_jobs\":17737,\"link_jobs\":17737,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348352210903900,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352221955400,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":20,\"reset_reason\":1,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348352690916500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348352690916500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":7,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":677,\"reports\":69,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":0,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348352785490900,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352807863300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":90055,\"flash_bytes\":16777216,\"internal_free\":182839,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":3840,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348352807863300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352819061900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":0,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348352819061900,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352841681100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":17864,\"max_exec_us\":182,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":5216,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348352841681100,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348352852747100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":17868,\"max_exec_us\":722,\"max_late_us\":377,\"deadline_misses\":0,\"stack_free_bytes\":4256,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348353169196000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348353169196000,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":8,\"status\":200,\"body\":{\"proposal_id\":586905921,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348353435627300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":1,\"status\":0,\"processing_us\":28,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348353666593000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348353666593000,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":13,\"status\":202,\"body\":{\"queued\":true,\"id\":1,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348353682181100,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":1,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":12340,\"processing_us\":28,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348354172920500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348354172920500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":15,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":1,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":12340,\"processing_us\":28,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348354673573300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348354673573300,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":17,\"status\":200,\"body\":{\"proposal_id\":586905922,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"fan\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348354695908700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"watchdog_injection\",\"armed\":true}"
+    },
+    {
+      "host_monotonic_ns": 348354973061600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348354984222800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":20,\"control_jobs\":18240,\"link_jobs\":18296,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348355657542300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348355668725100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":20,\"control_jobs\":18240,\"link_jobs\":18432,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348356172991900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348356172991900,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":21,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":14518,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"task_count\":12}}"
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":75023,\"flash_bytes\":16777216,\"internal_free\":105811,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":74,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348357140953300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":14765,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348357789619000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348357811342000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":95058,\"flash_bytes\":16777216,\"internal_free\":182839,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":3840,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348357811342000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348357822195300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":1,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348357822195300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348357843928200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":18240,\"max_exec_us\":265,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":4000,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348357843928200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348357855073900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":18869,\"max_exec_us\":722,\"max_late_us\":377,\"deadline_misses\":0,\"stack_free_bytes\":4256,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348358436661700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348358436661700,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":29,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":432,\"reports\":75,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":1,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348359699660800,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359699660800,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt:  - ControlTask (CPU 1)\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359710483900,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt: Tasks currently running:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359710483900,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt: CPU 0: IDLE0\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359710483900,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt: CPU 1: IDLE1\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359721604000,
+      "text": "COM9 \u001b[0;31mE (97013) task_wdt: Aborting.\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359721604000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359721604000,
+      "text": "COM9 abort() was called at PC 0x4200ee94 on core 0"
+    },
+    {
+      "host_monotonic_ns": 348359721604000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359721604000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 Backtrace: 0x40376672:0x3fc98a90 0x4037c859:0x3fc98ab0 0x4038398a:0x3fc98ad0 0x4200ee94:0x3fc98b40 0x40376ff5:0x3fc98b70 0x420736fb:0x3fcf5450 0x4200f87a:0x3fcf5470 0x4037de07:0x3fcf5490"
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 ELF file SHA256: 1693e824052bddb8"
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348359744347600,
+      "text": "COM9 Rebooting..."
+    },
+    {
+      "host_monotonic_ns": 348359756191100,
+      "text": "COM9 ESP-ROM:esp32s3-20210327"
+    },
+    {
+      "host_monotonic_ns": 348359756191100,
+      "text": "COM9 Build:Mar 27 2021"
+    },
+    {
+      "host_monotonic_ns": 348359756191100,
+      "text": "COM9 rst:0xc (RTC_SW_CPU_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)"
+    },
+    {
+      "host_monotonic_ns": 348359756191100,
+      "text": "COM9 Saved PC:0x403761f0"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 SPIWP:0xee"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 mode:DIO, clock div:1"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 load:0x3fce3808,len:0x1820"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 load:0x403c9700,len:0xe6c"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 load:0x403cc700,len:0x3048"
+    },
+    {
+      "host_monotonic_ns": 348359767164900,
+      "text": "COM9 entry 0x403c997c"
+    },
+    {
+      "host_monotonic_ns": 348359778442800,
+      "text": "COM9 \u001b[0;32mI (29) boot: ESP-IDF 4.4.7 2nd stage bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359778442800,
+      "text": "COM9 \u001b[0;32mI (29) boot: compile time 14:46:57\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359789899300,
+      "text": "COM9 \u001b[0;32mI (29) boot: Multicore bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359789899300,
+      "text": "COM9 \u001b[0;32mI (31) boot: chip revision: v0.2\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359801319200,
+      "text": "COM9 \u001b[0;32mI (35) qio_mode: Enabling default flash chip QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359801319200,
+      "text": "COM9 \u001b[0;32mI (40) boot.esp32s3: Boot SPI Speed : 80MHz\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359801319200,
+      "text": "COM9 \u001b[0;32mI (45) boot.esp32s3: SPI Mode       : QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359812884400,
+      "text": "COM9 \u001b[0;32mI (50) boot.esp32s3: SPI Flash Size : 16MB\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359812884400,
+      "text": "COM9 \u001b[0;32mI (54) boot: Enabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359823705100,
+      "text": "COM9 \u001b[0;32mI (60) boot: Partition Table:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359823705100,
+      "text": "COM9 \u001b[0;32mI (63) boot: ## Label            Usage          Type ST Offset   Length\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359834694700,
+      "text": "COM9 \u001b[0;32mI (71) boot:  0 nvs              WiFi data        01 02 00009000 00005000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359845353100,
+      "text": "COM9 \u001b[0;32mI (78) boot:  1 otadata          OTA data         01 00 0000e000 00002000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359845353100,
+      "text": "COM9 \u001b[0;32mI (86) boot:  2 app0             OTA app          00 10 00010000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359856255300,
+      "text": "COM9 \u001b[0;32mI (93) boot:  3 app1             OTA app          00 11 00310000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359867747900,
+      "text": "COM9 \u001b[0;32mI (101) boot:  4 model            Unknown data     01 40 00610000 00600000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359867747900,
+      "text": "COM9 \u001b[0;32mI (108) boot:  5 storage          Unknown data     01 82 00c10000 003f0000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359878682300,
+      "text": "COM9 \u001b[0;32mI (116) boot: End of partition table\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359878682300,
+      "text": "COM9 \u001b[0;32mI (120) esp_image: segment 0: paddr=00010020 vaddr=3c080020 size=164e8h ( 91368) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359900550600,
+      "text": "COM9 \u001b[0;32mI (142) esp_image: segment 1: paddr=00026510 vaddr=3fc978a0 size=04740h ( 18240) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359911594000,
+      "text": "COM9 \u001b[0;32mI (146) esp_image: segment 2: paddr=0002ac58 vaddr=40374000 size=053c0h ( 21440) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359911594000,
+      "text": "COM9 \u001b[0;32mI (152) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=75bc0h (482240) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359976734300,
+      "text": "COM9 \u001b[0;32mI (230) esp_image: segment 4: paddr=000a5be8 vaddr=403793c0 size=0e4e0h ( 58592) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359999389100,
+      "text": "COM9 \u001b[0;32mI (249) boot: Loaded app from partition at offset 0x10000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348359999389100,
+      "text": "COM9 \u001b[0;32mI (249) boot: Disabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348360449555700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348360449555700,
+      "text": "COM9 {\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":3,\"build_mode\":\"ClawGrid:outputs=inhibited;faults=diagnostic\"}"
+    },
+    {
+      "host_monotonic_ns": 348360449555700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348360460921500,
+      "text": "COM9 {\"kind\":\"console_transport\",\"transport\":\"ClawGrid:console=uart0\"}"
+    },
+    {
+      "host_monotonic_ns": 348360460921500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348360471727300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":true,\"boot\":21}"
+    },
+    {
+      "host_monotonic_ns": 348360471727300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348360471727300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":6,\"boot\":21,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348360537507300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348360548554300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":21,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348360940413000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348360940413000,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":35,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":1927,\"reports\":76,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":1,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348361411689400,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348361411689400,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":36,\"status\":409,\"body\":{\"error\":\"Controller unavailable or stale\",\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348361422998300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348361422998300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"injection\",\"type\":\"R\",\"sent\":true}"
+    },
+    {
+      "host_monotonic_ns": 348361444464400,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":1,\"status\":4,\"processing_us\":3,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348361934530700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348361934530700,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":39,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":913,\"reports\":77,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":0,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348361956744800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348361967898000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":21,\"control_jobs\":285,\"link_jobs\":285,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348362140784900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348362140784900,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":80025,\"flash_bytes\":16777216,\"internal_free\":104963,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348362140784900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348362140784900,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":78,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348362151860000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348362151860000,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":15765,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348362290353600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348362301801900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":21,\"control_jobs\":352,\"link_jobs\":352,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348362669452100,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348362669452100,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":45,\"status\":200,\"body\":{\"proposal_id\":586905923,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348362924468800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":1,\"status\":0,\"processing_us\":28,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348363172695300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348363172695300,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":46,\"status\":202,\"body\":{\"queued\":true,\"id\":1,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348363172695300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":1,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":17231,\"processing_us\":28,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348363673878500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348363673878500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":49,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":1,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":17231,\"processing_us\":28,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348363695975700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348363706903900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":21,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348364186074800,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348364186074800,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":51,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":138,\"reports\":80,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":1,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348364668351500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348364668351500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":52,\"status\":200,\"body\":{\"proposal_id\":586905924,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348364745463300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348364777597300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":5002,\"flash_bytes\":16777216,\"internal_free\":182839,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":4160,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348364777597300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348364788797100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":1,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348364788797100,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348364810936100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":850,\"max_exec_us\":382,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":4000,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348364810936100,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348364821972500,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":854,\"max_exec_us\":962,\"max_late_us\":2,\"deadline_misses\":0,\"stack_free_bytes\":4288,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348364930479000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":2,\"status\":0,\"processing_us\":28,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348365167512700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348365167512700,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":53,\"status\":202,\"body\":{\"queued\":true,\"id\":2,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348365183391900,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":2,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":17281,\"processing_us\":28,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348365672783400,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348365672783400,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":59,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":2,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":17281,\"processing_us\":28,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348366174169400,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348366174169400,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":61,\"status\":200,\"body\":{\"proposal_id\":586905925,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"fan\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348366196170200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"watchdog_injection\",\"armed\":true}"
+    },
+    {
+      "host_monotonic_ns": 348366470406000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348366481577600,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":21,\"control_jobs\":1133,\"link_jobs\":1187,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":85025,\"flash_bytes\":16777216,\"internal_free\":104327,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":83,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348367147660700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":16765,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348367159207100,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348367170234600,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":21,\"control_jobs\":1133,\"link_jobs\":1325,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348367680270100,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348367680270100,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":68,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":16818,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"task_count\":12}}"
+    },
+    {
+      "host_monotonic_ns": 348369752522000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348369774681800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":10004,\"flash_bytes\":16777216,\"internal_free\":182843,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":4016,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348369774681800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348369785664200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":2,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348369785664200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348369807089500,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":1133,\"max_exec_us\":382,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":4000,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348369807089500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348369828358200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":1855,\"max_exec_us\":962,\"max_late_us\":2,\"deadline_misses\":0,\"stack_free_bytes\":4288,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348369935231500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348369935231500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":69,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":912,\"reports\":85,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":2,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348371203248300,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371203248300,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt:  - ControlTask (CPU 1)\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371214378500,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt: Tasks currently running:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371214378500,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt: CPU 0: IDLE0\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371214378500,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt: CPU 1: IDLE1\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371225485300,
+      "text": "COM9 \u001b[0;31mE (11496) task_wdt: Aborting.\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371225485300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371225485300,
+      "text": "COM9 abort() was called at PC 0x4200ee94 on core 0"
+    },
+    {
+      "host_monotonic_ns": 348371225485300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371225485300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 Backtrace: 0x40376672:0x3fc98a90 0x4037c859:0x3fc98ab0 0x4038398a:0x3fc98ad0 0x4200ee94:0x3fc98b40 0x40376ff5:0x3fc98b70 0x420736fb:0x3fcf5450 0x4200f87a:0x3fcf5470 0x4037de07:0x3fcf5490"
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 ELF file SHA256: 1693e824052bddb8"
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371247672800,
+      "text": "COM9 Rebooting..."
+    },
+    {
+      "host_monotonic_ns": 348371258524300,
+      "text": "COM9 ESP-ROM:esp32s3-20210327"
+    },
+    {
+      "host_monotonic_ns": 348371258524300,
+      "text": "COM9 Build:Mar 27 2021"
+    },
+    {
+      "host_monotonic_ns": 348371258524300,
+      "text": "COM9 rst:0xc (RTC_SW_CPU_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)"
+    },
+    {
+      "host_monotonic_ns": 348371258524300,
+      "text": "COM9 Saved PC:0x403761f0"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 SPIWP:0xee"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 mode:DIO, clock div:1"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 load:0x3fce3808,len:0x1820"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 load:0x403c9700,len:0xe6c"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 load:0x403cc700,len:0x3048"
+    },
+    {
+      "host_monotonic_ns": 348371270259800,
+      "text": "COM9 entry 0x403c997c"
+    },
+    {
+      "host_monotonic_ns": 348371281413900,
+      "text": "COM9 \u001b[0;32mI (29) boot: ESP-IDF 4.4.7 2nd stage bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371281413900,
+      "text": "COM9 \u001b[0;32mI (29) boot: compile time 14:46:57\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371292049000,
+      "text": "COM9 \u001b[0;32mI (29) boot: Multicore bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371292049000,
+      "text": "COM9 \u001b[0;32mI (31) boot: chip revision: v0.2\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371303167600,
+      "text": "COM9 \u001b[0;32mI (35) qio_mode: Enabling default flash chip QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371303167600,
+      "text": "COM9 \u001b[0;32mI (40) boot.esp32s3: Boot SPI Speed : 80MHz\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371303167600,
+      "text": "COM9 \u001b[0;32mI (45) boot.esp32s3: SPI Mode       : QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371314397800,
+      "text": "COM9 \u001b[0;32mI (50) boot.esp32s3: SPI Flash Size : 16MB\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371314397800,
+      "text": "COM9 \u001b[0;32mI (54) boot: Enabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371325471000,
+      "text": "COM9 \u001b[0;32mI (60) boot: Partition Table:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371325471000,
+      "text": "COM9 \u001b[0;32mI (63) boot: ## Label            Usage          Type ST Offset   Length\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371336623800,
+      "text": "COM9 \u001b[0;32mI (71) boot:  0 nvs              WiFi data        01 02 00009000 00005000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371347668900,
+      "text": "COM9 \u001b[0;32mI (78) boot:  1 otadata          OTA data         01 00 0000e000 00002000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371347668900,
+      "text": "COM9 \u001b[0;32mI (86) boot:  2 app0             OTA app          00 10 00010000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371358597700,
+      "text": "COM9 \u001b[0;32mI (93) boot:  3 app1             OTA app          00 11 00310000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371369683100,
+      "text": "COM9 \u001b[0;32mI (101) boot:  4 model            Unknown data     01 40 00610000 00600000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371369683100,
+      "text": "COM9 \u001b[0;32mI (108) boot:  5 storage          Unknown data     01 82 00c10000 003f0000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371381073900,
+      "text": "COM9 \u001b[0;32mI (116) boot: End of partition table\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371381073900,
+      "text": "COM9 \u001b[0;32mI (120) esp_image: segment 0: paddr=00010020 vaddr=3c080020 size=164e8h ( 91368) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371402825800,
+      "text": "COM9 \u001b[0;32mI (142) esp_image: segment 1: paddr=00026510 vaddr=3fc978a0 size=04740h ( 18240) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371414136000,
+      "text": "COM9 \u001b[0;32mI (146) esp_image: segment 2: paddr=0002ac58 vaddr=40374000 size=053c0h ( 21440) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371414136000,
+      "text": "COM9 \u001b[0;32mI (152) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=75bc0h (482240) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371489803800,
+      "text": "COM9 \u001b[0;32mI (230) esp_image: segment 4: paddr=000a5be8 vaddr=403793c0 size=0e4e0h ( 58592) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371500895600,
+      "text": "COM9 \u001b[0;32mI (249) boot: Loaded app from partition at offset 0x10000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371512046500,
+      "text": "COM9 \u001b[0;32mI (249) boot: Disabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348371948001700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371958832200,
+      "text": "COM9 {\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":3,\"build_mode\":\"ClawGrid:outputs=inhibited;faults=diagnostic\"}"
+    },
+    {
+      "host_monotonic_ns": 348371958832200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371958832200,
+      "text": "COM9 {\"kind\":\"console_transport\",\"transport\":\"ClawGrid:console=uart0\"}"
+    },
+    {
+      "host_monotonic_ns": 348371969777600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371969777600,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":true,\"boot\":22}"
+    },
+    {
+      "host_monotonic_ns": 348371969777600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348371980628700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":6,\"boot\":22,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348372035468900,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348372046211000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":22,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":79,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":1412,\"reports\":87,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":2,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":90325,\"flash_bytes\":16777216,\"internal_free\":104335,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372441066900,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":88,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348372457138700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372457138700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":17825,\"max_exec_us\":834,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348372921362000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372921362000,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":82,\"status\":409,\"body\":{\"error\":\"Controller unavailable or stale\",\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348372943022700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348372943022700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"injection\",\"type\":\"R\",\"sent\":true}"
+    },
+    {
+      "host_monotonic_ns": 348372954463700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":2,\"status\":4,\"processing_us\":3,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348373431607200,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348373431607200,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":86,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":908,\"reports\":88,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":0,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348373453280500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348373463924600,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":22,\"control_jobs\":283,\"link_jobs\":283,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348373790683900,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348373801567000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":22,\"control_jobs\":351,\"link_jobs\":351,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348374175058600,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348374175058600,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":89,\"status\":200,\"body\":{\"proposal_id\":586905926,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348374431037800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":1,\"status\":0,\"processing_us\":26,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348374671638700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348374671638700,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":90,\"status\":202,\"body\":{\"queued\":true,\"id\":1,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348374671638700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":1,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":17249,\"processing_us\":26,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348375174336200,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348375174336200,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":93,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":1,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":17249,\"processing_us\":26,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348375195987400,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348375207474800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":22,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348375687635600,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348375687635600,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":95,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":158,\"reports\":91,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":1,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348376174459400,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348376174459400,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":96,\"status\":200,\"body\":{\"proposal_id\":586905927,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348376254154500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348376275802300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":5003,\"flash_bytes\":16777216,\"internal_free\":182839,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":4160,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348376275802300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348376298012100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":1,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348376298012100,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348376308607800,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":850,\"max_exec_us\":273,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":4000,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348376308607800,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348376330253700,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":854,\"max_exec_us\":762,\"max_late_us\":3,\"deadline_misses\":0,\"stack_free_bytes\":4288,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348376426955000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":2,\"status\":0,\"processing_us\":29,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348376673935100,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348376673935100,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":97,\"status\":202,\"body\":{\"queued\":true,\"id\":2,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348376673935100,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":2,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":17252,\"processing_us\":29,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348377172383000,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348377172383000,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":104,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":2,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":17252,\"processing_us\":29,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348377671553200,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348377671553200,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":105,\"status\":200,\"body\":{\"proposal_id\":586905928,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"fan\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348377671553200,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348377671553200,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":95559,\"flash_bytes\":16777216,\"internal_free\":104335,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348377683004300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348377683004300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":93,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348377683004300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348377683004300,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":18872,\"max_exec_us\":837,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348377694059100,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"watchdog_injection\",\"armed\":true}"
+    },
+    {
+      "host_monotonic_ns": 348377968255600,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348377979575300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":22,\"control_jobs\":1131,\"link_jobs\":1186,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348378654828200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348378666039900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":22,\"control_jobs\":1131,\"link_jobs\":1323,\"control_stalled\":true,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348379172706100,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348379172706100,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":112,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":19118,\"max_exec_us\":837,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"task_count\":12}}"
+    },
+    {
+      "host_monotonic_ns": 348381259806000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348381282080200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"A\",\"uptime_ms\":10005,\"flash_bytes\":16777216,\"internal_free\":182843,\"internal_min\":173615,\"internal_largest\":143360,\"psram_total\":8388608,\"psram_free\":8385863,\"psram_largest\":8257536,\"stack_free_bytes\":4016,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348381282080200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348381293032500,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":0,\"duplicates\":0,\"last_command\":2,\"command_dropped\":0,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348381293032500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348381314840300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"ControlTask\",\"core\":1,\"priority\":5,\"period_ms\":5,\"jobs\":1131,\"max_exec_us\":279,\"max_late_us\":6,\"deadline_misses\":0,\"stack_free_bytes\":4000,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348381314840300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348381338395900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"A\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":1855,\"max_exec_us\":762,\"max_late_us\":3,\"deadline_misses\":0,\"stack_free_bytes\":4288,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348381435685600,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348381435685600,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":113,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":907,\"reports\":96,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":2,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"memory\",\"node\":\"B\",\"uptime_ms\":100560,\"flash_bytes\":16777216,\"internal_free\":104327,\"internal_min\":55775,\"internal_largest\":59392,\"psram_total\":8388608,\"psram_free\":4089807,\"psram_largest\":3866624,\"stack_free_bytes\":3696,\"rx_dropped\":0,\"tx_failed\":0,\"memory_config_ok\":true}"
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":98,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"radio\":true}"
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348382680893500,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"rtos\",\"node\":\"B\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":19872,\"max_exec_us\":837,\"max_late_us\":1,\"deadline_misses\":0,\"stack_free_bytes\":3524,\"watchdog\":true,\"diagnostic_dropped\":0}"
+    },
+    {
+      "host_monotonic_ns": 348382691801300,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt: Task watchdog got triggered. The following tasks did not reset the watchdog in time:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382702691900,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt:  - ControlTask (CPU 1)\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382702691900,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt: Tasks currently running:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382713444400,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt: CPU 0: IDLE0\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382713444400,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt: CPU 1: IDLE1\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382713444400,
+      "text": "COM9 \u001b[0;31mE (11487) task_wdt: Aborting.\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382713444400,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382724271700,
+      "text": "COM9 abort() was called at PC 0x4200ee94 on core 0"
+    },
+    {
+      "host_monotonic_ns": 348382724271700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382724271700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 Backtrace: 0x40376672:0x3fc98a90 0x4037c859:0x3fc98ab0 0x4038398a:0x3fc98ad0 0x4200ee94:0x3fc98b40 0x40376ff5:0x3fc98b70 0x420736fb:0x3fcf5450 0x4200f87a:0x3fcf5470 0x4037de07:0x3fcf5490"
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 ELF file SHA256: 1693e824052bddb8"
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348382735244700,
+      "text": "COM9 Rebooting..."
+    },
+    {
+      "host_monotonic_ns": 348382757036700,
+      "text": "COM9 ESP-ROM:esp32s3-20210327"
+    },
+    {
+      "host_monotonic_ns": 348382757036700,
+      "text": "COM9 Build:Mar 27 2021"
+    },
+    {
+      "host_monotonic_ns": 348382757036700,
+      "text": "COM9 rst:0xc (RTC_SW_CPU_RST),boot:0x8 (SPI_FAST_FLASH_BOOT)"
+    },
+    {
+      "host_monotonic_ns": 348382757036700,
+      "text": "COM9 Saved PC:0x403761f0"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 SPIWP:0xee"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 mode:DIO, clock div:1"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 load:0x3fce3808,len:0x1820"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 load:0x403c9700,len:0xe6c"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 load:0x403cc700,len:0x3048"
+    },
+    {
+      "host_monotonic_ns": 348382768340700,
+      "text": "COM9 entry 0x403c997c"
+    },
+    {
+      "host_monotonic_ns": 348382779356900,
+      "text": "COM9 \u001b[0;32mI (29) boot: ESP-IDF 4.4.7 2nd stage bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382779356900,
+      "text": "COM9 \u001b[0;32mI (29) boot: compile time 14:46:57\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382790439900,
+      "text": "COM9 \u001b[0;32mI (29) boot: Multicore bootloader\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382790439900,
+      "text": "COM9 \u001b[0;32mI (31) boot: chip revision: v0.2\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382801595100,
+      "text": "COM9 \u001b[0;32mI (35) qio_mode: Enabling default flash chip QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382801595100,
+      "text": "COM9 \u001b[0;32mI (40) boot.esp32s3: Boot SPI Speed : 80MHz\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382801595100,
+      "text": "COM9 \u001b[0;32mI (45) boot.esp32s3: SPI Mode       : QIO\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382812414600,
+      "text": "COM9 \u001b[0;32mI (50) boot.esp32s3: SPI Flash Size : 16MB\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382812414600,
+      "text": "COM9 \u001b[0;32mI (54) boot: Enabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382823475700,
+      "text": "COM9 \u001b[0;32mI (60) boot: Partition Table:\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382823475700,
+      "text": "COM9 \u001b[0;32mI (63) boot: ## Label            Usage          Type ST Offset   Length\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382834511400,
+      "text": "COM9 \u001b[0;32mI (71) boot:  0 nvs              WiFi data        01 02 00009000 00005000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382845695100,
+      "text": "COM9 \u001b[0;32mI (78) boot:  1 otadata          OTA data         01 00 0000e000 00002000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382845695100,
+      "text": "COM9 \u001b[0;32mI (86) boot:  2 app0             OTA app          00 10 00010000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382856681900,
+      "text": "COM9 \u001b[0;32mI (93) boot:  3 app1             OTA app          00 11 00310000 00300000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382867478100,
+      "text": "COM9 \u001b[0;32mI (101) boot:  4 model            Unknown data     01 40 00610000 00600000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382867478100,
+      "text": "COM9 \u001b[0;32mI (108) boot:  5 storage          Unknown data     01 82 00c10000 003f0000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382878650400,
+      "text": "COM9 \u001b[0;32mI (116) boot: End of partition table\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382878650400,
+      "text": "COM9 \u001b[0;32mI (120) esp_image: segment 0: paddr=00010020 vaddr=3c080020 size=164e8h ( 91368) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382889749500,
+      "text": "COM9 \u001b[0;32mI (142) esp_image: segment 1: paddr=00026510 vaddr=3fc978a0 size=04740h ( 18240) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382900880900,
+      "text": "COM9 \u001b[0;32mI (146) esp_image: segment 2: paddr=0002ac58 vaddr=40374000 size=053c0h ( 21440) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382912086300,
+      "text": "COM9 \u001b[0;32mI (152) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=75bc0h (482240) map\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382977314900,
+      "text": "COM9 \u001b[0;32mI (230) esp_image: segment 4: paddr=000a5be8 vaddr=403793c0 size=0e4e0h ( 58592) load\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382999072700,
+      "text": "COM9 \u001b[0;32mI (249) boot: Loaded app from partition at offset 0x10000\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348382999072700,
+      "text": "COM9 \u001b[0;32mI (249) boot: Disabling RNG early entropy source...\u001b[0m"
+    },
+    {
+      "host_monotonic_ns": 348383444388500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348383444388500,
+      "text": "COM9 {\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":3,\"build_mode\":\"ClawGrid:outputs=inhibited;faults=diagnostic\"}"
+    },
+    {
+      "host_monotonic_ns": 348383444388500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348383455523500,
+      "text": "COM9 {\"kind\":\"console_transport\",\"transport\":\"ClawGrid:console=uart0\"}"
+    },
+    {
+      "host_monotonic_ns": 348383455523500,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348383467323200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":true,\"boot\":23}"
+    },
+    {
+      "host_monotonic_ns": 348383467323200,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348383467323200,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":6,\"boot\":23,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348383521859300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348383532536000,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":23,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348383941589500,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348383941589500,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":126,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":1407,\"reports\":98,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":2,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348384417222600,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348384417222600,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":127,\"status\":409,\"body\":{\"error\":\"Controller unavailable or stale\",\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348384428897700,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348384428897700,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"injection\",\"type\":\"R\",\"sent\":true}"
+    },
+    {
+      "host_monotonic_ns": 348384440017300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":2,\"status\":4,\"processing_us\":2,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348384936851300,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348384936851300,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":130,\"status\":200,\"body\":{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"UNKNOWN\",\"motion\":false,\"light\":false,\"fan\":false,\"age_ms\":913,\"reports\":99,\"invalid\":0,\"replayed\":0,\"authenticated\":true,\"mode\":\"HOME\",\"auto_flags\":1,\"manual_flags\":0,\"grace_ms\":120000,\"light_timer_ms\":0,\"fan_timer_ms\":0,\"light_on_ms\":0,\"fan_on_ms\":0,\"last_command\":0,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":false,\"relay_active_low_assumption\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348384958714300,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348384969742600,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":23,\"control_jobs\":287,\"link_jobs\":287,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348385294475000,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348385305676300,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":23,\"control_jobs\":355,\"link_jobs\":355,\"control_stalled\":false,\"diagnostic_faults_enabled\":true,\"physical_outputs_enabled\":false}"
+    },
+    {
+      "host_monotonic_ns": 348385669236800,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348385669236800,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":133,\"status\":200,\"body\":{\"proposal_id\":586905929,\"target\":\"virtual_rooms\",\"room\":\"bedroom\",\"device\":\"light\",\"action\":\"OFF\",\"expires_in_ms\":15000,\"authorized\":false}}"
+    },
+    {
+      "host_monotonic_ns": 348385924862400,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"actuation\",\"id\":1,\"status\":0,\"processing_us\":27,\"light\":false,\"fan\":false}"
+    },
+    {
+      "host_monotonic_ns": 348386164623600,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348386164623600,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":134,\"status\":202,\"body\":{\"queued\":true,\"id\":1,\"message\":\"Confirmed and submitted; awaiting software ACK\",\"physical_state\":\"not measured\"}}"
+    },
+    {
+      "host_monotonic_ns": 348386176518600,
+      "text": "COM8 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":1,\"phase\":2,\"status\":0,\"attempts\":1,\"rtt_us\":12292,\"processing_us\":27,\"light\":false,\"fan\":false,\"outcome_known\":true}"
+    },
+    {
+      "host_monotonic_ns": 348386677998100,
+      "text": "COM8 "
+    },
+    {
+      "host_monotonic_ns": 348386677998100,
+      "text": "COM8 {\"kind\":\"bridge\",\"id\":136,\"status\":200,\"body\":{\"source\":\"HARDWARE_MEASURED\",\"id\":1,\"phase\":2,\"status\":0,\"light\":false,\"fan\":false,\"attempts\":1,\"rtt_us\":12292,\"processing_us\":27,\"outcome_known\":true}}"
+    },
+    {
+      "host_monotonic_ns": 348386700668700,
+      "text": "COM9 "
+    },
+    {
+      "host_monotonic_ns": 348386711577900,
+      "text": "COM9 {\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":23,\"reset_reason\":6,\"grace_ms\":120000,\"auto_flags\":1,\"away\":false,\"physical_outputs_enabled\":false}"
+    }
+  ],
+  "reconnections": [],
+  "time_definition": "Host monotonic seconds from writing X to first observed fresh schema-3 state after boot; includes boot/radio/probe delivery.",
+  "policy_changes_sent": false,
+  "manual_resets_during_trials": false,
+  "physical_commands_sent": false
+}

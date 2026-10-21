@@ -1,0 +1,17 @@
+original_policy_restored: PASS
+default_faults_off: PASS
+A_X_cannot_arm: PASS
+B_replay_hook_disabled: PASS
+A_d_hook_disabled: PASS
+A_O_hook_disabled: PASS
+B_F_hook_disabled: PASS
+B_W_hook_disabled: PASS
+B_V_hook_disabled: PASS
+disabled_X_caused_no_reboot: PASS
+policy_preserved_beyond_watchdog_interval: PASS
+normal_control_and_link_progress: PASS
+fresh_inhibited_schema3_telemetry: PASS
+telemetry_advances: PASS
+A_normal_selftest: PASS
+B_normal_selftest: PASS
+16 default restoration checks passed; ports released

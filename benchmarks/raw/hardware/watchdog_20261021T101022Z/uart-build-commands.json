@@ -1,0 +1,54 @@
+[
+  {
+    "command": [
+      "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+      "-m",
+      "platformio",
+      "run",
+      "-d",
+      "native",
+      "-e",
+      "native_voice_uart_diagnostic"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+      "-m",
+      "platformio",
+      "run",
+      "-d",
+      "native",
+      "-e",
+      "native_voice_uart"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+      "-m",
+      "platformio",
+      "run",
+      "-d",
+      "speech",
+      "-e",
+      "speech_intelligence_diagnostic"
+    ],
+    "exit_code": 0
+  },
+  {
+    "command": [
+      "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+      "-m",
+      "platformio",
+      "run",
+      "-d",
+      "speech",
+      "-e",
+      "speech_intelligence"
+    ],
+    "exit_code": 0
+  }
+]

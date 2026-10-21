@@ -1,0 +1,14 @@
+{
+  "role": "A",
+  "port": "COM9",
+  "mac": "e0:72:a1:f6:a9:68",
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "native\\.pio\\build\\native_voice_uart\\firmware.bin",
+      "sha256": "82f3450186dae4bbf92b649059d58b4c341bfffe9fd6332d2a01219a31a5b4f2"
+    }
+  ]
+}

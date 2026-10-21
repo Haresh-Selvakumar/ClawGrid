@@ -1,0 +1,18 @@
+{
+  "fault_injections": 0,
+  "diagnostic_flash_writes": 0,
+  "preflight_failures": [
+    {
+      "step": "native USB pair presence",
+      "exit_code": 1,
+      "observed": "COM8 B present; COM7 A absent; COM9 CH343 adapter present; no role assigned to COM9"
+    },
+    {
+      "step": "cached model verification guard",
+      "exit_code": 1,
+      "observed": "PIO rebuild removed generated srmodels.bin; stopped before any flash; guard now regenerates pinned model and compares prior flashed SHA256"
+    }
+  ],
+  "port_diagnosis": "COM9 read-mac confirmed expected A e0:72:a1:f6:a9:68 via CH343 UART; native USB diagnostics unavailable. Identity read caused one normal reset outside any trial. No flashing/fault injection.",
+  "guard_correction": "CMake compile_commands omits PlatformIO application flags; replaced that proposed guard with retained actual-binary mode marker plus negative unit tests. All four rebuilt markers verified."
+}

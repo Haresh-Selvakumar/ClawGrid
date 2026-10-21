@@ -1,0 +1,34 @@
+[
+  {
+    "environment": "native_voice_diagnostic",
+    "sha256": "3006cd1e308716daff57405bc7b34bfa7ecca02d7935a943d7bcd72eb5378fd5",
+    "physical_outputs_enabled": false,
+    "diagnostic_faults": true,
+    "timeout_seconds": 5,
+    "panic_restart": true
+  },
+  {
+    "environment": "speech_intelligence_diagnostic",
+    "sha256": "2b7c7f6f194eeea6447db3cfbb86f8388808095cec80ca7b7ec459a6670fe5d0",
+    "physical_outputs_enabled": false,
+    "diagnostic_faults": true,
+    "timeout_seconds": 5,
+    "panic_restart": true
+  },
+  {
+    "environment": "native_voice",
+    "sha256": "1a481adeeb995d17ac47aea657c8831d26888db9f6422129ca1d25cece7ef761",
+    "physical_outputs_enabled": false,
+    "diagnostic_faults": false,
+    "timeout_seconds": 5,
+    "panic_restart": true
+  },
+  {
+    "environment": "speech_intelligence",
+    "sha256": "a87dc3b67f84cb2b5b618459de81c41025314fad3d53b85d7cba02e51ebd9e32",
+    "physical_outputs_enabled": false,
+    "diagnostic_faults": false,
+    "timeout_seconds": 5,
+    "panic_restart": true
+  }
+]

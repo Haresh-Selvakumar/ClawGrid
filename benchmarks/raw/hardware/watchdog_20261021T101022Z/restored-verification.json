@@ -1,0 +1,569 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "utc": "2026-10-21T10:13:17.964582+00:00",
+  "cases": [
+    {
+      "test": "original_policy_restored",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "default_faults_off",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "A_X_cannot_arm",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_replay_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "A_d_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "A_O_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_F_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_W_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_V_hook_disabled",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "disabled_X_caused_no_reboot",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "policy_preserved_beyond_watchdog_interval",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "normal_control_and_link_progress",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "fresh_inhibited_schema3_telemetry",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "telemetry_advances",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "A_normal_selftest",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    },
+    {
+      "test": "B_normal_selftest",
+      "source": "HARDWARE_MEASURED",
+      "status": "PASS",
+      "details": ""
+    }
+  ],
+  "observations": {
+    "policy_before": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "policy_saved",
+      "boot": 25,
+      "reset_reason": 1,
+      "grace_ms": 120000,
+      "auto_flags": 1,
+      "away": false,
+      "physical_outputs_enabled": false
+    },
+    "health_before": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 25,
+      "control_jobs": 12191,
+      "link_jobs": 12191,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false
+    },
+    "A_disabled_request": {
+      "kind": "fault_injection_disabled",
+      "node": "A",
+      "armed": false
+    },
+    "B_disabled_request": {
+      "kind": "fault_injection_disabled",
+      "node": "B",
+      "armed": false
+    },
+    "state_before": {
+      "kind": "bridge",
+      "id": 10,
+      "status": 200,
+      "body": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 248,
+        "reports": 42,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 0,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      }
+    },
+    "policy_after": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "policy_saved",
+      "boot": 25,
+      "reset_reason": 1,
+      "grace_ms": 120000,
+      "auto_flags": 1,
+      "away": false,
+      "physical_outputs_enabled": false
+    },
+    "health_after": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 25,
+      "control_jobs": 13604,
+      "link_jobs": 13604,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false
+    },
+    "state_after": {
+      "kind": "bridge",
+      "id": 20,
+      "status": 200,
+      "body": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 999,
+        "reports": 48,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 0,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 0,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      }
+    },
+    "A_selftest": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "A",
+      "passed": true,
+      "rtos_ready": true
+    },
+    "B_selftest": {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "B",
+      "passed": true,
+      "rtos_ready": true
+    }
+  },
+  "records": [
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348519432120000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 25,
+        "reset_reason": 1,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348519465288200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 25,
+        "control_jobs": 12191,
+        "link_jobs": 12191,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348519569347400,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "A",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348519586174200,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "B",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348519660433600,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "A",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348519677348000,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "A",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348519694273000,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "B",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348519705133200,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "B",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348519716649400,
+      "device": {
+        "kind": "fault_injection_disabled",
+        "node": "B",
+        "armed": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348520258589600,
+      "device": {
+        "kind": "bridge",
+        "id": 10,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 248,
+          "reports": 42,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348522212660700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 45010,
+        "flash_bytes": 16777216,
+        "internal_free": 107083,
+        "internal_min": 55447,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 3808,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348522218288100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 44,
+        "invalid": 0,
+        "replayed": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348522218658500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 8761,
+        "max_exec_us": 802,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4164,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348522792720300,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "A",
+        "uptime_ms": 65037,
+        "flash_bytes": 16777216,
+        "internal_free": 182839,
+        "internal_min": 173615,
+        "internal_largest": 143360,
+        "psram_total": 8388608,
+        "psram_free": 8385863,
+        "psram_largest": 8257536,
+        "stack_free_bytes": 3920,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348522808972800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "safety",
+        "node": "A",
+        "rejected": 0,
+        "duplicates": 0,
+        "last_command": 0,
+        "command_dropped": 0,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348522824762500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "ControlTask",
+        "core": 1,
+        "priority": 5,
+        "period_ms": 5,
+        "jobs": 12860,
+        "max_exec_us": 181,
+        "max_late_us": 6,
+        "deadline_misses": 0,
+        "stack_free_bytes": 5216,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348522845711200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "A",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 12865,
+        "max_exec_us": 753,
+        "max_late_us": 3,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4144,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348526491692000,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "policy_saved",
+        "boot": 25,
+        "reset_reason": 1,
+        "grace_ms": 120000,
+        "auto_flags": 1,
+        "away": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348526529945600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "task_health",
+        "boot": 25,
+        "control_jobs": 13604,
+        "link_jobs": 13604,
+        "control_stalled": false,
+        "diagnostic_faults_enabled": false,
+        "physical_outputs_enabled": false
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348527006521400,
+      "device": {
+        "kind": "bridge",
+        "id": 20,
+        "status": 200,
+        "body": {
+          "room": "bedroom",
+          "known": true,
+          "occupancy": "UNKNOWN",
+          "motion": false,
+          "light": false,
+          "fan": false,
+          "age_ms": 999,
+          "reports": 48,
+          "invalid": 0,
+          "replayed": 0,
+          "authenticated": true,
+          "mode": "HOME",
+          "auto_flags": 1,
+          "manual_flags": 0,
+          "grace_ms": 120000,
+          "light_timer_ms": 0,
+          "fan_timer_ms": 0,
+          "light_on_ms": 0,
+          "fan_on_ms": 0,
+          "last_command": 0,
+          "physical_state": "not measured",
+          "physical_outputs_enabled": false,
+          "relay_active_low_assumption": true
+        }
+      }
+    },
+    {
+      "port": "COM9",
+      "host_monotonic_ns": 348527028916900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "selftest",
+        "node": "A",
+        "passed": true,
+        "rtos_ready": true
+      }
+    },
+    {
+      "port": "COM8",
+      "host_monotonic_ns": 348527040474700,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "selftest",
+        "node": "B",
+        "passed": true,
+        "rtos_ready": true
+      }
+    }
+  ]
+}

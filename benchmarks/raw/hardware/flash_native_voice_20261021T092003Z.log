@@ -1,0 +1,97 @@
+esptool v5.4.0
+Serial port COM7:
+Connecting...
+Connected to ESP32-S3 on COM7:
+Chip type:          ESP32-S3 (QFN56) (revision v0.2)
+Features:           Wi-Fi, BT 5 (LE), Dual Core + LP Core, 240MHz, Embedded PSRAM 8MB (AP_3v3)
+Crystal frequency:  40MHz
+USB mode:           USB-Serial/JTAG
+MAC:                e0:72:a1:f6:a9:68
+
+Uploading stub flasher...
+Running stub flasher...
+Stub flasher running.
+Changing baud rate to 460800...
+Changed.
+
+MAC:                e0:72:a1:f6:a9:68
+
+Staying in bootloader.
+esptool v5.4.0
+Serial port COM7:
+Connecting...
+Connected to ESP32-S3 on COM7:
+Chip type:          ESP32-S3 (QFN56) (revision v0.2)
+Features:           Wi-Fi, BT 5 (LE), Dual Core + LP Core, 240MHz, Embedded PSRAM 8MB (AP_3v3)
+Crystal frequency:  40MHz
+USB mode:           USB-Serial/JTAG
+MAC:                e0:72:a1:f6:a9:68
+
+Uploading stub flasher...
+Running stub flasher...
+Stub flasher running.
+Changing baud rate to 460800...
+Changed.
+
+Configuring flash size...
+
+Writing 'C:\Users\hares\Downloads\ClawGrid-software\AUTOHOME-main\native\.pio\build\native_voice\bootloader.bin' at 0x00000000...
+SHA digest in image updated.
+Flash will be erased from 0x00000000 to 0x00005fff...
+Compressed 22320 bytes to 13946...
+Writing at 0x00005730 ============================== 100.0% 13.62kB/13.62kB [0s] 
+Wrote 22320 bytes (13946 compressed) at 0x00000000 in 0.3 seconds (572.7 kbit/s).
+Verifying written data...
+Hash of data verified.
+
+Writing 'C:\Users\hares\Downloads\ClawGrid-software\AUTOHOME-main\native\.pio\build\native_voice\partitions.bin' at 0x00008000...
+Flash will be erased from 0x00008000 to 0x00008fff...
+Compressed 3072 bytes to 144...
+Writing at 0x00008c00 ============================== 100.0% 144B/144B [0s] 
+Wrote 3072 bytes (144 compressed) at 0x00008000 in 0.1 seconds (236.3 kbit/s).
+Verifying written data...
+Hash of data verified.
+
+Writing 'C:\Users\hares\Downloads\ClawGrid-software\AUTOHOME-main\native\.pio\build\native_voice\ota_data_initial.bin' at 0x0000e000...
+Flash will be erased from 0x0000e000 to 0x0000ffff...
+Compressed 8192 bytes to 31...
+Writing at 0x00010000 ============================== 100.0% 31B/31B [0s] 
+Wrote 8192 bytes (31 compressed) at 0x0000e000 in 0.1 seconds (630.2 kbit/s).
+Verifying written data...
+Hash of data verified.
+
+Writing 'C:\Users\hares\Downloads\ClawGrid-software\AUTOHOME-main\native\.pio\build\native_voice\firmware.bin' at 0x00010000...
+Flash will be erased from 0x00010000 to 0x000aefff...
+Compressed 649648 bytes to 429160...
+Writing at 0x0001bbf1 =                                3.8% 16.00kB/419.10kB [0s] 
+Writing at 0x0002911a ==                               7.6% 32.00kB/419.10kB [0s] 
+Writing at 0x0002ecdc ===                             11.5% 48.00kB/419.10kB [0s] 
+Writing at 0x00034567 ====>                           15.3% 64.00kB/419.10kB [1s] 
+Writing at 0x00039551 =====>                          19.1% 80.00kB/419.10kB [1s] 
+Writing at 0x0003ef04 ======>                         22.9% 96.00kB/419.10kB [1s] 
+Writing at 0x00043ea1 ========                        26.7% 112.00kB/419.10kB [1s] 
+Writing at 0x00048dcb =========                       30.5% 128.00kB/419.10kB [1s] 
+Writing at 0x0004dc62 ==========                      34.4% 144.00kB/419.10kB [2s] 
+Writing at 0x00053068 ===========                     38.2% 160.00kB/419.10kB [2s] 
+Writing at 0x00058499 ============>                   42.0% 176.00kB/419.10kB [2s] 
+Writing at 0x0005d41b =============>                  45.8% 192.00kB/419.10kB [2s] 
+Writing at 0x000627b3 ==============>                 49.6% 208.00kB/419.10kB [2s] 
+Writing at 0x000680c5 ================                53.4% 224.00kB/419.10kB [2s] 
+Writing at 0x0006d034 =================               57.3% 240.00kB/419.10kB [3s] 
+Writing at 0x000721a0 ==================              61.1% 256.00kB/419.10kB [3s] 
+Writing at 0x000770c7 ===================             64.9% 272.00kB/419.10kB [3s] 
+Writing at 0x0007c509 ====================>           68.7% 288.00kB/419.10kB [3s] 
+Writing at 0x0008190e =====================>          72.5% 304.00kB/419.10kB [3s] 
+Writing at 0x000874c5 ======================>         76.4% 320.00kB/419.10kB [3s] 
+Writing at 0x0008c957 ========================        80.2% 336.00kB/419.10kB [4s] 
+Writing at 0x0009210a =========================       84.0% 352.00kB/419.10kB [4s] 
+Writing at 0x0009a9b0 ==========================      87.8% 368.00kB/419.10kB [4s] 
+Writing at 0x000a28fc ===========================     91.6% 384.00kB/419.10kB [4s] 
+Writing at 0x000a82e0 ============================>   95.4% 400.00kB/419.10kB [4s] 
+Writing at 0x000ad485 =============================>  99.3% 416.00kB/419.10kB [4s] 
+Writing at 0x000ae9b0 ============================== 100.0% 419.10kB/419.10kB [4s] 
+Wrote 649648 bytes (429160 compressed) at 0x00010000 in 5.0 seconds (1038.8 kbit/s).
+Verifying written data...
+Hash of data verified.
+
+Hard resetting via RTS pin...

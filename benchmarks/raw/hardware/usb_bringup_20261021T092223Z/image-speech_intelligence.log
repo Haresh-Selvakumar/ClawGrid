@@ -1,0 +1,46 @@
+esptool v5.4.0
+Image size: 1068224 bytes
+Detected image type: ESP32-S3
+
+ESP32-S3 Image Header
+=====================
+Image version: 1
+Entry point: 0x40375cf4
+Segments: 5
+Flash size: 16MB
+Flash freq: 80m
+Flash mode: DIO
+
+ESP32-S3 Extended Image Header
+==============================
+WP pin: 0xee (disabled)
+Flash pins drive settings: clk_drv: 0x0, q_drv: 0x0, d_drv: 0x0, cs0_drv: 0x0, hd_drv: 0x0, wp_drv: 0x0
+Chip ID: 9 (ESP32-S3)
+Minimal chip revision: v0.0, (legacy min_rev = 0)
+Maximal chip revision: v655.35
+
+Segments Information
+====================
+Segment   Length   Load addr   File offs  Memory types
+-------  -------  ----------  ----------  ------------
+      0  0x32da0  0x3c0c0020  0x00000018  DROM
+      1  0x06c1c  0x3fc97850  0x00032dc0  BYTE_ACCESSIBLE, MEM_INTERNAL, DRAM
+      2  0x0662c  0x40374000  0x000399e4  MEM_INTERNAL, IRAM
+      3  0xb7a48  0x42000020  0x00040018  IROM
+      4  0x0d220  0x4037a62c  0x000f7a68  MEM_INTERNAL, IRAM
+
+ESP32-S3 Image Footer
+=====================
+Checksum: 0x8d (valid)
+Validation hash: 96dcb9d1956e4715e0e5283fba1c235f65704a759b7197012509779a15d6987a (valid)
+
+Application Information
+=======================
+Project name: clawgrid_speech
+App version: 1
+Compile time: Oct 21 2026 14:48:03
+ELF file SHA256: f283a915f5000bdf1e18f88b404daff882a7d7c400898be6a3bb596bd6936ce9
+ESP-IDF: 4.4.7
+Minimal eFuse block revision: 0.0
+Maximal eFuse block revision: 0.0
+Secure version: 0

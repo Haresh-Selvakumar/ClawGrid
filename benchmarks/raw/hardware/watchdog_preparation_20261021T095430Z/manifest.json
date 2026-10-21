@@ -1,0 +1,66 @@
+{
+  "utc": "20261021T095430Z",
+  "status": "BLOCKED_BEFORE_TRIAL_1",
+  "hardware_fault_injections": 0,
+  "diagnostic_images_deployed": false,
+  "default_restriction_images_deployed": false,
+  "credentials_unchanged": true,
+  "nvs_erased": false,
+  "manual_reset_outside_trials": "COM9 identity read only, followed by normal hard reset",
+  "host_tests_passed": 139,
+  "watchdog_config": {
+    "NodeA": [
+      "ControlTask",
+      "LinkTask",
+      "IDLE0",
+      "IDLE1"
+    ],
+    "NodeB": [
+      "LinkTask",
+      "IDLE0",
+      "IDLE1"
+    ],
+    "timeout_seconds": 5,
+    "task_panic": true,
+    "panic_behavior": "print and reboot"
+  },
+  "blocker": "Expected Node A MAC verified via CH343 UART COM9, but its native USB console COM7 is absent. Node B COM8 remains available. No role assumed from COM9.",
+  "files": [
+    {
+      "path": "build-commands.json",
+      "sha256": "35605d69c956530fc61f39769828638817d60f054bf98761c137d614e96f4787"
+    },
+    {
+      "path": "image-inventory.json",
+      "sha256": "8af4aae96de2784a6223cacf090705e53b27d96295de33e78c939db19cf88fd4"
+    },
+    {
+      "path": "model-check.json",
+      "sha256": "8f41d4b1514c3ffd219c47f6d8b522155bc04823f6093fba1f2720f7b3444988"
+    },
+    {
+      "path": "preflight-blockers.json",
+      "sha256": "80d85e5d47df9ddb25b7a6dfcccc9f7bcea410ead13b74dc01f674e89931e8c6"
+    },
+    {
+      "path": "connection-diagnosis.json",
+      "sha256": "52af42bb01fd46f499153d17af458d8e5eac9eadc49907e69d4f274efe2b5742"
+    },
+    {
+      "path": "COM9-identity.log",
+      "sha256": "e662b4ff707d3a9a934e10071e08264f76eb475fc66f85789dd6792e5cebb6ac"
+    },
+    {
+      "path": "host-final.log",
+      "sha256": "97f6d3adbc762f10ed047814a15495821a257e86044584f4dbc528a11fffb3b6"
+    },
+    {
+      "path": "host-final.xml",
+      "sha256": "d95a50d5a135926027113aa093316fafab7ee0490d579bd29608342adc067660"
+    },
+    {
+      "path": "marker.xml",
+      "sha256": "fbdc9901a9b1ee77f661fc12ff9c7c3a8232cad0e8a37c9d43183b7f4ade2d47"
+    }
+  ]
+}

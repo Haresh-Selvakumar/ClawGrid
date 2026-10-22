@@ -16,9 +16,14 @@
 
 /* Node A (Voice & Fast-path) Pin Mapping (ESP32-S3-N16R8) */
 #define NODE_A_PIR_PIN             6       /* 3-pin PIR sensor input */
-#define NODE_A_RELAY_LIGHT_PIN     4       /* Low-voltage relay channel 1 */
-#define NODE_A_RELAY_FAN_PIN       5       /* Low-voltage relay channel 2 */
-#define NODE_A_RELAY_ACTIVE_LOW    true    /* Safe default: active-low relay board */
+#define NODE_A_RELAY_LIGHT_PIN     4       /* Separate single-channel light module */
+#define NODE_A_RELAY_FAN_PIN       5       /* Separate single-channel fan module */
+/* Provisional GPIO-to-interface polarity, not verified module compatibility.
+ * An intervening transistor may invert it. Check electrically before bench use. */
+#ifndef NODE_A_RELAY_ACTIVE_LOW
+#define NODE_A_RELAY_ACTIVE_LOW    true
+#endif
+#define NODE_A_PIR_WARMUP_MS       60000u /* Then require 200 ms LOW before arming. */
 #ifndef CLAWGRID_PHYSICAL_OUTPUTS
 #define CLAWGRID_PHYSICAL_OUTPUTS  0 /* Simulation builds never drive relay pins. */
 #endif

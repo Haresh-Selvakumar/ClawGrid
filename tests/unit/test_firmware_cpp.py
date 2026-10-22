@@ -25,7 +25,8 @@ def executable(tmp_path_factory):
     return path
 
 
-@pytest.mark.parametrize('case',['runtime','safety','automation','house','leases','sensor_boundaries','routing','pcm','wiremode','policy_recovery']+[f'evidence_{i}' for i in range(23)])
+@pytest.mark.parametrize('case',['runtime','safety','automation','house','leases','sensor_boundaries','routing','pcm','wiremode','policy_recovery',
+    'pir_startup','pir_startup_high','pir_wrap','pir_vacancy','report_progress','timer_dwell','recovery_transients','maximum_run']+[f'evidence_{i}' for i in range(23)])
 def test_actual_firmware(executable,case):
     result=subprocess.run([str(executable),case],capture_output=True,text=True,timeout=5)
     assert result.returncode==0,result.stdout+result.stderr

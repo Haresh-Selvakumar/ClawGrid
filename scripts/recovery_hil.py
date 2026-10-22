@@ -91,10 +91,16 @@ def run(args):
             live=b.http('GET','/api/rtos',timeout=2);t['B_during_fault']=live
             require('B_unrelated_activity_live',live and live['status']==200 and live['body'].get('jobs',0)>0)
             while time.monotonic_ns()-t['injected_ns']<3_400_000_000:b.poll(.05)
-            # LinkTask can retransmit its cached report while ControlTask is
-            # stalled. Record this honestly; known=true alone is not proof of
-            # control progress. The q counters above prove the induced stall.
+            # The current pair must expire frozen control samples even while
+            # unrelated radio/HTTP tasks are alive. Never count packet receipt
+            # alone as control progress.
             t['during_fault_state']=state()
+            require('frozen_control_telemetry_expires',t['during_fault_state'].get('known') is False)
+            # Recheck the existing proposal without replacing/consuming it;
+            # retain the same one for the post-reset boot-binding assertion.
+            unavailable=b.http('POST','/api/confirm',f'{proposal["body"]["proposal_id"]} {target}'.encode())
+            t['during_fault_confirmation']=unavailable
+            require('stale_controller_confirmation_rejected',unavailable and unavailable['status']==409 and unavailable['body'].get('error')=='Controller unavailable or stale')
             boot=b.wait(lambda r:r['port']==b.a and r['device'].get('kind')=='boot_recovery',timeout=12,start=first_record);t['boot']=boot
             t['boot_observed_ns']=next((r['host_monotonic_ns'] for r in b.records[first_record:] if r['port']==b.a and r['device'].get('kind')=='boot_recovery'),None)
             text=b.timed_lines[first_line:]

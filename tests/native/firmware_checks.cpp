@@ -4,6 +4,7 @@
 #include "house_selftest.h"
 #include "evidence_selftest.h"
 #include "software_selftest.h"
+#include "integration_selftest.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -51,6 +52,14 @@ int main(int argc,char **argv) {
     else if(!strcmp(argv[1],"pcm")) passed=software_pcm_test();
     else if(!strcmp(argv[1],"wiremode")) passed=software_wire_test();
     else if(!strcmp(argv[1],"policy_recovery")) passed=software_policy_test();
+    else if(!strcmp(argv[1],"pir_startup")) passed=pir_startup_test(false);
+    else if(!strcmp(argv[1],"pir_startup_high")) passed=pir_startup_test(true);
+    else if(!strcmp(argv[1],"pir_wrap")) passed=pir_wrap_test();
+    else if(!strcmp(argv[1],"pir_vacancy")) passed=pir_vacancy_test();
+    else if(!strcmp(argv[1],"report_progress")) passed=report_progress_test();
+    else if(!strcmp(argv[1],"timer_dwell")) passed=timer_dwell_test();
+    else if(!strcmp(argv[1],"recovery_transients")) passed=recovery_transients_test();
+    else if(!strcmp(argv[1],"maximum_run")) passed=maximum_run_test();
     else if(!strncmp(argv[1],"evidence_",9)) passed=evidence_case((unsigned)atoi(argv[1]+9));
     printf("{\"source\":\"HOST_MEASURED\",\"case\":\"%s\",\"passed\":%s}\n",argv[1],passed?"true":"false");
     return passed?0:1;

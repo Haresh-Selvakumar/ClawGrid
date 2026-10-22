@@ -28,7 +28,7 @@ static portMUX_TYPE s_mux=portMUX_INITIALIZER_UNLOCKED;
 static RoomReport s_report;
 static SimState s_sim_report;
 static uint32_t s_sim_received=0,s_sim_sequence=0;
-static uint32_t s_received=0,s_last_seq=0,s_accepted=0,s_invalid=0,s_replayed=0;
+static uint32_t s_received=0,s_last_seq=0,s_accepted=0,s_invalid=0,s_replayed=0,s_nonprogress=0;
 static std::atomic<uint32_t> s_seq{0},s_tx_failed{0};
 static RuntimeHealth s_health;
 static DiagnosticLog s_log;
@@ -151,10 +151,10 @@ static esp_err_t rtos_api(httpd_req_t *req) {
 }
 static esp_err_t state_api(httpd_req_t *req) {
     portENTER_CRITICAL(&s_mux); RoomReport r=s_report; bool have=s_have;
-    uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed;
+    uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed,nonprogress=s_nonprogress;
     portEXIT_CRITICAL(&s_mux); bool known=have&&age<3000;
-    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true}"));
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s}",occupancy_name(r.occupancy),r.motion?"true":"false",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false"));
+    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true,\"age_ms\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"physical_state\":\"not measured\"}",have?age:0,r.boot_id,r.uptime_ms,nonprogress));
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s}",occupancy_name(r.occupancy),r.motion?"true":"false",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false"));
 }
 static esp_err_t transaction_api(httpd_req_t *req) {
     if(!authorized(req)) return unauthorized(req);
@@ -302,6 +302,7 @@ static void process_frame(const RxFrame &f) {
         if(!decode_room_report(p,h.payload_len,r)) { portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return; }
         portENTER_CRITICAL(&s_mux);
         if(s_have && (r.boot_id<s_report.boot_id || (r.boot_id==s_report.boot_id && !sequence_newer(h.seq_num,s_last_seq)))) ++s_replayed;
+        else if(!room_report_advances(r,s_report)) ++s_nonprogress;
         else {
             if(s_have && r.boot_id!=s_report.boot_id) { s_last_control=0; if(s_transaction.phase==1) s_transaction.phase=3; }
             s_report=r; s_last_seq=h.seq_num; s_have=true; s_received=millis(); ++s_accepted;
@@ -401,8 +402,8 @@ void loop() {
     static uint32_t last_memory=0;
     if((uint32_t)(now-last_memory)>=5000) {
         last_memory=now; memory_log("B",s_rx.dropped(),s_tx_failed.load());
-        portENTER_CRITICAL(&s_mux); uint32_t a=s_accepted,b=s_invalid,c=s_replayed; portEXIT_CRITICAL(&s_mux);
-        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":%u,\"invalid\":%u,\"replayed\":%u,\"authenticated\":true,\"radio\":%s}\n",a,b,c,s_radio?"true":"false");
+        portENTER_CRITICAL(&s_mux); uint32_t a=s_accepted,b=s_invalid,c=s_replayed,d=s_nonprogress; portEXIT_CRITICAL(&s_mux);
+        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":%u,\"invalid\":%u,\"replayed\":%u,\"nonprogress\":%u,\"authenticated\":true,\"radio\":%s}\n",a,b,c,d,s_radio?"true":"false");
         s_link_timing.log("B","LinkTask",0,3,5,s_log.dropped.load());
     }
     vTaskDelay(pdMS_TO_TICKS(5));

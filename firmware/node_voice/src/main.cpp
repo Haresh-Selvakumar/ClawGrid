@@ -41,6 +41,8 @@ static uint32_t s_boot=0;
 static std::atomic<uint32_t> s_tx_failed{0},s_rejected{0},s_duplicates{0},s_last_command{0},s_command_dropped{0};
 static std::atomic<bool> s_drop_ack{false},s_muted{false};
 static std::atomic<bool> s_stall_control{false};
+static std::atomic<bool> s_pir_ready{false};
+static std::atomic<uint32_t> s_pir_warmup_remaining{NODE_A_PIR_WARMUP_MS};
 static std::atomic<uint32_t> s_mute_start{0};
 static void receive(const uint8_t *mac,const uint8_t *data,int n) { s_rx.push(mac,data,n); }
 
@@ -76,7 +78,8 @@ static void control_task(void*) {
         uint32_t start=micros(),now=millis();
         safety_kernel_tick_periodic(now);
         bool changed=s_pir.sample(digitalRead(NODE_A_PIR_PIN)==HIGH,now);
-        if(changed) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"motion_event\",\"room\":\"bedroom\",\"at_ms\":%u,\"motion\":%s}\n",now,s_pir.motion()?"true":"false");
+        s_pir_ready.store(s_pir.ready()); s_pir_warmup_remaining.store(s_pir.warmup_remaining(now));
+        if(changed) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"motion_event\",\"input\":\"PHYSICAL_DIGITAL_GPIO\",\"room\":\"bedroom\",\"at_ms\":%u,\"motion\":%s}\n",now,s_pir.motion()?"true":"false");
         if(s_ok&&s_health.healthy(kControlReady|kLinkReady))
             s_automation.tick(now,changed&&s_pir.motion(),s_pir.occupancy(now,s_automation.grace));
         ControlCommand c; for(int i=0;i<2&&s_commands.pop(c);++i) control(c,now);
@@ -133,7 +136,7 @@ static void link_task(void*) {
                 last_sim=now;
             }
         }
-        if(s_radio && have && !s_muted.load() && ((uint32_t)(now-last_send)>=1000 || report.motion!=last_report.motion)) {
+        if(s_radio && have && room_report_publishable(report,last_report,millis()) && !s_muted.load() && ((uint32_t)(now-last_send)>=1000 || report.motion!=last_report.motion)) {
             uint8_t p[kRoomReportBytes]; encode_room_report(report,p);
             if(!secure_send(kNodeB,MSG_TYPE_ROOM_STATE,1,2,sequence++,p,sizeof(p))) ++s_tx_failed;
             last_send=now; last_report=report;
@@ -160,6 +163,8 @@ void setup() {
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":%s,\"boot\":%u}\n",storage?"true":"false",s_boot);
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":%u,\"boot\":%u,\"physical_outputs_enabled\":%s}\n",(unsigned)esp_reset_reason(),s_boot,CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
     pinMode(NODE_A_PIR_PIN,INPUT_PULLDOWN);
+    s_pir.begin(millis(),NODE_A_PIR_WARMUP_MS);
+    Serial.printf("{\"kind\":\"physical_input_config\",\"pin\":%u,\"pull\":\"DOWN\",\"warmup_ms\":%u,\"filter_ms\":200,\"requires_low_baseline\":true,\"relay_active_low_assumption\":%s}\n",NODE_A_PIR_PIN,NODE_A_PIR_WARMUP_MS,NODE_A_RELAY_ACTIVE_LOW?"true":"false");
     WiFi.mode(WIFI_STA); WiFi.setSleep(false);
     s_radio=esp_wifi_set_channel(CLAWGRID_WIFI_CHANNEL,WIFI_SECOND_CHAN_NONE)==ESP_OK && esp_now_init()==ESP_OK && secure_peer(kNodeB);
     if(s_radio) esp_now_register_recv_cb(receive);
@@ -192,7 +197,7 @@ void loop() {
         if(c=='X' && !CLAWGRID_DIAGNOSTIC_FAULTS)
             Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");
         if(c=='P') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":%u,\"reset_reason\":%u,\"grace_ms\":%u,\"auto_flags\":%u,\"away\":%s,\"physical_outputs_enabled\":%s}\n",s_boot,(unsigned)esp_reset_reason(),s_saved_policy.grace_ms,s_saved_policy.light_auto|(s_saved_policy.fan_auto<<1),s_saved_policy.away?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
-        if(c=='q') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":%u,\"control_jobs\":%u,\"link_jobs\":%u,\"control_stalled\":%s,\"diagnostic_faults_enabled\":%s,\"physical_outputs_enabled\":%s}\n",s_boot,s_control_timing.jobs.load(),s_link_timing.jobs.load(),s_stall_control.load()?"true":"false",CLAWGRID_DIAGNOSTIC_FAULTS?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
+        if(c=='q') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":%u,\"control_jobs\":%u,\"link_jobs\":%u,\"control_stalled\":%s,\"diagnostic_faults_enabled\":%s,\"physical_outputs_enabled\":%s,\"pir_ready\":%s,\"pir_warmup_remaining_ms\":%u}\n",s_boot,s_control_timing.jobs.load(),s_link_timing.jobs.load(),s_stall_control.load()?"true":"false",CLAWGRID_DIAGNOSTIC_FAULTS?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false",s_pir_ready.load()?"true":"false",s_pir_warmup_remaining.load());
         if(c=='d' || c=='O') {
             if(!CLAWGRID_DIAGNOSTIC_FAULTS) {
                 Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");

@@ -1,0 +1,18 @@
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"policy_saved","boot":20,"reset_reason":1,"grace_ms":120000,"auto_flags":1,"away":false,"physical_outputs_enabled":false}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":60037,"flash_bytes":16777216,"internal_free":182839,"internal_min":173615,"internal_largest":143360,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3840,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":11860,"max_exec_us":182,"max_late_us":6,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":11864,"max_exec_us":722,"max_late_us":377,"deadline_misses":0,"stack_free_bytes":4256,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":20,"control_jobs":11870,"link_jobs":11870,"control_stalled":false,"diagnostic_faults_enabled":true,"physical_outputs_enabled":false}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"A","passed":true,"rtos_ready":true}
+COM8 
+COM8 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}
+COM8 
+COM8 {"kind":"bridge","id":9,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":433,"reports":40,"invalid":0,"replayed":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":0,"fan_on_ms":0,"last_command":0,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}

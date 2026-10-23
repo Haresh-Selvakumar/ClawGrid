@@ -1,0 +1,37 @@
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"policy_saved","boot":25,"reset_reason":1,"grace_ms":120000,"auto_flags":1,"away":false,"physical_outputs_enabled":false}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":25,"control_jobs":12191,"link_jobs":12191,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false}
+COM9 {"kind":"fault_injection_disabled","node":"A","armed":false}
+COM8 {"kind":"fault_injection_disabled","node":"B","armed":false}
+COM9 {"kind":"fault_injection_disabled","node":"A","armed":false}
+COM9 {"kind":"fault_injection_disabled","node":"A","armed":false}
+COM8 {"kind":"fault_injection_disabled","node":"B","armed":false}
+COM8 {"kind":"fault_injection_disabled","node":"B","armed":false}
+COM8 {"kind":"fault_injection_disabled","node":"B","armed":false}
+COM8 
+COM8 {"kind":"bridge","id":10,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":248,"reports":42,"invalid":0,"replayed":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":0,"fan_on_ms":0,"last_command":0,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+COM8 
+COM8 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":45010,"flash_bytes":16777216,"internal_free":107083,"internal_min":55447,"internal_largest":59392,"psram_total":8388608,"psram_free":4089807,"psram_largest":3866624,"stack_free_bytes":3808,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM8 
+COM8 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":44,"invalid":0,"replayed":0,"authenticated":true,"radio":true}
+COM8 
+COM8 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":8761,"max_exec_us":802,"max_late_us":2,"deadline_misses":0,"stack_free_bytes":4164,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":65037,"flash_bytes":16777216,"internal_free":182839,"internal_min":173615,"internal_largest":143360,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3920,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":12860,"max_exec_us":181,"max_late_us":6,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":12865,"max_exec_us":753,"max_late_us":3,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"policy_saved","boot":25,"reset_reason":1,"grace_ms":120000,"auto_flags":1,"away":false,"physical_outputs_enabled":false}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":25,"control_jobs":13604,"link_jobs":13604,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false}
+COM8 
+COM8 {"kind":"bridge","id":20,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":999,"reports":48,"invalid":0,"replayed":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":0,"fan_on_ms":0,"last_command":0,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"A","passed":true,"rtos_ready":true}
+COM8 
+COM8 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}

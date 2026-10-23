@@ -1,0 +1,29 @@
+{
+  "source": "HOST_MEASURED",
+  "at_utc": "2026-10-22T06:18:18.863469+00:00",
+  "flashed_by_agent": false,
+  "physical_outputs_enabled": false,
+  "led_pin_default": 48,
+  "hardware_led_observed": false,
+  "build_log": "build-traffic-led.log",
+  "host_test": "tests/native/traffic_indicator.cpp",
+  "host_test_passed": true,
+  "artifacts": [
+    {
+      "role": "A",
+      "environment": "native_voice",
+      "expected_port": "COM8",
+      "path": "native\\.pio\\build\\native_voice\\firmware.bin",
+      "sha256": "25ebc72df243653f7bf70151002894fd3714f72f1270e6ec8fdaa70633612347",
+      "size_bytes": 665888
+    },
+    {
+      "role": "B",
+      "environment": "native_intelligence",
+      "expected_port": "COM7",
+      "path": "native\\.pio\\build\\native_intelligence\\firmware.bin",
+      "sha256": "4488ce5bc7ca8941b2796e570b5bf00887dd1bf6a6668808d57859f9a80a75ca",
+      "size_bytes": 793664
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "role": "A",
+    "environment": "native_voice_uart_diagnostic",
+    "sha256": "0047560cd9da302d8efb44efff0b2d97cfdda5e8e7d242c972ea0b8006b8fa4f",
+    "diagnostic_faults": true,
+    "physical_outputs_enabled": false,
+    "write_address": "0x10000",
+    "bytes": 671984
+  },
+  {
+    "role": "B-speech",
+    "environment": "speech_intelligence_diagnostic",
+    "sha256": "ed36636286750a9eec6f6b120e49d83649d322a320ec1f6c53a0169bab6b986f",
+    "diagnostic_faults": true,
+    "physical_outputs_enabled": false,
+    "write_address": "0x10000",
+    "bytes": 1068480
+  }
+]

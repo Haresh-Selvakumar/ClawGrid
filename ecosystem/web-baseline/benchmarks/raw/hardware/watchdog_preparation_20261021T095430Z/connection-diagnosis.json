@@ -1,0 +1,56 @@
+{
+  "ports": [
+    {
+      "port": "COM3",
+      "serial": null,
+      "description": "Standard Serial over Bluetooth link (COM3)"
+    },
+    {
+      "port": "COM4",
+      "serial": null,
+      "description": "Standard Serial over Bluetooth link (COM4)"
+    },
+    {
+      "port": "COM8",
+      "serial": "E0:72:A1:F5:BC:B0",
+      "description": "USB Serial Device (COM8)"
+    },
+    {
+      "port": "COM9",
+      "serial": "5C37271527",
+      "description": "USB-Enhanced-SERIAL CH343 (COM9)"
+    }
+  ],
+  "B_read_only_state": {
+    "kind": "bridge",
+    "id": 201,
+    "status": 200,
+    "body": {
+      "room": "bedroom",
+      "known": true,
+      "occupancy": "UNKNOWN",
+      "motion": false,
+      "light": false,
+      "fan": false,
+      "age_ms": 189,
+      "reports": 964,
+      "invalid": 0,
+      "replayed": 0,
+      "authenticated": true,
+      "mode": "HOME",
+      "auto_flags": 1,
+      "manual_flags": 0,
+      "grace_ms": 120000,
+      "light_timer_ms": 0,
+      "fan_timer_ms": 0,
+      "light_on_ms": 0,
+      "fan_on_ms": 0,
+      "last_command": 0,
+      "physical_state": "not measured",
+      "physical_outputs_enabled": false,
+      "relay_active_low_assumption": true
+    }
+  },
+  "no_fault_injected": true,
+  "no_board_written": true
+}

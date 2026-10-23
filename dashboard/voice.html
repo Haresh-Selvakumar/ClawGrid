@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClawGrid voice control</title>
+<style>
+:root{color-scheme:dark;font:16px system-ui;background:#101a24;color:#e8f2f5}*{box-sizing:border-box}body{margin:0}main{max-width:800px;margin:6vh auto;padding:24px}h1{font-size:32px;margin:0 0 10px}p{line-height:1.6}.muted{color:#b7cbd5}section{background:#1b2b39;border:1px solid #405b6c;border-radius:16px;padding:24px;margin:22px 0}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}label{display:block;margin:14px 0}input,select,button{font:inherit;border:1px solid #688b9e;border-radius:8px;padding:12px;background:#142431;color:inherit}input[type=password],select{display:block;width:100%;margin-top:8px}button{cursor:pointer}button:disabled{opacity:.5;cursor:default}#start{background:#90dfc7;color:#10251e;border:0;font-weight:650}#stop{border-color:#f5b7a4}#message{min-height:4em;white-space:pre-wrap}#state{white-space:pre-wrap}a{color:#90dfc7}.tag{display:inline-block;color:#90dfc7;font-size:14px;margin-bottom:14px}
+</style>
+<main><span class="tag">OFFLINE SPEECH ON THIS PC</span><h1>ClawGrid voice control</h1>
+<p class="muted">Microphone → PC recognition → USB board B → ESP-NOW → remote board A.</p>
+<section><label>Control token<input id="token" type="password" autocomplete="off" placeholder="Enter your local control token"></label>
+<label>Control target<select id="targetMode"><option value="physical_bedroom">Physical bedroom relays</option><option value="virtual_rooms">Virtual rooms — no relay switching</option></select></label>
+<label><input id="benchAlias" type="checkbox"> Bench: Hall commands use the same physical bedroom relay pair</label>
+<label><input id="cloudMode" type="checkbox"> Send commands through Supabase (requires internet)</label>
+<p id="cloudState" class="muted" role="status">Enter the token to check cloud sync.</p>
+<div class="row"><button id="start" disabled>Start listening</button><button id="stop" disabled>Stop listening</button></div>
+<p id="message" role="status">Enter the token, select the target, then Start listening.</p>
+<p class="muted">Say “bedroom light on”, pause, then “bedroom lights off”. Commands are submitted automatically while listening. The microphone stays open until Stop. There is no wake word. Keep at least three seconds between relay transitions.</p></section>
+<section><h2>Test a command</h2><p class="muted">Uses the selected target and command route above. Virtual rooms change software state only.</p><div class="row"><button id="lightOn">Light ON</button><button id="lightOff">Light OFF</button><button id="fanOn">Fan ON</button><button id="fanOff">Fan OFF</button></div><p id="manualResult" role="status"></p></section>
+<section><h2>Controller state</h2><p id="state" role="status">Checking remote controller…</p><p class="muted">Reported ON/OFF is the controller's commanded state. Relay contacts and loads are not independently measured. Audio stays on this PC and is not saved.</p></section>
+<p><a href="/simulation">Open the detailed dashboard</a></p></main>
+<script src="/api/client"></script><script>
+'use strict';const $=id=>document.getElementById(id);let polling=false,cloudConfigured=false,lastCloudPoll=0;
+const show=message=>{$('message').textContent=message;$('start').disabled=ClawGrid.listening;$('stop').disabled=!ClawGrid.listening;};
+async function poll(){
+ if(polling)return;polling=true;
+ try{
+  $('stop').disabled=!ClawGrid.listening;
+  if(!$('token').value){$('start').disabled=true;return;}
+  if(Date.now()-lastCloudPoll>3000){
+   lastCloudPoll=Date.now();
+   try{const cloud=await ClawGrid.request('/local/cloud/status');
+    $('cloudState').textContent=cloud.ready?`Supabase connected · ESP history sync active · Home ${cloud.home_id}`:(cloud.error||'Supabase is reconnecting; cloud commands are unavailable');
+    if(!cloudConfigured){$('cloudMode').checked=true;cloudConfigured=true;}
+   }catch(error){$('cloudState').textContent=error.message;}
+  }
+  const local=await ClawGrid.localSpeech('status');
+  const state=await ClawGrid.request('/api/state');
+  $('state').textContent=state.known?`Bedroom light: ${state.light?'ON':'OFF'}\nBedroom fan: ${state.fan?'ON':'OFF'}\nPhysical GPIO outputs: ${state.physical_outputs_enabled?'ENABLED':'INHIBITED — relay switching is disabled'}\nTelemetry age: ${state.age_ms} ms`:'Remote A is unavailable; no control commands can be accepted.';
+  if(!state.known&&ClawGrid.listening)await ClawGrid.stopListening('Remote controller disconnected. Start listening again after reconnecting.');
+  $('start').disabled=ClawGrid.listening||!local.ready||!state.known;
+ }catch(error){$('start').disabled=true;if(ClawGrid.listening)await ClawGrid.stopListening('Connection lost: '+error.message);$('state').textContent=error.message;}
+ finally{polling=false;}
+}
+$('start').onclick=async()=>{$('start').disabled=true;try{await ClawGrid.startListening(show);}catch(error){show(error.message);}finally{$('stop').disabled=!ClawGrid.listening;}};
+$('stop').onclick=async()=>{await ClawGrid.stopListening();await poll();};
+for(const [id,device,action] of [['lightOn','light','ON'],['lightOff','light','OFF'],['fanOn','fan','ON'],['fanOff','fan','OFF']]){
+ $(id).onclick=async()=>{
+  const buttons=['lightOn','lightOff','fanOn','fanOff'];buttons.forEach(name=>$(name).disabled=true);
+  const target={target:ClawGrid.selectedMode(),room:'bedroom',device,action};
+  try{await ClawGrid.prepare(target);const queued=await ClawGrid.confirm(target);await ClawGrid.result(queued.id,message=>$('manualResult').textContent=message);}
+  catch(error){$('manualResult').textContent=error.message;}
+  finally{buttons.forEach(name=>$(name).disabled=false);}
+ };
+}
+$('token').addEventListener('change',poll);setInterval(poll,1000);poll();
+</script></html>

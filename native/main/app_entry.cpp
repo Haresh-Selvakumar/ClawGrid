@@ -18,6 +18,7 @@ extern "C" void app_main(void) {
     esp_err_t status=nvs_flash_init();
     if(status!=ESP_OK) { native_serial_begin(); printf("NVS initialization failed: %s\n",esp_err_to_name(status)); return; }
     setup();
+    printf("%s\n", CLAWGRID_PAIR_ID);
     xTaskCreateStaticPinnedToCore(diagnostics,"Diagnostics",sizeof(diagnostic_stack),nullptr,1,diagnostic_stack,&diagnostic_tcb,1);
     // Only confirm a staged image once its essential tasks have registered.
     const esp_partition_t *running=esp_ota_get_running_partition();

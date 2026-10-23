@@ -1,233 +1,1878 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ClawGrid V2.0 | Offline-First Edge AI Dashboard</title>
-  <style>
-    :root {
-      --bg: #090d16;
-      --card-bg: #121926;
-      --border: #1f293d;
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --text: #f1f5f9;
-      --text-muted: #94a3b8;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --unknown: #6b7280;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      padding: 16px;
-    }
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid var(--border);
-    }
-    h1 { font-size: 1.25rem; font-weight: 700; color: #60a5fa; }
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 2px 8px;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-    .badge-offline { background: #064e3b; color: #6ee7b7; border: 1px solid #059669; }
-    .badge-occupied { background: #064e3b; color: #34d399; }
-    .badge-likely { background: #78350f; color: #fde68a; }
-    .badge-vacant { background: #1f2937; color: #9ca3af; }
-    .badge-unknown { background: #374151; color: #d1d5db; }
-    
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      position: relative;
-    }
-    .card h2 { font-size: 1.1rem; margin-bottom: 8px; display: flex; justify-content: space-between; }
-    .room-meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px; }
-    
-    .device-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-top: 1px solid var(--border);
-    }
-    .btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      padding: 6px 14px;
-      border-radius: 6px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 0.85rem;
-      transition: background 0.15s;
-    }
-    .btn:hover { background: var(--primary-hover); }
-    .btn-off { background: #374151; color: #9ca3af; }
-    .btn-action { background: #4f46e5; }
-    .btn-action:hover { background: #4338ca; }
-    
-    .voice-box {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-    .voice-input-group { display: flex; gap: 8px; margin-top: 10px; }
-    input[type="text"] {
-      flex: 1;
-      background: #090d16;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 8px 12px;
-      color: white;
-      font-size: 0.9rem;
-    }
-    input[type="text"]:focus { outline: none; border-color: var(--primary); }
-    
-    .clarification-alert {
-      margin-top: 10px;
-      background: #78350f;
-      border: 1px solid #d97706;
-      color: #fef3c7;
-      padding: 10px;
-      border-radius: 6px;
-      font-size: 0.85rem;
-      display: none;
-    }
-    
-    .benchmark-section {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
-    }
-    table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.85rem; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid var(--border); }
-    th { color: var(--text-muted); font-weight: 600; }
-    
-    .logs-box {
-      background: #06090f;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 10px;
-      font-family: monospace;
-      font-size: 0.75rem;
-      height: 140px;
-      overflow-y: auto;
-      color: #a7f3d0;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ClawGrid — Smart Home &amp; Edge AI Console</title>
+<meta name="description" content="ClawGrid V2.0 room-aware lighting and fan automation, local offline voice assistant, multi-room simulation, and deterministic SafetyKernel dashboard.">
+<style>
+:root {
+  --bg-dark: #090d16;
+  --bg-sidebar: #0d121f;
+  --bg-card: #121826;
+  --bg-card-hover: #172033;
+  --bg-input: #0a0f1d;
+  --border: #1e293b;
+  --border-light: rgba(255, 255, 255, 0.08);
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --primary: #3b82f6;
+  --primary-glow: rgba(59, 130, 246, 0.25);
+  --accent-purple: #8b5cf6;
+  --accent-indigo: #6366f1;
+  --accent-teal: #06b6d4;
+  --accent-cyan: #14b8a6;
+  --accent-amber: #f59e0b;
+  --accent-pink: #ec4899;
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.12);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.12);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.12);
+  --unknown: #6b7280;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace;
+  --sidebar-w: 260px;
+  --sidebar-w-collapsed: 72px;
+  --transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font: 14px/1.5 var(--font-sans);
+  background: var(--bg-dark);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  overflow-x: hidden;
+}
+
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-dark); }
+::-webkit-scrollbar-thumb { background: #26334a; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+
+aside.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  min-height: 100vh;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  z-index: 100;
+  transition: var(--transition);
+}
+aside.sidebar.collapsed {
+  width: var(--sidebar-w-collapsed);
+}
+aside.sidebar.collapsed .brand-name,
+aside.sidebar.collapsed .brand-sub,
+aside.sidebar.collapsed .user-info,
+aside.sidebar.collapsed .nav-text,
+aside.sidebar.collapsed .nav-badge,
+aside.sidebar.collapsed .sidebar-footer-card {
+  display: none;
+}
+aside.sidebar.collapsed .user-widget { padding: 12px 6px; justify-content: center; }
+aside.sidebar.collapsed .sidebar-brand { padding: 20px 16px; justify-content: center; }
+aside.sidebar.collapsed .nav-item { justify-content: center; padding: 12px; }
+
+.sidebar-brand {
+  padding: 22px 20px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+}
+.brand-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 18px;
+  color: #fff;
+  box-shadow: 0 4px 12px var(--primary-glow);
+  flex-shrink: 0;
+}
+.brand-name {
+  font-size: 18px;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.brand-sub {
+  font-size: 10px;
+  font-weight: 700;
+  color: #38bdf8;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.user-widget {
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+.user-avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 1.5px solid var(--accent-teal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13px;
+  color: #38bdf8;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+}
+.user-info { display: flex; flex-direction: column; overflow: hidden; }
+.user-name { font-size: 13px; font-weight: 700; color: var(--text-main); white-space: nowrap; }
+.user-role { font-size: 11px; color: var(--accent-teal); font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+nav.sidebar-menu {
+  padding: 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+.nav-section-title {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 10px 12px 4px;
+}
+aside.sidebar.collapsed .nav-section-title { display: none; }
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  font-size: 13.5px;
+  font-weight: 600;
+  transition: var(--transition);
+  text-align: left;
+  width: 100%;
+}
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+.nav-item.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.16), rgba(6, 182, 212, 0.14));
+  border-color: rgba(59, 130, 246, 0.45);
+  color: #93c5fd;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.nav-item-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-text { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.nav-badge {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  font-weight: 700;
+}
+
+.sidebar-footer-card {
+  margin: 10px 12px 16px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(16, 185, 129, 0.06);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.sidebar-footer-card strong {
+  color: #34d399;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 12px;
+}
+
+.content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: var(--bg-dark);
+}
+
+header.app-header {
+  height: 68px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  gap: 16px;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.btn-toggle-sidebar {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: var(--transition);
+}
+.btn-toggle-sidebar:hover { background: var(--bg-card); color: var(--text-main); border-color: #3b82f6; }
+.breadcrumb-wrap { display: flex; flex-direction: column; }
+.breadcrumb-title { font-size: 16px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.breadcrumb-path { font-size: 11.5px; color: var(--text-dim); display: flex; gap: 6px; align-items: center; }
+.header-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.mode-segmented {
+  display: flex;
+  background: #080c16;
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 3px;
+  position: relative;
+}
+.mode-btn {
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+.mode-btn:hover { color: var(--text-main); }
+.mode-btn.active {
+  background: linear-gradient(135deg, #2563eb, #0891b2);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.35);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-dot.live {
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  animation: pulse-green 2s infinite;
+}
+.status-dot.syn { background: #06b6d4; box-shadow: 0 0 8px #06b6d4; }
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+.mode-persistent-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 6px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.badge-real { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.3); }
+.badge-syn { background: rgba(6, 182, 212, 0.15); color: #22d3ee; border: 1px solid rgba(6, 182, 212, 0.3); }
+
+.token-box-nav {
+  display: flex;
+  align-items: center;
+  background: #080c16;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 10px;
+  gap: 6px;
+}
+.token-label-text { font-size: 11px; font-weight: 700; color: var(--text-dim); }
+.token-input-field {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  width: 96px;
+  outline: none;
+}
+
+.header-actions { display: flex; align-items: center; gap: 8px; }
+.header-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #080c16;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: var(--transition);
+}
+.header-icon-btn:hover { background: var(--bg-card); color: var(--text-main); border-color: #3b82f6; }
+.notif-badge-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 6px var(--danger);
+  display: none;
+}
+
+main.dashboard-container {
+  padding: 20px 24px 32px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1600px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Intuitive Mode & Quick-Action Strip */
+.context-banner {
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.85));
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent-teal);
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.context-banner.real-mode {
+  border-left-color: var(--success);
+}
+.context-banner-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.context-banner-title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.context-banner-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.context-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.app-view { display: none; flex-direction: column; gap: 20px; }
+.app-view.active-view { display: flex; }
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+}
+.kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+.kpi-title { font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; display: flex; justify-content: space-between; align-items: center; }
+.kpi-value-row { display: flex; align-items: baseline; justify-content: space-between; margin: 8px 0 6px; gap: 8px; }
+.kpi-value { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: -0.5px; font-family: var(--font-mono); }
+.kpi-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+.badge-green { background: var(--success-bg); color: #34d399; }
+.badge-blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+.badge-amber { background: var(--warning-bg); color: #fbbf24; }
+.badge-red { background: var(--danger-bg); color: #f87171; }
+.kpi-subtext { font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
+.kpi-sparkline { margin-top: 10px; height: 24px; width: 100%; }
+
+.content-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: var(--transition);
+}
+.content-card:hover { border-color: rgba(255, 255, 255, 0.12); }
+.card-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  padding-bottom: 14px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.card-headline { font-size: 15.5px; font-weight: 700; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+.card-subtitle { font-size: 12px; color: var(--text-dim); font-weight: normal; margin-top: 2px; }
+.card-dots { color: var(--text-dim); cursor: pointer; font-size: 18px; padding: 2px 6px; border-radius: 4px; }
+.card-dots:hover { background: rgba(255, 255, 255, 0.05); color: var(--text-main); }
+
+.btn {
+  font: inherit;
+  font-size: 12.5px;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 13px;
+  background: #080c16;
+  color: var(--text-main);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: var(--transition);
+}
+.btn:hover:not(:disabled) { border-color: #3b82f6; background: #17223b; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #0891b2);
+  border-color: #0284c7;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+.btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, #1d4ed8, #0e7490); box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4); }
+.btn-success { background: linear-gradient(135deg, #059669, #10b981); border-color: #047857; color: #fff; }
+.btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); border-color: #b91c1c; color: #fff; }
+.btn-warning { background: linear-gradient(135deg, #d97706, #f59e0b); border-color: #b45309; color: #fff; }
+.btn-sm { padding: 5px 10px; font-size: 11.5px; border-radius: 6px; }
+
+.middle-grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; }
+.bottom-grid { display: grid; grid-template-columns: 1.25fr 1fr; gap: 18px; }
+
+.chart-container {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  background: #090e1a;
+  border-radius: 10px;
+  border: 1px solid var(--border-light);
+  overflow: hidden;
+}
+.chart-container canvas { width: 100%; height: 100%; display: block; }
+.chart-legend-row { display: flex; align-items: center; gap: 16px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+.legend-dot.temp { background: #06b6d4; }
+.legend-dot.lux { background: #818cf8; }
+.legend-dot.motion { background: #f59e0b; }
+
+.actuator-list { display: flex; flex-direction: column; gap: 10px; }
+.actuator-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  background: #0a0f1d;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  transition: var(--transition);
+  gap: 10px;
+}
+.actuator-row:hover { border-color: rgba(59, 130, 246, 0.35); }
+.actuator-info { display: flex; align-items: center; gap: 12px; }
+.actuator-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.actuator-icon-box.active {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+}
+.actuator-title { font-size: 13.5px; font-weight: 700; color: var(--text-main); }
+.actuator-meta { font-size: 11.5px; color: var(--text-dim); }
+
+.btn-group-toggle {
+  display: flex;
+  background: #050811;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 2px;
+}
+.btn-group-toggle button {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 700;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-group-toggle button:hover { color: var(--text-main); }
+.btn-group-toggle button.active-on { background: #10b981; color: #fff; }
+.btn-group-toggle button.active-off { background: #374151; color: #fff; }
+.btn-group-toggle button.active-auto { background: #2563eb; color: #fff; }
+
+.scene-toolbar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-top: 2px;
+}
+.scene-toolbar .btn { justify-content: center; }
+
+/* Voice & Intent Assistant Bar */
+.voice-assistant-box {
+  background: #090e1a;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.voice-input-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.voice-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.voice-chip {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 14px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: #93c5fd;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.voice-chip:hover {
+  background: rgba(59, 130, 246, 0.22);
+  color: #fff;
+}
+
+.simulator-layout {
+  display: grid;
+  grid-template-columns: minmax(400px, 1.4fr) minmax(320px, 1fr);
+  gap: 20px;
+}
+.canvas-wrap {
+  width: 100%;
+  background: #080c16;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+#simHouseCanvas {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 800 / 560;
+  background: #090e1a;
+  border-radius: 8px;
+  touch-action: none;
+  cursor: pointer;
+  outline: none;
+}
+#simHouseCanvas:focus {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+.sim-controls-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.room-jump-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-top: 4px;
+  border-top: 1px solid var(--border-light);
+}
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { display: flex; flex-direction: column; gap: 4px; }
+.form-group label { font-size: 11.5px; font-weight: 700; color: var(--text-dim); text-transform: uppercase; }
+.form-control {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--text-main);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: var(--transition);
+}
+.form-control:focus { border-color: #3b82f6; box-shadow: 0 0 0 2px var(--primary-glow); }
+
+.checkbox-row {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  font-size: 13px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+.checkbox-row label { display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-muted); }
+.checkbox-row input[type="checkbox"] { accent-color: #3b82f6; width: 16px; height: 16px; }
+
+.terminal-block {
+  background: #060913;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #cbd5e1;
+  line-height: 1.5;
+  max-height: 120px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.table-responsive { width: 100%; overflow-x: auto; }
+table.dashboard-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+table.dashboard-table th {
+  background: #0b101d;
+  color: var(--text-dim);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+}
+table.dashboard-table td { padding: 11px 14px; border-bottom: 1px solid var(--border-light); color: var(--text-muted); }
+table.dashboard-table tr:hover td { background: rgba(255, 255, 255, 0.02); color: var(--text-main); }
+
+.pill-status { display: inline-flex; align-items: center; gap: 5px; padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+.pill-active { background: var(--success-bg); color: #34d399; }
+.pill-inactive { background: rgba(148, 163, 184, 0.12); color: #94a3b8; }
+.pill-warning { background: var(--warning-bg); color: #fbbf24; }
+.pill-danger { background: var(--danger-bg); color: #f87171; }
+
+.filter-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; padding-bottom: 12px; border-bottom: 1px solid var(--border-light); }
+.dropdown-panel {
+  position: absolute;
+  top: 46px;
+  right: 0;
+  width: 340px;
+  background: #0f1627;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
+  z-index: 150;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+}
+.dropdown-panel.open { display: flex; }
+
+/* Toast Notification */
+.toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast-item {
+  background: #0f172a;
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  color: var(--text-main);
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  font-size: 12.5px;
+  max-width: 340px;
+  pointer-events: auto;
+  animation: slideInToast 0.2s ease-out;
+}
+.toast-item.warn { border-left-color: var(--warning); }
+.toast-item.success { border-left-color: var(--success); }
+.toast-item.danger { border-left-color: var(--danger); }
+@keyframes slideInToast {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 1200px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .middle-grid, .bottom-grid, .simulator-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 768px) {
+  aside.sidebar { position: fixed; left: -260px; }
+  aside.sidebar.mobile-open { left: 0; }
+  .kpi-row { grid-template-columns: 1fr; }
+  header.app-header { padding: 0 14px; height: auto; min-height: 64px; padding-top: 8px; padding-bottom: 8px; }
+  main.dashboard-container { padding: 14px; }
+  .scene-toolbar { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
 </head>
 <body>
-  <header>
+
+<select id="targetMode" style="display:none">
+  <option value="physical_bedroom" selected>Physical Bedroom</option>
+  <option value="virtual_rooms">Virtual Rooms (Synthetic)</option>
+</select>
+
+<!-- LEFT SIDEBAR: CLAWGRID BRANDING -->
+<aside class="sidebar" id="sidebarEl">
+  <div class="sidebar-brand" onclick="switchView('overview')" title="ClawGrid Home">
+    <div class="brand-icon">⚡</div>
     <div>
-      <h1>CLAWGRID V2.0</h1>
-      <p style="font-size: 0.8rem; color: var(--text-muted);">Dual ESP32-S3 Offline Edge AI Automation</p>
+      <div class="brand-name">CLAWGRID</div>
+      <div class="brand-sub">SMART HOME &amp; EDGE AI</div>
     </div>
-    <span class="badge badge-offline">Offline Local Mesh</span>
-  </header>
-
-  <!-- Voice Control with Phone Microphone -->
-  <section class="voice-box">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3>Phone Microphone & Local Edge-AI Intent</h3>
-      <span class="badge badge-occupied" id="micStatusBadge">Phone Mic Ready</span>
-    </div>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
-      Speak directly into your phone. The audio/text is sent to the 2 ESP32-S3s where the cooperative model & Safety Kernel execute.
-    </p>
-
-    <div style="display:flex; gap:10px; align-items:center; margin-top:12px;">
-      <button class="btn btn-action" id="micBtn" onclick="togglePhoneMic()" style="display:flex; align-items:center; gap:6px; padding:10px 18px; font-size:1rem; border-radius:30px;">
-        <span id="micIcon">🎙️</span> <span id="micLabel">Tap to Speak</span>
-      </button>
-      <div style="flex:1;">
-        <input type="text" id="voiceInput" placeholder="Or type/dictate via phone keyboard..." value="Hey Claw, turn on bedroom light">
-      </div>
-      <button class="btn" onclick="sendVoiceCommand()">Run Model</button>
-    </div>
-
-    <!-- Cooperative Pipeline Execution Visualizer -->
-    <div id="pipelineBox" style="margin-top:12px; padding:10px; background:#0b1322; border-radius:8px; border:1px solid #1e293b; font-size:0.8rem;">
-      <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-        <span style="color:#94a3b8;">Dual ESP32-S3 Pipeline:</span>
-        <span id="pipelineTiming" style="color:#60a5fa; font-weight:bold;">Ready</span>
-      </div>
-      <div style="display:flex; gap:4px; align-items:center;">
-        <div id="pipeStep1" style="flex:1; padding:4px; text-align:center; background:#1e293b; border-radius:4px; font-size:0.75rem;">1. Phone Mic Input</div>
-        <span style="color:#475569;">➔</span>
-        <div id="pipeStep2" style="flex:1; padding:4px; text-align:center; background:#1e293b; border-radius:4px; font-size:0.75rem;">2. Node B (Layer 0..L/2)</div>
-        <span style="color:#475569;">➔</span>
-        <div id="pipeStep3" style="flex:1; padding:4px; text-align:center; background:#1e293b; border-radius:4px; font-size:0.75rem;">3. Node A (Layer L/2..L)</div>
-        <span style="color:#475569;">➔</span>
-        <div id="pipeStep4" style="flex:1; padding:4px; text-align:center; background:#1e293b; border-radius:4px; font-size:0.75rem;">4. Safety Kernel Gate</div>
-      </div>
-    </div>
-
-    <div id="clarifyBox" class="clarification-alert"></div>
-  </section>
-
-  <!-- Room Cards -->
-  <div class="grid" id="roomsGrid">
-    <!-- Populated dynamically via JS -->
   </div>
 
-  <!-- Research Benchmark Harness -->
-  <section class="benchmark-section">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <h3>Cooperative Edge-AI Benchmark (Research Comparison)</h3>
-      <div>
-        <button class="btn" onclick="runBenchmark()">Run Benchmark</button>
-        <button class="btn btn-off" onclick="exportBenchmarkJSON()">Export JSON</button>
+  <div class="user-widget">
+    <div class="user-avatar-circle">CG</div>
+    <div class="user-info">
+      <div class="user-name">ClawGrid V2.0</div>
+      <div class="user-role" id="sidebarNodeRole">Node A + Node B Console</div>
+    </div>
+  </div>
+
+  <nav class="sidebar-menu">
+    <div class="nav-section-title">Home Automation</div>
+    <button type="button" class="nav-item active" id="navOverview" onclick="switchView('overview')">
+      <span class="nav-item-icon">📊</span>
+      <span class="nav-text">Home Overview</span>
+    </button>
+    <button type="button" class="nav-item" id="navSimulator" onclick="switchView('simulator')">
+      <span class="nav-item-icon">🏠</span>
+      <span class="nav-text">4-Room Interactive Lab</span>
+      <span class="nav-badge">4 Zones</span>
+    </button>
+    <button type="button" class="nav-item" id="navDevices" onclick="switchView('devices')">
+      <span class="nav-item-icon">💡</span>
+      <span class="nav-text">Rooms &amp; Relays</span>
+    </button>
+    <button type="button" class="nav-item" id="navTelemetry" onclick="switchView('telemetry')">
+      <span class="nav-item-icon">📈</span>
+      <span class="nav-text">Live Telemetry</span>
+    </button>
+
+    <div class="nav-section-title">Safety &amp; Diagnostics</div>
+    <button type="button" class="nav-item" id="navLogs" onclick="switchView('logs')">
+      <span class="nav-item-icon">📋</span>
+      <span class="nav-text">Event Audit Logs</span>
+      <span class="nav-badge" id="navLogBadge">0</span>
+    </button>
+    <button type="button" class="nav-item" id="navDiagnostics" onclick="switchView('diagnostics')">
+      <span class="nav-item-icon">🔍</span>
+      <span class="nav-text">Sensor Diagnostics</span>
+    </button>
+    <button type="button" class="nav-item" id="navHealth" onclick="switchView('health')">
+      <span class="nav-item-icon">🛡️</span>
+      <span class="nav-text">SafetyKernel &amp; RTOS</span>
+    </button>
+    <button type="button" class="nav-item" id="navConfig" onclick="switchView('config')">
+      <span class="nav-item-icon">⚙️</span>
+      <span class="nav-text">Policy Settings</span>
+    </button>
+  </nav>
+
+  <div class="sidebar-footer-card">
+    <strong>🛡️ SafetyKernel Active</strong>
+    <div>Low-voltage DC only · 3s dwell guard · 4h max run cutoff enforced.</div>
+  </div>
+</aside>
+
+<div class="content-wrapper">
+  <header class="app-header">
+    <div class="header-left">
+      <button type="button" class="btn-toggle-sidebar" id="btnToggleSidebar" title="Toggle Navigation Sidebar">☰</button>
+      <div class="breadcrumb-wrap">
+        <div class="breadcrumb-title" id="breadcrumbHeadline">
+          <span>Home Overview</span>
+          <span class="mode-persistent-badge badge-syn" id="headerModeBadge">SYNTHETIC SIMULATION</span>
+        </div>
+        <div class="breadcrumb-path">
+          <span>⚡ ClawGrid</span>
+          <span>›</span>
+          <span id="breadcrumbCurrent" style="color:#94a3b8">Home Overview</span>
+        </div>
       </div>
     </div>
-    <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">
-      Comparing Mode A (Single Node Baseline), Mode B (Parallel Responsibilities), and Mode C (Split-Model Partitioned Inference).
-    </p>
-    <table>
-      <thead>
-        <tr>
-          <th>Configuration</th>
-          <th>Compute (ms)</th>
-          <th>Network / Transfer (ms)</th>
-          <th>Total Latency (ms)</th>
-          <th>Throughput / Memory</th>
-          <th>Source Tag</th>
-        </tr>
-      </thead>
-      <tbody id="benchmarkRows">
-        <tr><td colspan="6" style="text-align:center; color:var(--text-muted);">Click 'Run Benchmark' to measure metrics.</td></tr>
-      </tbody>
-    </table>
-  </section>
 
-  <!-- Safety Kernel Audit Logs -->
-  <section class="card">
-    <h3 style="margin-bottom: 8px;">Deterministic Safety Kernel Audit Log</h3>
-    <div class="logs-box" id="auditLogs">
-      [0.00s] Safety Kernel initialized. Zero mains voltage enforced. Fail-safe defaults applied.
+    <div class="header-right">
+      <div class="mode-segmented" title="Switch between Physical Bedroom Hardware (Node A) and 4-Room Synthetic Simulation">
+        <button type="button" class="mode-btn" id="btnModeReal" onclick="switchTelemetryMode('physical_bedroom')">
+          <i class="status-dot live" id="dotModeReal"></i> Hardware (Node A)
+        </button>
+        <button type="button" class="mode-btn active" id="btnModeSyn" onclick="switchTelemetryMode('virtual_rooms')">
+          <i class="status-dot syn" id="dotModeSyn"></i> 4-Room Simulation
+        </button>
+      </div>
+
+      <label class="token-box-nav" title="ClawGrid Control API Token">
+        <span class="token-label-text">Token</span>
+        <input type="password" id="token" class="token-input-field" placeholder="API Token" value="clawgrid-dev-only" autocomplete="off" spellcheck="false">
+      </label>
+
+      <div class="header-actions">
+        <button type="button" class="header-icon-btn" title="Toggle Fullscreen" onclick="toggleFullscreen()">⛶</button>
+        <div style="position:relative">
+          <button type="button" class="header-icon-btn" id="btnNotif" title="System Notifications" onclick="toggleNotifPanel()">
+            🔔
+            <span class="notif-badge-dot" id="notifDot"></span>
+          </button>
+          <div class="dropdown-panel" id="notifPanel">
+            <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding-bottom:8px">
+              <strong style="font-size:13px">ClawGrid Notifications</strong>
+              <button class="btn btn-sm" onclick="clearNotifications()" style="padding:2px 6px">Clear</button>
+            </div>
+            <div id="notifList" style="display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto;font-size:12px">
+              <div style="color:var(--text-dim)">No active alerts. Deterministic SafetyKernel nominal.</div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="header-icon-btn" title="Policy Settings" onclick="switchView('config')">⚙️</button>
+      </div>
     </div>
-  </section>
+  </header>
 
-  <script src="/static/app.js"></script>
+  <main class="dashboard-container">
+    <!-- INTUITIVE CONTEXT & QUICK-ACTION BAR -->
+    <div class="context-banner" id="contextBanner">
+      <div class="context-banner-text">
+        <div class="context-banner-title" id="contextBannerTitle">
+          <span>🏠 4-Room Interactive Simulation Mode</span>
+          <span class="pill-status pill-active" style="font-size:10.5px">Source: SIMULATED</span>
+        </div>
+        <div class="context-banner-sub" id="contextBannerSub">
+          Auto policy: Occupied &amp; Lux &lt; 300 lx turns Light ON · Occupied &amp; Temp ≥ 28.0°C turns Fan ON · Vacant after 5s grace turns loads OFF.
+        </div>
+      </div>
+      <div class="context-banner-actions">
+        <button type="button" class="btn btn-sm btn-primary" onclick="switchView('simulator')">🗺️ Open 4-Room Floorplan</button>
+        <button type="button" class="btn btn-sm" id="btnQuickTour" onclick="toggleSimTour()">▶️ Run Room Tour</button>
+        <button type="button" class="btn btn-sm" onclick="switchView('devices')">💡 All Room Controls</button>
+      </div>
+    </div>
+
+    <!-- 4 KPI CARDS (Click any card to jump to its detailed view) -->
+    <div class="kpi-row">
+      <div class="kpi-card" onclick="switchView('simulator')" title="Click to open 4-Room Interactive Floorplan">
+        <div class="kpi-title"><span>Room Occupancy</span><span>↗</span></div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiOccVal">1 / 4</span>
+          <span class="kpi-badge badge-blue" id="kpiOccBadge">25% Occupied</span>
+        </div>
+        <div class="kpi-subtext" id="kpiOccSub">Active: Bedroom</div>
+        <div class="kpi-sparkline">
+          <svg viewBox="0 0 110 24" width="100%" height="24" fill="none">
+            <rect x="2" y="4" width="22" height="16" rx="4" id="kpiOccBar0" fill="#3b82f6"/>
+            <rect x="28" y="4" width="22" height="16" rx="4" id="kpiOccBar1" fill="#1e293b"/>
+            <rect x="54" y="4" width="22" height="16" rx="4" id="kpiOccBar2" fill="#1e293b"/>
+            <rect x="80" y="4" width="22" height="16" rx="4" id="kpiOccBar3" fill="#1e293b"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card" onclick="switchView('devices')" title="Click to manage Room Relays &amp; Timers">
+        <div class="kpi-title"><span>Active Loads &amp; Relays</span><span>↗</span></div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiDevVal">8 / 8</span>
+          <span class="kpi-badge badge-green" id="kpiDevBadge">Relays Guarded</span>
+        </div>
+        <div class="kpi-subtext" id="kpiDevSub">1 Energized · Safe Low-Voltage</div>
+        <div class="kpi-sparkline">
+          <svg viewBox="0 0 110 24" width="100%" height="24" fill="none">
+            <path d="M4 18 L25 18 L35 6 L55 6 L65 18 L85 18 L95 6 L106 6" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card" onclick="switchView('telemetry')" title="Click to inspect Live Telemetry &amp; Export CSV">
+        <div class="kpi-title"><span>Avg Room Temp &amp; Lux</span><span>↗</span></div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiTempVal">25.3 °C</span>
+          <span class="kpi-badge badge-amber" id="kpiTempBadge">236 lx Avg</span>
+        </div>
+        <div class="kpi-subtext" id="kpiTempSub">Range: 22.8°C – 29.5°C across 4 zones</div>
+        <div class="kpi-sparkline">
+          <svg viewBox="0 0 110 24" width="100%" height="24" fill="none">
+            <path d="M4 16 Q 30 4, 55 12 T 106 8" stroke="#f59e0b" stroke-width="2.5" fill="none"/>
+          </svg>
+        </div>
+      </div>
+
+      <div class="kpi-card" onclick="switchView('health')" title="Click to inspect SafetyKernel &amp; FreeRTOS Health">
+        <div class="kpi-title"><span>SafetyKernel &amp; Health</span><span>↗</span></div>
+        <div class="kpi-value-row">
+          <span class="kpi-value" id="kpiHealthVal">Nominal</span>
+          <span class="kpi-badge badge-green" id="kpiHealthBadge">SIMULATED</span>
+        </div>
+        <div class="kpi-subtext" id="kpiHealthSub">3s Dwell · 0 Faults</div>
+        <div class="kpi-sparkline">
+          <svg viewBox="0 0 110 24" width="100%" height="24" fill="none">
+            <circle cx="12" cy="12" r="5" fill="#10b981"/>
+            <circle cx="36" cy="12" r="5" fill="#10b981"/>
+            <circle cx="60" cy="12" r="5" fill="#10b981"/>
+            <circle cx="84" cy="12" r="5" fill="#10b981"/>
+            <circle cx="102" cy="12" r="5" fill="#10b981"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 1: OVERVIEW -->
+    <div class="app-view active-view" id="viewOverview">
+      <div class="middle-grid">
+        <div class="content-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-headline">Live Environmental Telemetry</div>
+              <div class="card-subtitle">Reactive Temperature (°C) &amp; Effective Illuminance (lux) Waveform</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+              <select id="overviewChartRoom" class="form-control" style="padding:4px 8px;font-size:12px;width:135px" onchange="updateTelemetryChart()">
+                <option value="all">All Rooms Avg</option>
+                <option value="0">Bedroom</option>
+                <option value="1">Living Room</option>
+                <option value="2">Kitchen</option>
+                <option value="3">Study</option>
+              </select>
+              <div class="btn-group-toggle" id="chartWindowGroup">
+                <button type="button" id="btnWin60" class="active-auto" onclick="setChartWindow(60)">1m</button>
+                <button type="button" id="btnWin300" onclick="setChartWindow(300)">5m</button>
+                <button type="button" id="btnWin900" onclick="setChartWindow(900)">15m</button>
+              </div>
+              <button class="btn btn-sm" title="Inject Heat/Light Pulse to test chart" onclick="injectTelemetryPulse('heat')">🔥 +2°C</button>
+              <button class="btn btn-sm" title="Inject Lux Pulse to test chart" onclick="injectTelemetryPulse('lux')">☀️ +150 lx</button>
+              <button class="btn btn-sm" title="Export Telemetry CSV" onclick="exportTelemetryCSV()">📥 CSV</button>
+            </div>
+          </div>
+          <div class="chart-legend-row">
+            <div class="legend-item"><span class="legend-dot temp"></span> Temperature (°C)</div>
+            <div class="legend-item"><span class="legend-dot lux"></span> Effective Illuminance (lux, includes Light ON boost)</div>
+            <span style="margin-left:auto;font-family:var(--font-mono);font-size:11.5px;color:#38bdf8" id="chartLiveReadout">Avg Temp: 25.3°C · Avg Lux: 236 lx</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="overviewChartCanvas" width="700" height="220"></canvas>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-headline">Multi-Room Status &amp; Quick Switcher</div>
+              <div class="card-subtitle">Inspect all 4 rooms at a glance or switch to spatial radar</div>
+            </div>
+            <div class="btn-group-toggle">
+              <button type="button" class="active-on" id="btnMiniSimMode" onclick="toggleRadarSim('mini')">4-Room Grid</button>
+              <button type="button" id="btnRadarMode" onclick="toggleRadarSim('radar')">Spatial Radar</button>
+            </div>
+          </div>
+
+          <div id="miniSimContainer" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div class="actuator-row" style="flex-direction:column;align-items:stretch;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong style="color:#60a5fa;font-size:13.5px">🛏️ Bedroom</strong>
+                <span class="pill-status pill-active" id="miniBadge0">OCCUPIED</span>
+              </div>
+              <div class="actuator-meta" id="miniBedState">25.0°C · 120 lx · Light ON · Fan OFF</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" onclick="quickToggle('bedroom','light')" title="Toggle Bedroom Light">💡 Light</button>
+                <button class="btn btn-sm" onclick="quickToggle('bedroom','fan')" title="Toggle Bedroom Fan">🌀 Fan</button>
+                <button class="btn btn-sm" style="margin-left:auto" onclick="jumpToRoom(0)" title="Move person to Bedroom">📍 Here</button>
+              </div>
+            </div>
+
+            <div class="actuator-row" style="flex-direction:column;align-items:stretch;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong style="color:#60a5fa;font-size:13.5px">🛋️ Living Room</strong>
+                <span class="pill-status pill-inactive" id="miniBadge1">VACANT</span>
+              </div>
+              <div class="actuator-meta" id="miniLivingState">24.0°C · 280 lx · Light OFF · Fan OFF</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" onclick="quickToggle('living_room','light')" title="Toggle Living Room Light">💡 Light</button>
+                <button class="btn btn-sm" onclick="quickToggle('living_room','fan')" title="Toggle Living Room Fan">🌀 Fan</button>
+                <button class="btn btn-sm" style="margin-left:auto" onclick="jumpToRoom(1)" title="Move person to Living Room">📍 Here</button>
+              </div>
+            </div>
+
+            <div class="actuator-row" style="flex-direction:column;align-items:stretch;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong style="color:#60a5fa;font-size:13.5px">🍳 Kitchen</strong>
+                <span class="pill-status pill-inactive" id="miniBadge2">VACANT</span>
+              </div>
+              <div class="actuator-meta" id="miniKitchenState">29.5°C · 450 lx · Light OFF · Fan OFF</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" onclick="quickToggle('kitchen','light')" title="Toggle Kitchen Light">💡 Light</button>
+                <button class="btn btn-sm" onclick="quickToggle('kitchen','fan')" title="Toggle Kitchen Fan">🌀 Fan</button>
+                <button class="btn btn-sm" style="margin-left:auto" onclick="jumpToRoom(2)" title="Move person to Kitchen">📍 Here</button>
+              </div>
+            </div>
+
+            <div class="actuator-row" style="flex-direction:column;align-items:stretch;gap:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong style="color:#60a5fa;font-size:13.5px">📚 Study</strong>
+                <span class="pill-status pill-inactive" id="miniBadge3">VACANT</span>
+              </div>
+              <div class="actuator-meta" id="miniStudyState">22.8°C · 95 lx · Light OFF · Fan OFF</div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap">
+                <button class="btn btn-sm" onclick="quickToggle('study','light')" title="Toggle Study Light">💡 Light</button>
+                <button class="btn btn-sm" onclick="quickToggle('study','fan')" title="Toggle Study Fan">🌀 Fan</button>
+                <button class="btn btn-sm" style="margin-left:auto" onclick="jumpToRoom(3)" title="Move person to Study">📍 Here</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="radarContainer" style="display:none;align-items:center;justify-content:center;height:240px">
+            <svg class="radar-chart-svg" viewBox="0 0 320 240" width="100%" height="100%">
+              <polygon points="160,20 260,65 260,175 160,220 60,175 60,65" fill="none" stroke="#1e293b" stroke-width="1"/>
+              <polygon points="160,50 230,80 230,160 160,190 90,160 90,80" fill="none" stroke="#1e293b" stroke-width="1"/>
+              <polygon points="160,80 200,100 200,140 160,160 120,140 120,100" fill="none" stroke="#1e293b" stroke-width="1"/>
+              <line x1="160" y1="20" x2="160" y2="220" stroke="#1e293b" stroke-width="1"/>
+              <line x1="60" y1="65" x2="260" y2="175" stroke="#1e293b" stroke-width="1"/>
+              <line x1="60" y1="175" x2="260" y2="65" stroke="#1e293b" stroke-width="1"/>
+              <polygon id="radarPoly" points="160,40 240,75 220,165 160,185 85,155 80,75" fill="rgba(6, 182, 212, 0.25)" stroke="#06b6d4" stroke-width="2"/>
+              <polygon id="radarPoly2" points="160,60 215,90 245,150 160,170 105,145 100,90" fill="rgba(139, 92, 246, 0.25)" stroke="#8b5cf6" stroke-width="2"/>
+              <text x="135" y="14" fill="#94a3b8" font-size="10" font-weight="700">BEDROOM</text>
+              <text x="266" y="70" fill="#94a3b8" font-size="10" font-weight="700">LIVING</text>
+              <text x="266" y="180" fill="#94a3b8" font-size="10" font-weight="700">KITCHEN</text>
+              <text x="142" y="234" fill="#94a3b8" font-size="10" font-weight="700">STUDY</text>
+              <text x="8" y="180" fill="#94a3b8" font-size="10" font-weight="700">SAFETY</text>
+              <text x="8" y="70" fill="#94a3b8" font-size="10" font-weight="700">ENERGY</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="content-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-headline">Bedroom Controls, Scenes &amp; Voice Assistant</div>
+              <div class="card-subtitle">Primary Zone Relays, Whole-Home Scenes, and Offline Intent Proposals</div>
+            </div>
+            <span class="pill-status pill-active" id="badgeKernelStatus">SafetyKernel Armed</span>
+          </div>
+
+          <div class="actuator-list">
+            <div class="actuator-row">
+              <div class="actuator-info">
+                <div class="actuator-icon-box" id="iconLight">💡</div>
+                <div>
+                  <div class="actuator-title">Bedroom Ceiling Light (Relay 1)</div>
+                  <div class="actuator-meta" id="metaLight">GPIO 4 · Active Low · Auto when Occupied &amp; Lux &lt; 300 lx</div>
+                </div>
+              </div>
+              <div class="btn-group-toggle" id="btnGroupLight">
+                <button type="button" id="btnLightOn" onclick="setActuator('bedroom','light','ON')">ON</button>
+                <button type="button" id="btnLightOff" class="active-off" onclick="setActuator('bedroom','light','OFF')">OFF</button>
+                <button type="button" id="btnLightAuto" class="active-auto" onclick="setActuator('bedroom','light','AUTO')">AUTO</button>
+              </div>
+            </div>
+
+            <div class="actuator-row">
+              <div class="actuator-info">
+                <div class="actuator-icon-box" id="iconFan">🌀</div>
+                <div>
+                  <div class="actuator-title">Bedroom Circulation Fan (Relay 2)</div>
+                  <div class="actuator-meta" id="metaFan">GPIO 5 · 12V DC · Auto when Occupied &amp; Temp ≥ 28.0°C</div>
+                </div>
+              </div>
+              <div class="btn-group-toggle" id="btnGroupFan">
+                <button type="button" id="btnFanOn" onclick="setActuator('bedroom','fan','ON')">ON</button>
+                <button type="button" id="btnFanOff" class="active-off" onclick="setActuator('bedroom','fan','OFF')">OFF</button>
+                <button type="button" id="btnFanAuto" class="active-auto" onclick="setActuator('bedroom','fan','AUTO')">AUTO</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="scene-toolbar">
+            <button class="btn" onclick="applyScene('HOME')" title="Enable automatic occupancy policies in all rooms">🏠 Home (Auto)</button>
+            <button class="btn" onclick="applyScene('AWAY')" title="Turn off all loads and suspend auto policies">🚪 Away</button>
+            <button class="btn" onclick="applyScene('SLEEP')" title="Turn off all lights and keep Bedroom Fan in AUTO">🌙 Sleep</button>
+            <button class="btn btn-danger" onclick="applyScene('ALL_OFF')" title="Immediately command all relays to logical OFF">🛑 All Off</button>
+          </div>
+
+          <!-- Offline Voice & Command Assistant -->
+          <div class="voice-assistant-box">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="font-size:12.5px;color:#38bdf8">🎙️ Offline Voice &amp; Intent Assistant (SafetyKernel Guarded)</strong>
+              <span style="font-size:11px;color:var(--text-dim)" id="voiceStatusBadge">Ready · Local Parser</span>
+            </div>
+            <div class="voice-input-row">
+              <input type="text" id="voiceTextInput" class="form-control" style="flex:1;min-width:180px" placeholder="e.g., &quot;turn on bedroom light&quot; or &quot;turn off kitchen fan&quot;" onkeydown="if(event.key==='Enter')runVoiceCommand()">
+              <button type="button" class="btn btn-primary" onclick="runVoiceCommand()">Send Intent</button>
+              <button type="button" class="btn" id="btnMicCapture" onclick="triggerMicCapture()" title="Record 4s PCM16 audio for Node B ESP-SR">🎤 Mic (4s)</button>
+            </div>
+            <div class="voice-chips">
+              <span style="font-size:11px;color:var(--text-dim)">Try:</span>
+              <span class="voice-chip" onclick="fillAndRunVoice('turn on bedroom light')">"turn on bedroom light"</span>
+              <span class="voice-chip" onclick="fillAndRunVoice('turn on bedroom fan')">"turn on bedroom fan"</span>
+              <span class="voice-chip" onclick="fillAndRunVoice('turn on study light')">"turn on study light"</span>
+              <span class="voice-chip" onclick="fillAndRunVoice('sleep mode')">"sleep mode"</span>
+            </div>
+          </div>
+
+          <div class="terminal-block" id="overviewTerminal">ClawGrid initialized. SafetyKernel enforcing 3.0s minimum dwell, 5m manual hold, and zero mains AC.</div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <!-- EMBEDDED RTOS, WATCHDOG & SAFETYKERNEL STATUS CARD RIGHT ON OVERVIEW -->
+          <div class="content-card">
+            <div class="card-topbar">
+              <div>
+                <div class="card-headline">🛡️ Embedded RTOS, Watchdog &amp; Link Status</div>
+                <div class="card-subtitle">Dual ESP32-S3 Tasks (Node A + Node B) &amp; Deterministic SafetyKernel</div>
+              </div>
+              <button class="btn btn-sm" onclick="switchView('health')">RTOS &amp; Fault Lab →</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+              <div style="background:#0a0f1d;border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-size:11px;color:var(--text-dim);font-weight:700">NODE A (BEDROOM MCU)</div>
+                <div style="font-size:13px;font-weight:700;color:#34d399;margin-top:2px" id="ovNodeAStatus">ControlTask: 200 Hz</div>
+                <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)" id="ovNodeAMeta">Boot #1 · 5.0s WDT Armed</div>
+              </div>
+              <div style="background:#0a0f1d;border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-size:11px;color:var(--text-dim);font-weight:700">NODE B (SPEECH / BRIDGE)</div>
+                <div style="font-size:13px;font-weight:700;color:#38bdf8;margin-top:2px" id="ovNodeBStatus">LinkTask: 200 Hz</div>
+                <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)" id="ovNodeBMeta">SRAM: 184 KiB · PSRAM: 7.6M</div>
+              </div>
+              <div style="background:#0a0f1d;border:1px solid var(--border);border-radius:8px;padding:10px">
+                <div style="font-size:11px;color:var(--text-dim);font-weight:700">SAFETYKERNEL &amp; LINK</div>
+                <div style="font-size:13px;font-weight:700;color:#a78bfa;margin-top:2px" id="ovPiStatus">3.0s Lease Nominal</div>
+                <div style="font-size:11px;color:var(--text-muted);font-family:var(--font-mono)" id="ovPiMeta">3.0s Dwell · 4.0h Cutoff</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="content-card">
+            <div class="card-topbar">
+              <div>
+                <div class="card-headline">Live Event Stream</div>
+                <div class="card-subtitle">Real-time Occupancy, Policy, and SafetyKernel Transitions</div>
+              </div>
+              <button class="btn btn-sm" onclick="switchView('logs')">Full Audit Log →</button>
+            </div>
+            <div class="table-responsive">
+              <table class="dashboard-table">
+                <thead>
+                  <tr>
+                    <th>Time</th>
+                    <th>Room</th>
+                    <th>Event</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="overviewEventsTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 2: TELEMETRY -->
+    <div class="app-view" id="viewTelemetry">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">High-Resolution Sensor Telemetry &amp; Interactive Signal Generator</div>
+            <div class="card-subtitle">Live waveforms react immediately to Light/Fan actuation, room occupancy, and environmental pulses</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <select id="telemetryRoomFilter" class="form-control" style="width:165px;padding:5px 10px" onchange="updateDetailedTelemetryView()">
+              <option value="all">All Rooms (Average)</option>
+              <option value="0">Bedroom</option>
+              <option value="1">Living Room</option>
+              <option value="2">Kitchen</option>
+              <option value="3">Study</option>
+            </select>
+            <button class="btn btn-sm" onclick="injectTelemetryPulse('heat')">🔥 Heat Pulse (+2.5°C)</button>
+            <button class="btn btn-sm" onclick="injectTelemetryPulse('cool')">❄️ Cool Pulse (-2.5°C)</button>
+            <button class="btn btn-sm" onclick="injectTelemetryPulse('lux')">☀️ Daylight (+200 lx)</button>
+            <button class="btn btn-sm" onclick="injectTelemetryPulse('dark')">🌙 Dusk (-180 lx)</button>
+            <button class="btn btn-sm" onclick="exportTelemetryCSV()">📥 Export CSV</button>
+            <button class="btn btn-sm" onclick="exportSummaryJSON()">📦 Export JSON</button>
+          </div>
+        </div>
+        <div class="chart-container" style="height:280px">
+          <canvas id="detailedTelemetryCanvas" width="1000" height="280"></canvas>
+        </div>
+        <div class="table-responsive">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>Room</th>
+                <th>Occupancy</th>
+                <th>Temperature</th>
+                <th>Ambient / Effective Lux</th>
+                <th>PIR Motion</th>
+                <th>Presence</th>
+                <th>Door Contact</th>
+                <th>Active Loads</th>
+                <th>Data Source</th>
+                <th>Quick Action</th>
+              </tr>
+            </thead>
+            <tbody id="detailedTelemetryTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: SIMULATOR -->
+    <div class="app-view" id="viewSimulator">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">ClawGrid Four-Room Interactive Simulation Lab</div>
+            <div class="card-subtitle">Click or drag on any room to move the person and automatically select that room's environment controls.</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span class="pill-status pill-active" id="simStreamBadge">SIMULATED · Active</span>
+            <button class="btn btn-sm btn-primary" id="btnSimTour" onclick="toggleSimTour()">▶️ Run Room Tour</button>
+            <button class="btn btn-sm" onclick="simLeaveHouse()">🚪 Leave House</button>
+            <button class="btn btn-sm" onclick="resetSimHouse()">↺ Reset Defaults</button>
+          </div>
+        </div>
+
+        <div class="simulator-layout">
+          <div class="canvas-wrap">
+            <canvas id="simHouseCanvas" width="800" height="560" tabindex="0" aria-label="Interactive 4-room house layout. Click, drag, or use arrow keys to move avatar."></canvas>
+            <div class="sim-controls-bar">
+              <div style="display:flex;gap:6px;align-items:center">
+                <span style="font-size:11.5px;color:var(--text-dim);margin-right:2px">Move:</span>
+                <button class="btn btn-sm" onclick="moveSimPerson(-28,0)" title="Move Left (ArrowLeft)">←</button>
+                <button class="btn btn-sm" onclick="moveSimPerson(0,-28)" title="Move Up (ArrowUp)">↑</button>
+                <button class="btn btn-sm" onclick="moveSimPerson(0,28)" title="Move Down (ArrowDown)">↓</button>
+                <button class="btn btn-sm" onclick="moveSimPerson(28,0)" title="Move Right (ArrowRight)">→</button>
+              </div>
+              <div style="font-size:12.5px;font-weight:600;color:#38bdf8" id="simAvatarPos">Avatar Position: (160, 140) · Bedroom</div>
+            </div>
+            <div class="room-jump-bar">
+              <span style="font-size:11.5px;color:var(--text-dim)">Quick Teleport:</span>
+              <button class="btn btn-sm" onclick="jumpToRoom(0)">🛏️ Bedroom</button>
+              <button class="btn btn-sm" onclick="jumpToRoom(1)">🛋️ Living Room</button>
+              <button class="btn btn-sm" onclick="jumpToRoom(2)">🍳 Kitchen</button>
+              <button class="btn btn-sm" onclick="jumpToRoom(3)">📚 Study</button>
+              <button class="btn btn-sm" onclick="simLeaveHouse()">🚪 Outside</button>
+            </div>
+            <p style="font-size:12px;color:var(--text-dim)">
+              💡 <strong>How it works:</strong> Clicking a room moves the avatar there and selects that room on the right. When occupied, <strong>Light AUTO</strong> turns ON if Lux &lt; <span id="lblSimLuxThresh">300</span> lx, and <strong>Fan AUTO</strong> turns ON if Temp ≥ <span id="lblSimTempThresh">28.0</span>°C. Leaving a room starts the <span id="lblSimGrace">5</span>s vacancy grace countdown.
+            </p>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="content-card" style="padding:16px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <h3 style="font-size:14.5px;color:var(--text-main)">Room Environmental Control</h3>
+                <span class="pill-status pill-active" id="simSelectedRoomBadge">Bedroom</span>
+              </div>
+              <div class="form-group" style="margin-bottom:10px">
+                <label>Selected Room (Syncs on Canvas Click)</label>
+                <select id="simRoomSelect" class="form-control" onchange="loadSimEnvToInputs()">
+                  <option value="0">Bedroom</option>
+                  <option value="1">Living Room</option>
+                  <option value="2">Kitchen</option>
+                  <option value="3">Study</option>
+                </select>
+              </div>
+
+              <div class="form-group" style="margin-bottom:10px">
+                <label>1-Click Weather / Lighting Presets</label>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:2px">
+                  <button type="button" class="btn btn-sm" onclick="applySimPreset(24.0, 550)">☀️ Daylight (24°C, 550 lx)</button>
+                  <button type="button" class="btn btn-sm" onclick="applySimPreset(23.5, 45)">🌙 Night (23.5°C, 45 lx)</button>
+                  <button type="button" class="btn btn-sm" onclick="applySimPreset(31.0, 110)">🔥 Hot &amp; Dim (31°C, 110 lx)</button>
+                  <button type="button" class="btn btn-sm" onclick="applySimPreset(21.0, 420)">❄️ Cool &amp; Bright (21°C, 420 lx)</button>
+                </div>
+              </div>
+
+              <div class="checkbox-row" style="margin-bottom:12px">
+                <label><input type="checkbox" id="simCheckPir" checked onchange="applySimEnvironment()"> Virtual PIR</label>
+                <label><input type="checkbox" id="simCheckPres" checked onchange="applySimEnvironment()"> Presence</label>
+                <label><input type="checkbox" id="simCheckDoor" onchange="applySimEnvironment()"> Door Open</label>
+              </div>
+
+              <div class="form-grid" style="margin-bottom:12px">
+                <div class="form-group">
+                  <label>Temperature (0–60 °C)</label>
+                  <input type="number" id="simInputTemp" class="form-control" min="0" max="60" value="25.0" step="0.5">
+                </div>
+                <div class="form-group">
+                  <label>Illuminance (0–2000 Lux)</label>
+                  <input type="number" id="simInputLux" class="form-control" min="0" max="2000" value="120" step="10">
+                </div>
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;justify-content:center" onclick="applySimEnvironment()">Apply Room Environment</button>
+              <div style="font-size:11.5px;color:var(--text-muted);margin-top:8px" id="simEnvStatus">
+                Active Rule: Occupied &amp; Lux &lt; 300 → Light ON; Occupied &amp; Temp ≥ 28°C → Fan ON.
+              </div>
+            </div>
+
+            <div class="content-card" style="padding:16px">
+              <h3 style="font-size:14px;color:var(--text-main);margin-bottom:6px">Sensor Fault &amp; Safety Experiments</h3>
+              <p style="font-size:12px;color:var(--text-muted);margin-bottom:10px">
+                Disabling both PIR and Presence sensors in a room forces occupancy evidence to <strong>UNKNOWN</strong> (never falsely claiming VACANT).
+              </p>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-warning btn-sm" style="flex:1;justify-content:center" onclick="simDisableSensors()">⚠️ Disable Room Sensors</button>
+                <button class="btn btn-sm" style="flex:1;justify-content:center" onclick="simRestoreSensors()">✅ Restore Room Sensors</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: DEVICES -->
+    <div class="app-view" id="viewDevices">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">Room Relays, Scenes &amp; Countdown Timers</div>
+            <div class="card-subtitle">Manual ON/OFF locks a 5-minute hold; AUTO restores sensor-driven policy control.</div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-sm" onclick="applyScene('HOME')">🔄 Resume All AUTO</button>
+            <button class="btn btn-sm btn-danger" onclick="applyScene('ALL_OFF')">🛑 Emergency All Off</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
+          <!-- Bedroom -->
+          <div class="content-card" style="padding:16px">
+            <h4 style="display:flex;justify-content:space-between;align-items:center;color:#60a5fa">
+              <span>🛏️ Bedroom</span>
+              <span class="pill-status pill-active" id="devRoomBadge0">OCCUPIED</span>
+            </h4>
+            <div style="font-size:11.5px;color:var(--text-dim);margin-bottom:8px" id="devRoomMeta0">PIR_1 (Zone 1) · 25.0°C · 120 lx</div>
+            <div class="actuator-list">
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">💡 Ceiling Light</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b0_light_meta">Auto Policy</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b0_light_on" onclick="setActuator('bedroom','light','ON')">ON</button>
+                  <button type="button" id="b0_light_off" class="active-off" onclick="setActuator('bedroom','light','OFF')">OFF</button>
+                  <button type="button" id="b0_light_auto" class="active-auto" onclick="setActuator('bedroom','light','AUTO')">AUTO</button>
+                </div>
+              </div>
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">🌀 Ceiling Fan</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b0_fan_meta">Auto Policy</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b0_fan_on" onclick="setActuator('bedroom','fan','ON')">ON</button>
+                  <button type="button" id="b0_fan_off" class="active-off" onclick="setActuator('bedroom','fan','OFF')">OFF</button>
+                  <button type="button" id="b0_fan_auto" class="active-auto" onclick="setActuator('bedroom','fan','AUTO')">AUTO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Living Room -->
+          <div class="content-card" style="padding:16px">
+            <h4 style="display:flex;justify-content:space-between;align-items:center;color:#60a5fa">
+              <span>🛋️ Living Room</span>
+              <span class="pill-status pill-inactive" id="devRoomBadge1">VACANT</span>
+            </h4>
+            <div style="font-size:11.5px;color:var(--text-dim);margin-bottom:8px" id="devRoomMeta1">Virtual Zone 2 · 24.0°C · 280 lx</div>
+            <div class="actuator-list">
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">💡 Ceiling Light</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b1_light_meta">Auto Policy</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b1_light_on" onclick="setActuator('living_room','light','ON')">ON</button>
+                  <button type="button" id="b1_light_off" class="active-off" onclick="setActuator('living_room','light','OFF')">OFF</button>
+                  <button type="button" id="b1_light_auto" class="active-auto" onclick="setActuator('living_room','light','AUTO')">AUTO</button>
+                </div>
+              </div>
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">🌀 Ceiling Fan</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b1_fan_meta">Manual OFF</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b1_fan_on" onclick="setActuator('living_room','fan','ON')">ON</button>
+                  <button type="button" id="b1_fan_off" class="active-off" onclick="setActuator('living_room','fan','OFF')">OFF</button>
+                  <button type="button" id="b1_fan_auto" class="active-auto" onclick="setActuator('living_room','fan','AUTO')">AUTO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Kitchen -->
+          <div class="content-card" style="padding:16px">
+            <h4 style="display:flex;justify-content:space-between;align-items:center;color:#60a5fa">
+              <span>🍳 Kitchen</span>
+              <span class="pill-status pill-inactive" id="devRoomBadge2">VACANT</span>
+            </h4>
+            <div style="font-size:11.5px;color:var(--text-dim);margin-bottom:8px" id="devRoomMeta2">Virtual Zone 3 · 29.5°C · 450 lx</div>
+            <div class="actuator-list">
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">💡 Ceiling Light</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b2_light_meta">Auto Policy</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b2_light_on" onclick="setActuator('kitchen','light','ON')">ON</button>
+                  <button type="button" id="b2_light_off" class="active-off" onclick="setActuator('kitchen','light','OFF')">OFF</button>
+                  <button type="button" id="b2_light_auto" class="active-auto" onclick="setActuator('kitchen','light','AUTO')">AUTO</button>
+                </div>
+              </div>
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">🌀 Ceiling Fan</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b2_fan_meta">Manual OFF</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b2_fan_on" onclick="setActuator('kitchen','fan','ON')">ON</button>
+                  <button type="button" id="b2_fan_off" class="active-off" onclick="setActuator('kitchen','fan','OFF')">OFF</button>
+                  <button type="button" id="b2_fan_auto" class="active-auto" onclick="setActuator('kitchen','fan','AUTO')">AUTO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Study -->
+          <div class="content-card" style="padding:16px">
+            <h4 style="display:flex;justify-content:space-between;align-items:center;color:#60a5fa">
+              <span>📚 Study</span>
+              <span class="pill-status pill-inactive" id="devRoomBadge3">VACANT</span>
+            </h4>
+            <div style="font-size:11.5px;color:var(--text-dim);margin-bottom:8px" id="devRoomMeta3">Virtual Zone 4 · 22.8°C · 95 lx</div>
+            <div class="actuator-list">
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">💡 Ceiling Light</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b3_light_meta">Auto Policy</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b3_light_on" onclick="setActuator('study','light','ON')">ON</button>
+                  <button type="button" id="b3_light_off" class="active-off" onclick="setActuator('study','light','OFF')">OFF</button>
+                  <button type="button" id="b3_light_auto" class="active-auto" onclick="setActuator('study','light','AUTO')">AUTO</button>
+                </div>
+              </div>
+              <div class="actuator-row" style="padding:8px 10px">
+                <div>
+                  <div style="font-size:12.5px;font-weight:600">🌀 Ceiling Fan</div>
+                  <div style="font-size:11px;color:var(--text-dim)" id="b3_fan_meta">Manual OFF</div>
+                </div>
+                <div class="btn-group-toggle">
+                  <button type="button" id="b3_fan_on" onclick="setActuator('study','fan','ON')">ON</button>
+                  <button type="button" id="b3_fan_off" class="active-off" onclick="setActuator('study','fan','OFF')">OFF</button>
+                  <button type="button" id="b3_fan_auto" class="active-auto" onclick="setActuator('study','fan','AUTO')">AUTO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card" style="padding:16px">
+          <h4 style="font-size:14px;color:var(--text-main);margin-bottom:8px">⏱️ Auto-Off Countdown Timer Scheduler</h4>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <select id="timerRoomSelect" class="form-control" style="width:150px">
+              <option value="bedroom">Bedroom</option>
+              <option value="living_room">Living Room</option>
+              <option value="kitchen">Kitchen</option>
+              <option value="study">Study</option>
+            </select>
+            <select id="timerDevSelect" class="form-control" style="width:130px">
+              <option value="light">Ceiling Light</option>
+              <option value="fan">Circulation Fan</option>
+            </select>
+            <input type="number" id="timerMinutes" class="form-control" min="1" max="1440" value="10" style="width:90px" placeholder="Minutes">
+            <span style="font-size:12px;color:var(--text-dim)">minutes</span>
+            <button class="btn btn-primary" onclick="scheduleTimer()">Start Countdown Timer</button>
+            <button class="btn" onclick="cancelTimer()">Clear All Timers</button>
+          </div>
+          <div id="activeTimersText" style="font-size:12px;color:var(--text-muted);margin-top:8px">No active countdown timers.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: LOGS -->
+    <div class="app-view" id="viewLogs">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">ClawGrid Audit &amp; Event Logs</div>
+            <div class="card-subtitle">Real-time log of occupancy transitions, SafetyKernel validations, and user commands</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-sm" onclick="clearEventLogs()">Clear Display</button>
+            <button class="btn btn-sm" onclick="exportEventLogsCSV()">📥 Download Log CSV</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <input type="text" id="logSearchInput" class="form-control" placeholder="Search events..." style="width:220px" oninput="renderLogsTable()">
+          <select id="logRoomFilter" class="form-control" style="width:140px" onchange="renderLogsTable()">
+            <option value="ALL">All Rooms</option>
+            <option value="bedroom">Bedroom</option>
+            <option value="living_room">Living Room</option>
+            <option value="kitchen">Kitchen</option>
+            <option value="study">Study</option>
+            <option value="system">System</option>
+          </select>
+          <select id="logSeverityFilter" class="form-control" style="width:140px" onchange="renderLogsTable()">
+            <option value="ALL">All Severities</option>
+            <option value="INFO">INFO</option>
+            <option value="WARN">WARN</option>
+            <option value="ALARM">ALARM</option>
+          </select>
+          <select id="logSourceFilter" class="form-control" style="width:150px" onchange="renderLogsTable()">
+            <option value="ALL">All Sources</option>
+            <option value="REAL_TIME">REAL_TIME</option>
+            <option value="SYNTHETIC">SYNTHETIC</option>
+          </select>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:auto" id="logCountLabel">Showing 0 events</span>
+        </div>
+
+        <div class="table-responsive">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Timestamp</th>
+                <th>Room</th>
+                <th>Event Type</th>
+                <th>Severity</th>
+                <th>Source</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody id="fullLogsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: DIAGNOSTICS -->
+    <div class="app-view" id="viewDiagnostics">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">Sensor Health &amp; Diagnostics Matrix</div>
+            <div class="card-subtitle">Per-sensor availability, warm-up readiness, and fault simulation controls</div>
+          </div>
+          <button class="btn btn-sm" onclick="refreshDiagnostics()">🔄 Refresh Diagnostics</button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="dashboard-table">
+            <thead>
+              <tr>
+                <th>Sensor ID</th>
+                <th>Room</th>
+                <th>Type</th>
+                <th>Latest Value</th>
+                <th>Freshness</th>
+                <th>Availability</th>
+                <th>Health Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="diagnosticsTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 7: HEALTH -->
+    <div class="app-view" id="viewHealth">
+      <div class="middle-grid">
+        <div class="content-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-headline">FreeRTOS Task &amp; Watchdog Telemetry</div>
+              <div class="card-subtitle">Dual ESP32-S3 Task Monitoring (`esp_task_wdt_init(5, true)`) &amp; Job Counters</div>
+            </div>
+            <span class="pill-status pill-active" id="badgeWatchdog">Task WDT Nominal (5.0s)</span>
+          </div>
+
+          <div class="table-responsive">
+            <table class="dashboard-table">
+              <thead>
+                <tr>
+                  <th>Task Name</th>
+                  <th>Core / Prio</th>
+                  <th>Period</th>
+                  <th>Min Stack Free</th>
+                  <th>Runtime Jobs</th>
+                  <th>Watchdog Subscription</th>
+                  <th>Missed Deadlines</th>
+                </tr>
+              </thead>
+              <tbody id="rtosFullTable">
+                <tr>
+                  <td><strong>ControlTask (Node A)</strong></td>
+                  <td>Core 1 · P5</td>
+                  <td>5 ms</td>
+                  <td>3,480 B</td>
+                  <td id="rtosJobsControl" style="font-family:var(--font-mono);color:#34d399">128,492</td>
+                  <td><span class="pill-status pill-active" id="wdtStatusControl">Subscribed (5.0s)</span></td>
+                  <td id="rtosMissControl">0</td>
+                </tr>
+                <tr>
+                  <td><strong>LinkTask (Node A/B)</strong></td>
+                  <td>Core 0 · P3</td>
+                  <td>5 ms</td>
+                  <td>2,912 B</td>
+                  <td id="rtosJobsLink" style="font-family:var(--font-mono);color:#38bdf8">64,120</td>
+                  <td><span class="pill-status pill-active" id="wdtStatusLink">Subscribed (5.0s)</span></td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td><strong>SpeechTask (Node B)</strong></td>
+                  <td>Core 1 · P4</td>
+                  <td>Event</td>
+                  <td>8,192 B</td>
+                  <td id="rtosJobsSpeech" style="font-family:var(--font-mono)">1,420</td>
+                  <td><span class="pill-status pill-inactive">Bounded Job Timeout</span></td>
+                  <td>0</td>
+                </tr>
+                <tr>
+                  <td><strong>Idle0 / Idle1 WDT</strong></td>
+                  <td>Core 0/1 · P0</td>
+                  <td>100 ms</td>
+                  <td>1,840 B</td>
+                  <td id="rtosJobsPi" style="font-family:var(--font-mono);color:#a78bfa">4,210</td>
+                  <td><span class="pill-status pill-active" id="wdtStatusPi">ESP-IDF Panic/Reboot</span></td>
+                  <td>0</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Interactive Embedded Fault & Watchdog Lab -->
+          <div style="background:#080c16;border:1px solid var(--border);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="font-size:13px;color:#fbbf24">⚡ Interactive Watchdog, Radio Lease &amp; SafetyKernel Lab</strong>
+              <span style="font-size:11.5px;font-family:var(--font-mono);color:var(--text-muted)" id="wdtBootCounter">Node A Boot #1 · Uptime: 0s</span>
+            </div>
+            <p style="font-size:12px;color:var(--text-muted)">
+              Test how ClawGrid handles embedded faults: stalling <code>ControlTask</code> stops its watchdog feed and triggers an <code>ESP_RST_TASK_WDT</code> panic/reboot after 5.0s (incrementing Boot ID and restoring NVS policy with relays OFF). Freezing radio timestamps triggers Node B's 3.0s freshness gate while Node A continues local autonomous PIR control.
+            </p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="button" class="btn btn-warning btn-sm" onclick="simulateWdtStall()">💥 Simulate ControlTask Stall (5s WDT Reboot)</button>
+              <button type="button" class="btn btn-sm" onclick="simulateStaleLease()">📡 Simulate 3.0s Radio Lease Expiry</button>
+              <button type="button" class="btn btn-sm" onclick="restoreNominalRtos()">✅ Restore Nominal State</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-headline">SafetyKernel &amp; Dual-ESP32-S3 Architecture</div>
+              <div class="card-subtitle">Node A (Bedroom Sensor &amp; Relays) ↔ Node B (Speech &amp; API Gateway)</div>
+            </div>
+          </div>
+
+          <div class="actuator-list">
+            <div class="actuator-row">
+              <div>
+                <strong>Node A — Bedroom Sensor &amp; Relay Controller (ESP32-S3)</strong>
+                <div class="actuator-meta">GPIO 6 PIR_1 (60s warm-up + 200ms LOW arming) · GPIO 4 Light · GPIO 5 Fan · Autonomous if radio drops</div>
+              </div>
+              <span class="pill-status pill-active" id="tier1Badge">ARMED</span>
+            </div>
+            <div class="actuator-row">
+              <div>
+                <strong>Node B — Edge AI Speech &amp; Radio Gateway (ESP32-S3)</strong>
+                <div class="actuator-meta">ESP-SR MultiNet6 offline voice proposals · Authenticated ESP-NOW link (3.0s freshness gate)</div>
+              </div>
+              <span class="pill-status pill-active" id="tier2Badge">ONLINE</span>
+            </div>
+            <div class="actuator-row">
+              <div>
+                <strong>Two-Step Proposal → Confirm Binding</strong>
+                <div class="actuator-meta">AI/Voice and UI requests create unactuated proposals first; only confirmed proposals matching Boot ID execute</div>
+              </div>
+              <span class="pill-status pill-active" id="tier3Badge">VERIFIED</span>
+            </div>
+            <div class="actuator-row">
+              <div>
+                <strong>Anti-Cycling Dwell (3.0s) &amp; Max Continuous Run (4.0h)</strong>
+                <div class="actuator-meta">Enforced deterministically inside <code>safety_kernel.c</code> / <code>safety_kernel.py</code></div>
+              </div>
+              <span class="pill-status pill-active" id="invariantDwellBadge">ENFORCED (3.0s)</span>
+            </div>
+          </div>
+
+          <div class="terminal-block" id="healthMemoryTerminal" style="margin-top:6px">Memory [HOST_MEASURED]: Internal Free SRAM: 184.2 KiB · Min Free: 142.0 KiB · PSRAM Free: 7,812 KiB. Dual ESP32-S3 task watchdogs armed (5.0s timeout).</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 8: CONFIG -->
+    <div class="app-view" id="viewConfig">
+      <div class="content-card">
+        <div class="card-topbar">
+          <div>
+            <div class="card-headline">ClawGrid Policy &amp; Threshold Configuration</div>
+            <div class="card-subtitle">Customize occupancy grace periods, environmental thresholds, and SafetyKernel holds</div>
+          </div>
+          <button class="btn btn-primary" onclick="saveConfiguration()">💾 Save Changes</button>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Vacancy Grace Period (seconds)</label>
+            <input type="number" id="cfgGrace" class="form-control" min="2" max="600" value="5">
+          </div>
+          <div class="form-group">
+            <label>Minimum Dwell Time (seconds)</label>
+            <input type="number" id="cfgDwell" class="form-control" min="1" max="30" value="3">
+          </div>
+          <div class="form-group">
+            <label>Manual Override Hold Duration (minutes)</label>
+            <input type="number" id="cfgHold" class="form-control" min="1" max="120" value="5">
+          </div>
+          <div class="form-group">
+            <label>Auto-Light Lux Threshold (Lux)</label>
+            <input type="number" id="cfgLux" class="form-control" min="10" max="1000" value="300">
+          </div>
+          <div class="form-group">
+            <label>Auto-Fan Temp Threshold (°C)</label>
+            <input type="number" id="cfgTemp" class="form-control" min="15" max="45" value="28.0" step="0.5">
+          </div>
+          <div class="form-group">
+            <label>Real-Time Hardware REST API URL</label>
+            <input type="text" id="cfgHardwareUrl" class="form-control" value="http://127.0.0.1:8770">
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:16px">
+          <button class="btn btn-primary" onclick="saveConfiguration()">Save Configuration</button>
+          <button class="btn" onclick="resetConfiguration()">Reset to Factory Defaults</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden compatibility elements for scripts & test runners -->
+    <div style="display:none">
+      <button id="confirmManual" disabled></button>
+      <button id="confirmSpeech" disabled></button>
+      <button id="execute" disabled></button>
+      <input type="checkbox" id="autoLight">
+      <input type="checkbox" id="autoFan">
+      <input type="number" id="grace" value="120">
+      <input type="text" id="command">
+      <div id="proposal"></div>
+      <div id="result"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="/api/client"></script>
+<script src="/static/app.js"></script>
 </body>
 </html>

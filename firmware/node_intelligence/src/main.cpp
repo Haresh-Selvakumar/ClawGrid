@@ -8,7 +8,7 @@
 #include "memory_runtime.h"
 #include "rx_mailbox.h"
 #include "runtime_selftest.h"
-#include "dashboard.h"
+#include "hardware_status.h"
 #include "security_selftest.h"
 #include "http_selftest.h"
 #include "rtos_runtime.h"
@@ -18,9 +18,12 @@
 #include "serial_bridge.h"
 #include "evidence_selftest.h"
 #include "command_target.h"
+#include "serial_text_command.h"
 #include "dashboard_client.h"
 #include "pcm16.h"
 #include <esp_system.h>
+#include <esp_wifi.h>
+#include <esp_netif.h>
 
 static RxMailbox s_rx;
 static httpd_handle_t s_http=nullptr;
@@ -28,7 +31,7 @@ static portMUX_TYPE s_mux=portMUX_INITIALIZER_UNLOCKED;
 static RoomReport s_report;
 static SimState s_sim_report;
 static uint32_t s_sim_received=0,s_sim_sequence=0;
-static uint32_t s_received=0,s_last_seq=0,s_accepted=0,s_invalid=0,s_replayed=0;
+static uint32_t s_received=0,s_last_seq=0,s_accepted=0,s_invalid=0,s_replayed=0,s_nonprogress=0;
 static std::atomic<uint32_t> s_seq{0},s_tx_failed{0};
 static RuntimeHealth s_health;
 static DiagnosticLog s_log;
@@ -95,8 +98,9 @@ static bool queue_command(ControlCommand c,uint32_t &id) {
 }
 static esp_err_t root(httpd_req_t *req) {
     httpd_resp_set_type(req,"text/html; charset=utf-8");
+    httpd_resp_set_hdr(req,"Cache-Control","no-store");
     httpd_resp_set_hdr(req,"Content-Security-Policy","default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'self'; frame-ancestors 'none'");
-    return httpd_resp_send(req,kDashboard,sizeof(kDashboard)-1);
+    return httpd_resp_send(req,kHardwareStatus,sizeof(kHardwareStatus)-1);
 }
 static esp_err_t simulation_page(httpd_req_t *req) {
     httpd_resp_set_type(req,"text/html; charset=utf-8");
@@ -147,14 +151,21 @@ static esp_err_t memory_api(httpd_req_t *req) {
     return json(req,snprintf(s_json,sizeof(s_json),"{\"source\":\"HARDWARE_MEASURED\",\"internal_free\":%u,\"internal_min\":%u,\"internal_largest\":%u,\"psram_total\":%u,\"psram_free\":%u,\"psram_largest\":%u,\"stack_task\":\"http\",\"stack_free_bytes\":%u,\"rx_dropped\":%u,\"memory_config_ok\":%s}",m.internal_free,m.internal_min,m.internal_largest,m.psram_total,m.psram_free,m.psram_largest,m.stack_free_bytes,s_rx.dropped(),memory_hardware_matches()?"true":"false"));
 }
 static esp_err_t rtos_api(httpd_req_t *req) {
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":%u,\"max_exec_us\":%u,\"max_late_us\":%u,\"deadline_misses\":%u,\"stack_free_bytes\":%u,\"watchdog\":%s,\"task_count\":%u}",s_link_timing.jobs.load(),s_link_timing.max_exec_us.load(),s_link_timing.max_late_us.load(),s_link_timing.deadline_misses.load(),s_link_timing.handle?(unsigned)uxTaskGetStackHighWaterMark(s_link_timing.handle):0,s_link_timing.watchdog.load()?"true":"false",(unsigned)uxTaskGetNumberOfTasks()));
+    // Read-only link/AP diagnostics stay on the HTTP task, outside ControlTask.
+    uint8_t channel=0; wifi_second_chan_t secondary;
+    bool channel_ok=esp_wifi_get_channel(&channel,&secondary)==ESP_OK;
+    wifi_sta_list_t clients={}; bool clients_ok=esp_wifi_ap_get_sta_list(&clients)==ESP_OK;
+    esp_netif_ip_info_t ip={}; esp_netif_t *ap=esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
+    bool ip_ok=ap && esp_netif_get_ip_info(ap,&ip)==ESP_OK;
+
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":%u,\"max_exec_us\":%u,\"max_late_us\":%u,\"deadline_misses\":%u,\"stack_free_bytes\":%u,\"watchdog\":%s,\"task_count\":%u,\"wifi_channel_known\":%s,\"wifi_channel\":%u,\"ap_ip_valid\":%s,\"ap_ip\":\"%u.%u.%u.%u\",\"ap_clients_known\":%s,\"ap_clients\":%u}",s_link_timing.jobs.load(),s_link_timing.max_exec_us.load(),s_link_timing.max_late_us.load(),s_link_timing.deadline_misses.load(),s_link_timing.handle?(unsigned)uxTaskGetStackHighWaterMark(s_link_timing.handle):0,s_link_timing.watchdog.load()?"true":"false",(unsigned)uxTaskGetNumberOfTasks(),channel_ok?"true":"false",channel,ip_ok?"true":"false",IP2STR(&ip.ip),clients_ok?"true":"false",(unsigned)clients.num));
 }
 static esp_err_t state_api(httpd_req_t *req) {
     portENTER_CRITICAL(&s_mux); RoomReport r=s_report; bool have=s_have;
-    uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed;
+    uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed,nonprogress=s_nonprogress;
     portEXIT_CRITICAL(&s_mux); bool known=have&&age<3000;
-    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true}"));
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s}",occupancy_name(r.occupancy),r.motion?"true":"false",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false"));
+    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true,\"age_ms\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"physical_state\":\"not measured\"}",have?age:0,r.boot_id,r.uptime_ms,nonprogress));
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s}",occupancy_name(r.occupancy),r.motion?"true":"false",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false"));
 }
 static esp_err_t transaction_api(httpd_req_t *req) {
     if(!authorized(req)) return unauthorized(req);
@@ -200,6 +211,19 @@ static esp_err_t proposal_api(httpd_req_t *req) {
     ProposalResult result=s_proposal.prepare(target,boot,fresh,millis(),from_speech,job);
     if(result!=ProposalResult::Ok) return proposal_failure(req,result);
     return json(req,snprintf(s_json,sizeof(s_json),"{\"proposal_id\":%u,\"target\":\"%s\",\"room\":\"%s\",\"device\":\"%s\",\"action\":\"%s\",\"expires_in_ms\":15000,\"authorized\":false}",s_proposal.id,target_mode(target.mode),target_room(target.room),target_device(target.device),target_action(target.action)));
+}
+static esp_err_t text_api(httpd_req_t *req) {
+    if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
+    if(!read_body(req)) return bad_body(req);
+    SerialTextCommand parsed; uint32_t boot=0;
+    if(!parse_serial_text(s_body,parsed)) {
+        s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
+    }
+    bool fresh=proposal_controller(boot);
+    ProposalResult result=s_proposal.prepare(parsed.target,boot,fresh,millis(),false,0);
+    if(result!=ProposalResult::Ok) return proposal_failure(req,result);
+    const CommandTarget &t=parsed.target;
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"proposal_id\":%u,\"target\":\"%s\",\"room\":\"%s\",\"device\":\"%s\",\"action\":\"%s\",\"requested_room\":\"%s\",\"bench_alias\":%s,\"acoustic_fallback\":%s,\"expires_in_ms\":15000,\"authorized\":false}",s_proposal.id,target_mode(t.mode),target_room(t.room),target_device(t.device),target_action(t.action),parsed.requested_hall?"hall":"bedroom",parsed.bench_alias?"true":"false",parsed.acoustic_fallback?"true":"false"));
 }
 static esp_err_t confirm_api(httpd_req_t *req) {
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
@@ -265,11 +289,11 @@ static esp_err_t client_api(httpd_req_t *req) {
 }
 static bool start_http() {
     httpd_config_t c=HTTPD_DEFAULT_CONFIG(); c.stack_size=6144; c.core_id=1; c.max_open_sockets=2;
-    c.max_uri_handlers=16; c.lru_purge_enable=true; c.recv_wait_timeout=1; c.send_wait_timeout=1;
+    c.max_uri_handlers=17; c.lru_purge_enable=true; c.recv_wait_timeout=1; c.send_wait_timeout=1;
     if(httpd_start(&s_http,&c)!=ESP_OK) return false;
-    const char *paths[]={"/","/api/state","/api/memory","/api/transaction","/api/control","/api/voice","/api/rtos","/simulation","/api/simulation","/api/simulation/input","/api/speech","/api/speech/audio","/api/evidence","/api/proposal","/api/confirm","/api/client"};
-    esp_err_t (*handlers[])(httpd_req_t*)={root,state_api,memory_api,transaction_api,control_api,voice_api,rtos_api,simulation_page,simulation_state_api,simulation_input_api,speech_state_api,speech_audio_api,evidence_api,proposal_api,confirm_api,client_api};
-    for(int i=0;i<16;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14)?HTTP_POST:HTTP_GET; r.handler=handlers[i];
+    const char *paths[]={"/","/api/state","/api/memory","/api/transaction","/api/control","/api/voice","/api/rtos","/simulation","/api/simulation","/api/simulation/input","/api/speech","/api/speech/audio","/api/evidence","/api/proposal","/api/confirm","/api/client","/api/text"};
+    esp_err_t (*handlers[])(httpd_req_t*)={root,state_api,memory_api,transaction_api,control_api,voice_api,rtos_api,simulation_page,simulation_state_api,simulation_input_api,speech_state_api,speech_audio_api,evidence_api,proposal_api,confirm_api,client_api,text_api};
+    for(int i=0;i<17;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14||i==16)?HTTP_POST:HTTP_GET; r.handler=handlers[i];
         if(httpd_register_uri_handler(s_http,&r)!=ESP_OK) { httpd_stop(s_http); s_http=nullptr; return false; }
     }
     return true;
@@ -285,6 +309,7 @@ static void control_tick(uint32_t now) {
     if(send) { uint8_t p[kControlBytes]; encode_control(t.command,p);
         if(!secure_send(kNodeA,MSG_TYPE_DEVICE_COMMAND,2,1,s_seq++,p,sizeof(p))) ++s_tx_failed;
     }
+    if(timeout) traffic_led_event(TrafficError);
     if(timeout) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":%u,\"phase\":3,\"attempts\":%u,\"outcome_known\":false}\n",t.command.id,t.attempts);
 }
 static void process_frame(const RxFrame &f) {
@@ -292,6 +317,7 @@ static void process_frame(const RxFrame &f) {
     if(!secure_decode(f.mac,kNodeA,f.bytes,f.length,h,p) || h.src_node!=1 || h.dst_node!=2) {
         portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return;
     }
+    traffic_led_event(TrafficRx);
     if(h.msg_type==MSG_TYPE_NODE_STATUS) {
         SimState state; if(!decode_sim_state(p,h.payload_len,state)) return;
         portENTER_CRITICAL(&s_mux);
@@ -302,6 +328,7 @@ static void process_frame(const RxFrame &f) {
         if(!decode_room_report(p,h.payload_len,r)) { portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return; }
         portENTER_CRITICAL(&s_mux);
         if(s_have && (r.boot_id<s_report.boot_id || (r.boot_id==s_report.boot_id && !sequence_newer(h.seq_num,s_last_seq)))) ++s_replayed;
+        else if(!room_report_advances(r,s_report)) ++s_nonprogress;
         else {
             if(s_have && r.boot_id!=s_report.boot_id) { s_last_control=0; if(s_transaction.phase==1) s_transaction.phase=3; }
             s_report=r; s_last_seq=h.seq_num; s_have=true; s_received=millis(); ++s_accepted;
@@ -318,6 +345,7 @@ static void process_frame(const RxFrame &f) {
             accepted=true;
         }
         t=s_transaction; portEXIT_CRITICAL(&s_mux);
+        if(accepted) traffic_led_event(a.status==ControlStatus::Applied ? TrafficAck : TrafficError);
         if(accepted) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":%u,\"phase\":2,\"status\":%u,\"attempts\":%u,\"rtt_us\":%u,\"processing_us\":%u,\"light\":%s,\"fan\":%s,\"outcome_known\":true}\n",a.id,(unsigned)a.status,t.attempts,t.rtt_us,a.processing_us,a.light?"true":"false",a.fan?"true":"false");
     }
 }
@@ -381,13 +409,13 @@ static void serial_tick() {
 }
 void setup() {
     s_proposal.seed(esp_random()&0x7fffffffu);
-    Serial.begin(115200); s_rx.begin(); s_log.begin(); neural_agent_init(); s_ok=runtime_selftest()&&neural_agent_selftest()&&security_selftest()&&s_health.begin();
+    Serial.begin(115200); traffic_led_begin(); s_rx.begin(); s_log.begin(); neural_agent_init(); s_ok=runtime_selftest()&&neural_agent_selftest()&&security_selftest()&&s_health.begin();
     Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"B\",\"schema\":3,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
     Serial.printf("{\"kind\":\"console_transport\",\"transport\":\"%s\"}\n",native_serial_transport());
     WiFi.mode(WIFI_AP_STA); WiFi.setSleep(false);
     bool ap=WiFi.softAP(kApSsid,kApPassword,CLAWGRID_WIFI_CHANNEL,false,2);
     s_radio=ap && esp_now_init()==ESP_OK && secure_peer(kNodeA);
-    if(s_radio) esp_now_register_recv_cb(receive);
+    if(s_radio) { esp_now_register_recv_cb(receive); esp_now_register_send_cb(traffic_send_complete); }
     if(s_ok) {
         s_link_timing.handle=xTaskCreateStaticPinnedToCore(link_task,"LinkTask",sizeof(s_link_stack),nullptr,3,s_link_stack,&s_link_tcb,0);
         if(!s_link_timing.handle) s_health.fail();
@@ -401,8 +429,8 @@ void loop() {
     static uint32_t last_memory=0;
     if((uint32_t)(now-last_memory)>=5000) {
         last_memory=now; memory_log("B",s_rx.dropped(),s_tx_failed.load());
-        portENTER_CRITICAL(&s_mux); uint32_t a=s_accepted,b=s_invalid,c=s_replayed; portEXIT_CRITICAL(&s_mux);
-        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":%u,\"invalid\":%u,\"replayed\":%u,\"authenticated\":true,\"radio\":%s}\n",a,b,c,s_radio?"true":"false");
+        portENTER_CRITICAL(&s_mux); uint32_t a=s_accepted,b=s_invalid,c=s_replayed,d=s_nonprogress; portEXIT_CRITICAL(&s_mux);
+        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"link\",\"node\":\"B\",\"accepted\":%u,\"invalid\":%u,\"replayed\":%u,\"nonprogress\":%u,\"authenticated\":true,\"radio\":%s}\n",a,b,c,d,s_radio?"true":"false");
         s_link_timing.log("B","LinkTask",0,3,5,s_log.dropped.load());
     }
     vTaskDelay(pdMS_TO_TICKS(5));

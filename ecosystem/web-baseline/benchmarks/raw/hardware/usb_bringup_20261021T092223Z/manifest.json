@@ -1,0 +1,121 @@
+{
+  "utc": "20261021T092223Z",
+  "kind": "USB_ONLY_BRINGUP",
+  "hardware_source": "HARDWARE_MEASURED",
+  "build_source": "HOST_MEASURED",
+  "steps": [
+    {
+      "step": "identity-and-backup",
+      "exit_code": 0
+    },
+    {
+      "step": "recover-and-verify-installed-credentials",
+      "exit_code": 0
+    },
+    {
+      "step": "build-pair",
+      "exit_code": 0
+    },
+    {
+      "step": "identity-checked-deploy-pair",
+      "exit_code": 0
+    },
+    {
+      "step": "normal-reset-boot-capture",
+      "exit_code": 0
+    },
+    {
+      "step": "verify-pair",
+      "exit_code": 0
+    }
+  ],
+  "files": [
+    {
+      "path": "identity-commands.json",
+      "sha256": "4b3926b213eb24780c8089b4a9d89df015cd12436d4019821f97e9270059078a"
+    },
+    {
+      "path": "credential-comparison.json",
+      "sha256": "162d56f0954129ab0189d75f0caa1ebb06919e35b80ce30248be5f496d054eb1"
+    },
+    {
+      "path": "build-commands.json",
+      "sha256": "3695418f53566df417a9829079da71a10b1c08548af917f10eb4adf28c736698"
+    },
+    {
+      "path": "deployment-guards.json",
+      "sha256": "bc172ce476c6641ad64b514baa2c661ad9dd92ef170dcec636639af184746423"
+    },
+    {
+      "path": "verification.json",
+      "sha256": "905fdde3b42832ca908392d35b9d3d70bd5f4ccf7d6f6afd09c36ac7fc37188c"
+    },
+    {
+      "path": "A-identity.log",
+      "sha256": "79ac968e485eca87fa0c62da9554ce4653d9a82dee9e588e3c43cfff44ff251f"
+    },
+    {
+      "path": "A-security.log",
+      "sha256": "79dec80ea634cced37e6e852bcbceaee77d1f6fc9d70a763a08e132ba6b81a89"
+    },
+    {
+      "path": "B-identity.log",
+      "sha256": "3ac0e086f4a1e77b411a4c82aff4c67991cfbcd1248da1f15d9804c7daa2a97a"
+    },
+    {
+      "path": "B-security.log",
+      "sha256": "e2a816cffa4a0bfafaad7cdbe29aa21d28c8b12ad38a7e185f343e2d92f3819f"
+    },
+    {
+      "path": "before-A-serial.log",
+      "sha256": "d85df55aa5aa73bb4d384eee8f834d9076d5bb3c3dda6c037f467e3125849c3b"
+    },
+    {
+      "path": "before-B-serial.log",
+      "sha256": "bfe7c041c62185b97ad88d013329be50055a9ed9b86b764bab33bb0eba3aa320"
+    },
+    {
+      "path": "updated-boot-A-serial.log",
+      "sha256": "620bc2473924d0d120298b40877f2ef1cf0cb05fe45d4b2992afb4e5a53b6ca7"
+    },
+    {
+      "path": "updated-boot-B-serial.log",
+      "sha256": "3b52cc7edb8d9445556a2e84a8ba972649a11c983b1987f2fe760479eb4e9ab0"
+    },
+    {
+      "path": "build-A.log",
+      "sha256": "8c4bad4411b7b3d77b31ba98ea5c6cf1920279cb59bd48da9ea44ae22dcefffa"
+    },
+    {
+      "path": "build-B.log",
+      "sha256": "623763d620d036885b2f5ac95bab11448f2e189a20d94f5c49758bf866326dc8"
+    },
+    {
+      "path": "image-native_voice.log",
+      "sha256": "cedcaf6c0179428a2324003b15893fce8869c3cfdfb0069c3b6b4595a0864489"
+    },
+    {
+      "path": "image-speech_intelligence.log",
+      "sha256": "1057c21f24c252160d8597747f5436c282463852b4ad621919b5ac466d35befe"
+    },
+    {
+      "path": "deploy-A.log",
+      "sha256": "d620b7bc09e3e01d7b2a03ab16352f99ad9f9217725bc79a27fb980810a6e434"
+    },
+    {
+      "path": "deploy-B-speech.log",
+      "sha256": "ac679c008eb7f7f9610f66d1fa981fd46f5922712252688f370098da7484e773"
+    }
+  ],
+  "preservation": {
+    "credentials": "Recovered unchanged from installed images; A/B radio constants match; old and updated B authenticate the original token",
+    "nvs": "No flash artifact intersects 0x9000..0xdfff; restored policy unchanged; normal boot counter advances",
+    "backups": "Private application and partition/NVS snapshots retained only in ignored benchmarks/backups/usb-bringup"
+  },
+  "stop_boundary": {
+    "physical_outputs_enabled": false,
+    "physical_control_commands_sent": false,
+    "watchdog_fault_injection": false,
+    "serial_handles_closed": true
+  }
+}

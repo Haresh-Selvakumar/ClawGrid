@@ -10,6 +10,13 @@
 #include <errno.h>
 #include <unistd.h>
 
+#if defined(CLAWGRID_UART_CONSOLE) && !CONFIG_ESP_CONSOLE_UART_DEFAULT
+#error UART environment requires the UART0 SDK console; regenerate its sdkconfig using native/CMakeLists.txt defaults
+#endif
+#if !defined(CLAWGRID_UART_CONSOLE) && !CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG
+#error Native USB environment requires the USB Serial/JTAG SDK console
+#endif
+
 NativeSerial Serial; NativeESP ESP; NativeWiFi WiFi;
 static bool serial_ready=false,wifi_ready=false,wifi_started=false;
 const char *native_serial_transport(void) {

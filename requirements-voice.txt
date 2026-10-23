@@ -1,0 +1,4 @@
+vosk==0.3.45
+pyserial==3.5
+websockets==17.3
+cryptography==50.0.2

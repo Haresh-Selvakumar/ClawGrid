@@ -1,0 +1,64 @@
+/**
+ * @file clawgrid_config.h
+ * @brief Hardware Pin Maps, Network Configuration, and Node IDs
+ */
+
+#ifndef CLAWGRID_CONFIG_H
+#define CLAWGRID_CONFIG_H
+
+/* Node Identifiers */
+#define NODE_ID_VOICE_FASTPATH     0x0001  /* Node A */
+#define NODE_ID_INTELLIGENCE_STATE 0x0002  /* Node B */
+#define NODE_ID_BROADCAST          0xFFFF
+
+/* Wireless (ESP-NOW) Channel */
+#define CLAWGRID_WIFI_CHANNEL      1
+
+/* Node A (Voice & Fast-path) Pin Mapping (ESP32-S3-N16R8) */
+#define NODE_A_PIR_PIN             6       /* 3-pin PIR sensor input */
+#define NODE_A_RELAY_LIGHT_PIN     4       /* Separate single-channel light module */
+#define NODE_A_RELAY_FAN_PIN       5       /* Separate single-channel fan module */
+/* Provisional GPIO-to-interface polarity, not verified module compatibility.
+ * An intervening transistor may invert it. Check electrically before bench use. */
+#ifndef NODE_A_RELAY_ACTIVE_LOW
+#define NODE_A_RELAY_ACTIVE_LOW    true
+#endif
+#define NODE_A_PIR_WARMUP_MS       60000u /* Then require 200 ms LOW before arming. */
+#ifndef CLAWGRID_PHYSICAL_OUTPUTS
+#define CLAWGRID_PHYSICAL_OUTPUTS  0 /* Simulation builds never drive relay pins. */
+#endif
+#ifndef CLAWGRID_DIAGNOSTIC_FAULTS
+#define CLAWGRID_DIAGNOSTIC_FAULTS 0 /* Explicit USB diagnostic builds only. */
+#endif
+#if CLAWGRID_DIAGNOSTIC_FAULTS && CLAWGRID_PHYSICAL_OUTPUTS
+#error Diagnostic fault injection requires physical outputs inhibited
+#endif
+#if CLAWGRID_PHYSICAL_OUTPUTS
+#define CLAWGRID_OUTPUT_MODE "enabled"
+#else
+#define CLAWGRID_OUTPUT_MODE "inhibited"
+#endif
+#if CLAWGRID_DIAGNOSTIC_FAULTS
+#define CLAWGRID_FAULT_MODE "diagnostic"
+#else
+#define CLAWGRID_FAULT_MODE "default"
+#endif
+#define CLAWGRID_BUILD_MODE "ClawGrid:outputs=" CLAWGRID_OUTPUT_MODE ";faults=" CLAWGRID_FAULT_MODE
+#define NODE_A_STATUS_LED_PIN      48      /* Onboard WS2812 or RGB LED */
+
+/* I2S Microphone Pin Mapping (INMP441 / PDM) */
+#define I2S_MIC_SCK_PIN            12      /* Serial Clock (BCLK) */
+#define I2S_MIC_WS_PIN             11      /* Word Select (LRCLK) */
+#define I2S_MIC_SD_PIN             10      /* Serial Data (DOUT) */
+
+/* I2S Speaker / DAC Pin Mapping (MAX98357A / Tone) */
+#define I2S_SPK_BCLK_PIN           16
+#define I2S_SPK_LRC_PIN            17
+#define I2S_SPK_DIN_PIN            18
+
+/* Safety Timing Parameters */
+#define CLAWGRID_MIN_DWELL_MS      3000    /* 3s anti-cycle dwell time */
+#define CLAWGRID_VACANCY_GRACE_MS  120000  /* 2 minutes grace period */
+#define CLAWGRID_HEARTBEAT_MS      1000    /* 1 Hz heartbeat */
+
+#endif /* CLAWGRID_CONFIG_H */

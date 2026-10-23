@@ -3,10 +3,14 @@
 #include <mbedtls/md.h>
 #include "private_config.h"
 #include "clawgrid_protocol.h"
+#include "traffic_led.h"
 
 // CCMP unicast plus a mandatory application tag; plaintext/spoofed-MAC frames
 // cannot authorize actions. CRC remains only accidental-corruption detection.
 static constexpr size_t kAuthBytes = 16;
+inline void traffic_send_complete(const uint8_t *, esp_now_send_status_t status) {
+    traffic_led_event(status == ESP_NOW_SEND_SUCCESS ? TrafficTx : TrafficError);
+}
 inline bool secure_peer(const uint8_t *mac) {
     if (esp_now_set_pmk(kPmk) != ESP_OK) return false;
     esp_now_peer_info_t peer = {};
@@ -34,5 +38,7 @@ inline bool secure_send(const uint8_t *mac, clawgrid_msg_type_t type, uint16_t s
     size_t n=clawgrid_serialize(type,src,dst,sequence,0,payload,bytes,packet,sizeof(packet)-kAuthBytes);
     if (!n || !auth_tag(packet,n,digest)) return false;
     memcpy(packet+n,digest,kAuthBytes);
-    return esp_now_send(mac,packet,n+kAuthBytes)==ESP_OK;
+    const bool sent=esp_now_send(mac,packet,n+kAuthBytes)==ESP_OK;
+    if(!sent) traffic_led_event(TrafficError);
+    return sent;
 }

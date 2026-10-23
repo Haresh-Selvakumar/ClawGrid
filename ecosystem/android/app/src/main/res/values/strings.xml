@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">ClawGrid</string>
+    <string name="brand_subtitle">SMART HOME &amp; EDGE AI</string>
+    <string name="version_title">ClawGrid V2.0</string>
+    <string name="mode_hardware">Hardware (Node A)</string>
+    <string name="mode_simulation">4-Room Simulation</string>
+    <string name="nav_overview">Home Overview</string>
+    <string name="nav_floorplan">4-Room Lab</string>
+    <string name="nav_relays">Rooms &amp; Relays</string>
+    <string name="nav_telemetry">Live Telemetry</string>
+    <string name="nav_safety">Safety &amp; Cloud</string>
+    <string name="kpi_occupancy">ROOM OCCUPANCY</string>
+    <string name="kpi_active_loads">ACTIVE LOADS &amp; RELAYS</string>
+    <string name="kpi_temp_lux">AVG ROOM TEMP &amp; LUX</string>
+    <string name="kpi_safety_health">SAFETYKERNEL &amp; HEALTH</string>
+    <string name="scene_resume_auto">Resume All AUTO</string>
+    <string name="scene_emergency_off">Emergency All Off</string>
+    <string name="scene_sleep">Sleep Mode</string>
+    <string name="scene_away">Away Mode</string>
+    <string name="timer_scheduler_title">Auto-Off Countdown Timer Scheduler</string>
+    <string name="timer_start">Start Countdown Timer</string>
+    <string name="timer_clear">Clear All Timers</string>
+    <string name="voice_assistant_title">Offline Edge Voice &amp; Intent Parser</string>
+    <string name="supabase_sync_title">Supabase Cloud Persistence &amp; Audit Sync</string>
+</resources>

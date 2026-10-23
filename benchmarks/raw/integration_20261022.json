@@ -1,0 +1,52 @@
+{
+  "date_ist": "2026-10-22",
+  "host_tests": {
+    "source": "HOST_MEASURED",
+    "passed": 167,
+    "seconds": 29.33,
+    "report": "benchmarks/raw/host_tests_current_verified.xml"
+  },
+  "frontend": "passed",
+  "images": [
+    {
+      "environment": "native_voice",
+      "sha256": "2cce3d140e58a3e83bb8d6f88a7d338b2aca452afbb8a0b019ecc9798ec9dacf",
+      "mode": "outputs=inhibited;faults=default",
+      "console": "usb_serial_jtag",
+      "deployed_this_session": false
+    },
+    {
+      "environment": "native_voice_uart",
+      "sha256": "7b419450192ca70f13224aad193d17342788fc909854d5893d5c30a81f3857a8",
+      "mode": "outputs=inhibited;faults=default",
+      "console": "uart0",
+      "deployed_this_session": false
+    },
+    {
+      "environment": "speech_intelligence",
+      "sha256": "6e33c58e8a9c83b990b3700c942564d8ecb6757fa3a3d857a22f45ed1d03a62d",
+      "mode": "outputs=inhibited;faults=default",
+      "console": "usb_serial_jtag",
+      "deployed_this_session": true
+    }
+  ],
+  "board_b": {
+    "source": "HARDWARE_MEASURED",
+    "port": "COM8",
+    "mac": "e0:72:a1:f5:bc:b0",
+    "flash_manifest": "benchmarks/raw/hardware/flash_speech_intelligence_20261022T031226Z.json",
+    "runtime_capture": "benchmarks/raw/hardware/20261022T031308Z.json",
+    "api_capture": "benchmarks/raw/hardware/api_initial_20261022.json"
+  },
+  "board_a": {
+    "deployed_this_session": false,
+    "failure": "Native COM7 could not configure port; subsequently absent; Windows lists Unknown USB Device (Device Descriptor Request Failed), Code 43. User cannot change cable now.",
+    "uart_build_ready": true
+  },
+  "physical_testing": "Not performed; user confirmed relay power disconnected. Relay IN interface remains unverified.",
+  "bridge": {
+    "url": "http://127.0.0.1:8770/simulation",
+    "serial": "COM8",
+    "launcher_pid": 11220
+  }
+}

@@ -1,0 +1,172 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "firmware_sha256": "acdb1aaf1489da864d14db9e3377ca8ff4face972ebe5d9d349419de0c5199ec",
+  "flash_manifest": "flash_speech_intelligence_20261022T033051Z.json",
+  "setup": "B COM8, relay power disconnected; no commands confirmed",
+  "cases": [
+    {
+      "name": "no_token",
+      "status": 401,
+      "expected": 401,
+      "passed": true
+    },
+    {
+      "name": "unknown_scope",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "ambiguous_state",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "negation",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "substring",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "hall_cannot_target_physical_without_alias",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "nul_byte",
+      "status": 400,
+      "expected": 400,
+      "passed": true
+    },
+    {
+      "name": "prepare_only_physical_bedroom bedroom light on",
+      "status": 409,
+      "passed": true,
+      "response": {
+        "error": "Controller unavailable or stale",
+        "authorized": false
+      }
+    },
+    {
+      "name": "prepare_only_virtual_rooms hall pan of",
+      "status": 409,
+      "passed": true,
+      "response": {
+        "error": "Controller unavailable or stale",
+        "authorized": false
+      }
+    },
+    {
+      "name": "prepare_only_bench_pair all fun onn",
+      "status": 409,
+      "passed": true,
+      "response": {
+        "error": "Controller unavailable or stale",
+        "authorized": false
+      }
+    }
+  ],
+  "records": {
+    "state": {
+      "room": "bedroom",
+      "known": false,
+      "occupancy": "UNKNOWN",
+      "light": null,
+      "fan": null,
+      "authenticated": true,
+      "age_ms": 0,
+      "boot_id": 0,
+      "sample_uptime_ms": 0,
+      "nonprogress": 0,
+      "physical_state": "not measured"
+    },
+    "memory": {
+      "source": "HARDWARE_MEASURED",
+      "internal_free": 103775,
+      "internal_min": 55359,
+      "internal_largest": 59392,
+      "psram_total": 8388608,
+      "psram_free": 4088263,
+      "psram_largest": 3866624,
+      "stack_task": "http",
+      "stack_free_bytes": 3712,
+      "rx_dropped": 0,
+      "memory_config_ok": true
+    },
+    "rtos": {
+      "source": "HARDWARE_MEASURED",
+      "task": "LinkTask",
+      "core": 0,
+      "priority": 3,
+      "period_ms": 5,
+      "jobs": 15320,
+      "max_exec_us": 102,
+      "max_late_us": 1163,
+      "deadline_misses": 0,
+      "stack_free_bytes": 4612,
+      "watchdog": true,
+      "task_count": 12
+    },
+    "speech": {
+      "processing_source": "HARDWARE_MEASURED",
+      "supported": true,
+      "engine": "ESP-SR 1.7.0 MultiNet6 English",
+      "phase": 1,
+      "job": 0,
+      "command_id": 0,
+      "confidence": 0.0,
+      "samples": 0,
+      "inference_us": 0,
+      "max_frame_us": 0,
+      "frames": 0,
+      "stack_free_bytes": 0,
+      "pcm_crc32": 0,
+      "diagnostic_text": "",
+      "error_code": 0,
+      "last_state": 0,
+      "candidate_id": 0,
+      "candidate_score": 0.0,
+      "peak": 0,
+      "clipped_samples": 0,
+      "nonzero_samples": 0,
+      "chunk_samples": 0,
+      "padded_samples": 0,
+      "detecting_frames": 0,
+      "engine_errors": 0,
+      "authorized": false
+    },
+    "evidence": {
+      "processing_source": "HARDWARE_MEASURED",
+      "input_source": "SIMULATED",
+      "scope": "shadow monitor selftest; no actuation",
+      "passed_mask": 8388607,
+      "cases": 23,
+      "execution_us": 381,
+      "monitor_bytes": 60,
+      "physical_verification": false
+    },
+    "rtos_later": {
+      "source": "HARDWARE_MEASURED",
+      "task": "LinkTask",
+      "core": 0,
+      "priority": 3,
+      "period_ms": 5,
+      "jobs": 16220,
+      "max_exec_us": 238,
+      "max_late_us": 1183,
+      "deadline_misses": 0,
+      "stack_free_bytes": 4612,
+      "watchdog": true,
+      "task_count": 12
+    }
+  },
+  "bridge_launcher_pid": 24864
+}

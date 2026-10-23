@@ -1,0 +1,9 @@
+{
+  "source": "HOST_MEASURED",
+  "apk": "ecosystem\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+  "bytes": 18570202,
+  "sha256": "a44b9cc4dc3571c71b334b95049d4ab2221af10f1da8b04f6f1b13d1a4366119",
+  "configured_private_value_matches": 0,
+  "privileged_buildconfig_fields": 0,
+  "limit": "Exact configured-value scan only; not a general secret audit or hardware validation"
+}

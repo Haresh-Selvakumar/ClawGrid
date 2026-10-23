@@ -14,7 +14,7 @@ def provision():
         config = dict(ap_ssid='ClawGrid-Assistant', ap_password=secrets.token_urlsafe(15),
                       api_token=secrets.token_hex(24), pmk=secrets.token_hex(16),
                       lmk=secrets.token_hex(16), hmac_key=secrets.token_hex(32),
-                      node_a_mac='e0:72:a1:f6:a9:68', node_b_mac='e0:72:a1:f5:bc:b0')
+                      node_a_mac='e0:72:a1:f5:bc:b0', node_b_mac='e0:72:a1:f6:a9:68')
         path.write_text(json.dumps(config, indent=2)+'\n')
     def array(name, value):
         return f'static const uint8_t {name}[] = {{'+','.join(str(b) for b in bytes.fromhex(value.replace(':','')))+'};\n'
@@ -23,6 +23,7 @@ def provision():
         source += f'static const char k{key.title().replace("_", "")}[] = {json.dumps(config[key])};\n'
     for name, key in [('kPmk','pmk'),('kLmk','lmk'),('kHmacKey','hmac_key'),('kNodeA','node_a_mac'),('kNodeB','node_b_mac')]:
         source += array(name, config[key])
+    source += '#define CLAWGRID_PAIR_ID '+json.dumps('ClawGrid:pair:A='+config['node_a_mac'].lower()+';B='+config['node_b_mac'].lower())+'\n'
     header.write_text(source)
     print('Local credentials and private build header ready. Secrets are in local_credentials.json; excluded from version control.')
 

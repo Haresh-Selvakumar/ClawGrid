@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 import pytest
 from scripts.recovery_hil import classify_reset,policy_matches
-from scripts.flash_native import validate_image_mode,validate_console_mode
+from scripts.flash_native import validate_image_mode,validate_console_mode,build_environment
 
 @pytest.mark.parametrize('uart,config,marker,valid',[
     (True,'CONFIG_ESP_CONSOLE_UART_DEFAULT=y',b'ClawGrid:console=uart0\0',True),
@@ -27,6 +27,30 @@ def test_flasher_uses_actual_image_mode_and_rejects_ambiguity(image,diagnostic,v
     if valid:validate_image_mode(image,diagnostic)
     else:
         with pytest.raises(RuntimeError):validate_image_mode(image,diagnostic)
+
+@pytest.mark.parametrize('image,diagnostic,bench,valid',[
+    (b'ClawGrid:outputs=enabled;faults=default\0',False,True,True),
+    (b'ClawGrid:outputs=inhibited;faults=default\0',False,True,False),
+    (b'ClawGrid:outputs=enabled;faults=diagnostic\0',True,True,False),
+    (b'ClawGrid:outputs=enabled;faults=default\0ClawGrid:outputs=inhibited;faults=default\0',False,True,False)])
+def test_bench_flash_requires_exact_explicit_mode(image,diagnostic,bench,valid):
+    if valid:validate_image_mode(image,diagnostic,bench)
+    else:
+        with pytest.raises(RuntimeError):validate_image_mode(image,diagnostic,bench)
+
+@pytest.mark.parametrize('role,uart,diagnostic,bench,expected',[
+    ('A',True,False,False,'native_voice_uart'),
+    ('A',False,False,True,'native_voice_bench'),
+    ('A',True,False,True,'native_voice_uart_bench'),
+    ('A',True,True,False,'native_voice_uart_diagnostic'),
+    ('B-speech',False,False,False,'speech_intelligence'),
+    ('A',True,True,True,None),('B-speech',False,False,True,None),
+    ('B-speech',True,False,False,'speech_intelligence_uart'),
+    ('B-speech',True,True,False,None),('B',True,False,False,None),('B',False,True,False,None)])
+def test_flash_environment_rejects_unsafe_or_wrong_role_selection(role,uart,diagnostic,bench,expected):
+    if expected:assert build_environment(role,uart,diagnostic,bench)==expected
+    else:
+        with pytest.raises(RuntimeError):build_environment(role,uart,diagnostic,bench)
 
 @pytest.mark.parametrize('reason,text,before,after,expected',[
     (6,True,10,11,True),(3,True,10,11,False),(0,True,10,11,False),

@@ -53,3 +53,14 @@ inline bool sequence_newer(uint32_t next, uint32_t last) {
     uint32_t delta = next - last;
     return delta != 0 && delta < 0x80000000u;
 }
+// Radio activity alone does not prove ControlTask has produced a new sample.
+// Same-boot timestamps use wrap-safe ordering; persisted boot IDs increase.
+inline bool room_report_advances(const RoomReport &next, const RoomReport &last) {
+    return next.boot_id && (next.boot_id > last.boot_id ||
+        (next.boot_id == last.boot_id && sequence_newer(next.uptime_ms,last.uptime_ms)));
+}
+inline bool room_report_publishable(const RoomReport &next, const RoomReport &last, uint32_t now) {
+    // Control runs every 5 ms. Do not publish an aged mailbox sample after a
+    // stall merely because the 1-second radio heartbeat is due.
+    return room_report_advances(next,last) && (uint32_t)(now-next.uptime_ms)<=100;
+}

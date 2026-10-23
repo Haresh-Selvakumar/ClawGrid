@@ -1,0 +1,20 @@
+[
+  {
+    "role": "A",
+    "environment": "native_voice_uart",
+    "sha256": "82f3450186dae4bbf92b649059d58b4c341bfffe9fd6332d2a01219a31a5b4f2",
+    "diagnostic_faults": false,
+    "physical_outputs_enabled": false,
+    "write_address": "0x10000",
+    "bytes": 671776
+  },
+  {
+    "role": "B-speech",
+    "environment": "speech_intelligence",
+    "sha256": "e7bedef3a79ee225122b80290a9704e450541d13f97c2351f5b426e1586d075a",
+    "diagnostic_faults": false,
+    "physical_outputs_enabled": false,
+    "write_address": "0x10000",
+    "bytes": 1067808
+  }
+]

@@ -1,0 +1,24 @@
+{
+  "source": "HOST_MEASURED",
+  "at_utc": "2026-10-22T05:40:32.169487+00:00",
+  "flashed": false,
+  "physical_outputs_enabled": false,
+  "build_log": "build-role-swap.log",
+  "tests": "benchmarks/raw/role_swap_tests_20261022.xml",
+  "assignments": {
+    "A": {
+      "mac": "e0:72:a1:f5:bc:b0",
+      "port_at_user_confirmation": "COM8",
+      "environment": "native_voice",
+      "firmware_sha256": "6cf01d4bab6462925e8183eec74067ecb3b81255a8b3efe94fa9ce8d52d96903",
+      "pair_marker_verified": true
+    },
+    "B": {
+      "mac": "e0:72:a1:f6:a9:68",
+      "port_at_user_confirmation": "COM7",
+      "environment": "native_intelligence",
+      "firmware_sha256": "a492d0f5054cac1809f02df870b7511071b6c01da9c9903b6a002a4957a3590b",
+      "pair_marker_verified": true
+    }
+  }
+}

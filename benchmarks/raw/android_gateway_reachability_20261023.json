@@ -1,0 +1,23 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "recorded_utc": "2026-10-23T16:44:45.457412+00:00",
+  "phone_browser_timeout": "USER_REPORTED",
+  "serial_runtime_capture": "phone-reachability-runtime.json",
+  "laptop_AP_capture": "laptop-ap-http.json",
+  "AP_IP": "192.168.4.1",
+  "DHCP_supplied_subnet": "255.255.255.0",
+  "laptop_DHCP_address": "192.168.4.3",
+  "phone_associated_client_before_laptop": 1,
+  "both_clients_during_test": 2,
+  "phone_DHCP_address": "awaiting phone Wi-Fi details; not inferred from association alone",
+  "TCP80": true,
+  "root_GET_status": 200,
+  "root_bytes": 155404,
+  "state_GET_status": 200,
+  "rtos_GET_status": 200,
+  "firmware_changed": false,
+  "credentials_changed": false,
+  "temporary_WLAN_profile_removed": true,
+  "laptop_original_WLAN_restored": true,
+  "identified_scope": "gateway Wi-Fi/DHCP/HTTP working for laptop; precise phone timeout cause not established"
+}

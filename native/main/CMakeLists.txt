@@ -1,6 +1,6 @@
 set(COMMON "${CMAKE_CURRENT_LIST_DIR}/../../firmware/common")
 idf_component_register(
-    SRCS "app_entry.cpp" "native_hal.cpp"
+    SRCS "app_entry.cpp" "native_hal.cpp" "traffic_led.cpp"
          "${COMMON}/protocol/clawgrid_protocol.c"
          "${COMMON}/safety_kernel/safety_kernel.c"
          "${COMMON}/safety_kernel/safety_selftest.c"

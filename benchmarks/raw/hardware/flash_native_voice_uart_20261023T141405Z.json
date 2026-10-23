@@ -1,0 +1,18 @@
+{
+  "role": "A",
+  "port": "COM10",
+  "mac": "e0:72:a1:f5:bc:b0",
+  "environment": "native_voice_uart",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "installed_missing_model": false,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "native\\.pio\\build\\native_voice_uart\\firmware.bin",
+      "sha256": "8f028bd90f65a55a72b09f4b886db7a3fa851f8a2108c6b79659136db8713cdf"
+    }
+  ]
+}

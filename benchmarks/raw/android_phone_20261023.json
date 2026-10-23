@@ -1,0 +1,41 @@
+{
+  "source": "HOST_MEASURED",
+  "date_india": "2026-10-23",
+  "apk": {
+    "source": "HOST_MEASURED",
+    "apk": "ecosystem\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+    "bytes": 18560780,
+    "sha256": "d12778de7b8ecab0d141f71bf26dea4919c458a068aa7ee79453e045c98b0bfd",
+    "configured_private_value_matches": 0,
+    "privileged_buildconfig_fields": 0,
+    "limit": "Exact configured-value scan only; not a general secret audit or hardware validation"
+  },
+  "debug_build": {
+    "command": "gradlew.bat --offline :app:assembleDebug :app:signingReport --console=plain",
+    "exit_code": 0,
+    "elapsed_seconds": 46
+  },
+  "wrapper_sha256": {
+    "wrapper.jar": "b3a875ddc1f044746e1b1a55f645584505f4a10438c1afea9f15e92a7c42ec13",
+    "bin.zip": "b266d5ff6b90eada6dc3b20cb090e3731302e553a27c5d3e4df1f0d76beaff06",
+    "actual_wrapper_jar": "b3a875ddc1f044746e1b1a55f645584505f4a10438c1afea9f15e92a7c42ec13"
+  },
+  "debug_certificate_sha256": "71ce1bf6f415db7a355e7c63d941c53e7b52fba6a4c33c25042582af0a464bf9",
+  "debug_keystore_file_sha256": "9e46ca0710b2b27e98782f3421545427e8ad60e39be8db05a466fc2fbed89b3e",
+  "release_signing_changed": false,
+  "tests": {
+    "control_voice_jvm": 42,
+    "wire_jvm": 3,
+    "audio_proposal_host": 32
+  },
+  "phone_installed": false,
+  "phone_microphone_tested": false,
+  "recognition_hardware_tested": false,
+  "ap_channel_source": 1,
+  "radio_hardware_tested": false,
+  "flashed": false,
+  "database_modified": false,
+  "gateway_url": "http://192.168.4.1",
+  "gateway_probe": "timeout 3s; laptop not on gateway AP",
+  "next_step": "Install via documented USB/sideload route, join AP, manual inhibited ACK/readback, then explicit-confirmation voice test"
+}

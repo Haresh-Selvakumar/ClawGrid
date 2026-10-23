@@ -1,0 +1,77 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0xb (SPI_FAST_FLASH_BOOT)
+Saved PC:0x42070526
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x1820
+load:0x403c9700,len:0xe6c
+load:0x403cc700,len:0x3048
+entry 0x403c997c
+[0;32mI (24) boot: ESP-IDF 4.4.7 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time 14:46:57[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (26) boot: chip revision: v0.2[0m
+[0;32mI (30) qio_mode: Enabling default flash chip QIO[0m
+[0;32mI (35) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (40) boot.esp32s3: SPI Mode       : QIO[0m
+[0;32mI (45) boot.esp32s3: SPI Flash Size : 16MB[0m
+[0;32mI (50) boot: Enabling RNG early entropy source...[0m
+[0;32mI (55) boot: Partition Table:[0m
+[0;32mI (59) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (66) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (74) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (81) boot:  2 app0             OTA app          00 10 00010000 00300000[0m
+[0;32mI (89) boot:  3 app1             OTA app          00 11 00310000 00300000[0m
+[0;32mI (96) boot:  4 model            Unknown data     01 40 00610000 00600000[0m
+[0;32mI (103) boot:  5 storage          Unknown data     01 82 00c10000 003f0000[0m
+[0;32mI (111) boot: End of partition table[0m
+[0;32mI (115) esp_image: segment 0: paddr=00010020 vaddr=3c080020 size=150a8h ( 86184) map[0m
+[0;32mI (137) esp_image: segment 1: paddr=000250d0 vaddr=3fc967f0 size=046c0h ( 18112) load[0m
+[0;32mI (140) esp_image: segment 2: paddr=00029798 vaddr=40374000 size=06880h ( 26752) load[0m
+[0;32mI (148) esp_image: segment 3: paddr=00030020 vaddr=42000020 size=729f0h (469488) map[0m
+[0;32mI (222) esp_image: segment 4: paddr=000a2a18 vaddr=4037a880 size=0bf68h ( 49000) load[0m
+[0;32mI (239) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (240) boot: Disabling RNG early entropy source...[0m
+
+{"source":"HARDWARE_MEASURED","kind":"persistence_boot","ok":true,"boot":15}
+
+{"source":"HARDWARE_MEASURED","kind":"boot_recovery","reset_reason":0,"boot":15,"physical_outputs_enabled":false}
+
+{"source":"HARDWARE_MEASURED","kind":"selftest","node":"A","passed":true,"rtos_ready":true}
+
+{"source":"HARDWARE_MEASURED","kind":"policy_saved","boot":15,"reset_reason":0,"grace_ms":120000,"auto_flags":1,"away":false,"physical_outputs_enabled":false}
+
+{"source":"HARDWARE_MEASURED","kind":"arena_probe","node":"A","bytes":262144,"peak_bytes":262144,"elapsed_us":19309,"passed":true,"heap_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":5002,"flash_bytes":16777216,"internal_free":190075,"internal_min":180851,"internal_largest":151552,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":3920,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":853,"max_exec_us":185,"max_late_us":190,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":854,"max_exec_us":851,"max_late_us":44,"deadline_misses":0,"stack_free_bytes":4288,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10005,"flash_bytes":16777216,"internal_free":190079,"internal_min":180851,"internal_largest":151552,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":3920,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":1854,"max_exec_us":185,"max_late_us":190,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":1854,"max_exec_us":851,"max_late_us":44,"deadline_misses":0,"stack_free_bytes":4288,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":15008,"flash_bytes":16777216,"internal_free":190075,"internal_min":180851,"internal_largest":151552,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":3920,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2854,"max_exec_us":185,"max_late_us":190,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2855,"max_exec_us":851,"max_late_us":44,"deadline_misses":0,"stack_free_bytes":4288,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":20011,"flash_bytes":16777216,"internal_free":190075,"internal_min":180851,"internal_largest":151552,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":3920,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":0,"command_dropped":0,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":3855,"max_exec_us":185,"max_late_us":190,"deadline_misses":0,"stack_free_bytes":5216,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":3856,"max_exec_us":851,"max_late_us":44,"deadline_misses":0,"stack_free_bytes":4288,"watchdog":true,"diagnostic_dropped":0}

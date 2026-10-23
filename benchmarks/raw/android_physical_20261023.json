@@ -1,0 +1,248 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "recorded_utc": "2026-10-23T14:41:08.522249+00:00",
+  "identities": [
+    {
+      "port": "COM9",
+      "mac": "e0:72:a1:f6:a9:68",
+      "role": "B",
+      "adapter": "CH343 UART0"
+    },
+    {
+      "port": "COM10",
+      "mac": "e0:72:a1:f5:bc:b0",
+      "role": "A",
+      "adapter": "CH343 UART0"
+    }
+  ],
+  "deployment_manifests": [
+    {
+      "role": "A",
+      "port": "COM10",
+      "mac": "e0:72:a1:f5:bc:b0",
+      "environment": "native_voice_uart",
+      "physical_outputs_enabled": false,
+      "diagnostic_faults_enabled": false,
+      "tool": "esptool 5.4.0",
+      "exit_code": 0,
+      "installed_missing_model": false,
+      "artifacts": [
+        {
+          "address": "0x10000",
+          "path": "native\\.pio\\build\\native_voice_uart\\firmware.bin",
+          "sha256": "8f028bd90f65a55a72b09f4b886db7a3fa851f8a2108c6b79659136db8713cdf"
+        }
+      ]
+    },
+    {
+      "role": "B-speech",
+      "port": "COM9",
+      "mac": "e0:72:a1:f6:a9:68",
+      "environment": "speech_intelligence",
+      "physical_outputs_enabled": false,
+      "diagnostic_faults_enabled": false,
+      "tool": "esptool 5.4.0",
+      "exit_code": 0,
+      "installed_missing_model": true,
+      "artifacts": [
+        {
+          "address": "0x10000",
+          "path": "speech\\.pio\\build\\speech_intelligence\\firmware.bin",
+          "sha256": "13579ec09414ff39b76cadad4e1c1381009bcc95d643d3da10fc0a93f79732ec"
+        },
+        {
+          "address": "0x610000",
+          "path": "speech\\.pio\\build\\speech_intelligence\\srmodels\\srmodels.bin",
+          "sha256": "b46a65befe47187f793ffb8108f74ab091338060060a54d23b69c385c3213d80"
+        }
+      ]
+    },
+    {
+      "role": "B-speech",
+      "port": "COM9",
+      "mac": "e0:72:a1:f6:a9:68",
+      "environment": "speech_intelligence_uart",
+      "physical_outputs_enabled": false,
+      "diagnostic_faults_enabled": false,
+      "tool": "esptool 5.4.0",
+      "exit_code": 0,
+      "installed_missing_model": false,
+      "artifacts": [
+        {
+          "address": "0x10000",
+          "path": "speech\\.pio\\build\\speech_intelligence_uart\\firmware.bin",
+          "sha256": "6f0adc8d52262cce11dde6ca9e8f5265995ef93953daeff397705dfea9a83686"
+        }
+      ]
+    }
+  ],
+  "runtime_selftests": "PASS A and B",
+  "controller_boot": 9,
+  "manual_results": [
+    {
+      "action": "OFF",
+      "id": 1,
+      "ack": {
+        "source": "HARDWARE_MEASURED",
+        "id": 1,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 13319,
+        "processing_us": 26,
+        "outcome_known": true
+      },
+      "readback": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 301,
+        "reports": 63,
+        "invalid": 0,
+        "replayed": 0,
+        "boot_id": 9,
+        "sample_uptime_ms": 318999,
+        "nonprogress": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 1,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 0,
+        "fan_on_ms": 0,
+        "last_command": 1,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "physical_switching_tested": false
+    },
+    {
+      "action": "ON",
+      "id": 2,
+      "ack": {
+        "source": "HARDWARE_MEASURED",
+        "id": 2,
+        "phase": 2,
+        "status": 0,
+        "light": true,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 18302,
+        "processing_us": 35,
+        "outcome_known": true
+      },
+      "readback": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": true,
+        "fan": false,
+        "age_ms": 51,
+        "reports": 69,
+        "invalid": 0,
+        "replayed": 0,
+        "boot_id": 9,
+        "sample_uptime_ms": 324999,
+        "nonprogress": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 1,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 425,
+        "fan_on_ms": 0,
+        "last_command": 2,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "physical_switching_tested": false
+    },
+    {
+      "action": "OFF",
+      "id": 3,
+      "ack": {
+        "source": "HARDWARE_MEASURED",
+        "id": 3,
+        "phase": 2,
+        "status": 0,
+        "light": false,
+        "fan": false,
+        "attempts": 1,
+        "rtt_us": 13293,
+        "processing_us": 34,
+        "outcome_known": true
+      },
+      "readback": {
+        "room": "bedroom",
+        "known": true,
+        "occupancy": "UNKNOWN",
+        "motion": false,
+        "light": false,
+        "fan": false,
+        "age_ms": 51,
+        "reports": 76,
+        "invalid": 0,
+        "replayed": 0,
+        "boot_id": 9,
+        "sample_uptime_ms": 331999,
+        "nonprogress": 0,
+        "authenticated": true,
+        "mode": "HOME",
+        "auto_flags": 1,
+        "manual_flags": 1,
+        "grace_ms": 120000,
+        "light_timer_ms": 0,
+        "fan_timer_ms": 0,
+        "light_on_ms": 5745,
+        "fan_on_ms": 0,
+        "last_command": 3,
+        "physical_state": "not measured",
+        "physical_outputs_enabled": false,
+        "relay_active_low_assumption": true
+      },
+      "physical_switching_tested": false
+    }
+  ],
+  "measurements": {
+    "state_observations": 47,
+    "sample_min": 262999,
+    "sample_max": 447999,
+    "max_age_ms": 801,
+    "max_invalid": 0,
+    "max_replayed": 0,
+    "all_outputs_inhibited": true,
+    "AP_IP": [
+      "192.168.4.1"
+    ],
+    "gateway_channels": [
+      1
+    ],
+    "max_AP_clients": 0,
+    "max_speech_job": 0,
+    "speech_ready": true
+  },
+  "APK_installed": "USER_REPORTED",
+  "phone_AP_tested": false,
+  "phone_manual_tested": false,
+  "phone_microphone_tested": false,
+  "recognition_tested": false,
+  "physical_switching_tested": false,
+  "private_inputs_unchanged": true,
+  "host_checks": {
+    "firmware_watchdog_cpp": "76 passed in 18.83s",
+    "final_uart_flash_guards": "41 passed in 4.37s"
+  },
+  "status": "board/API checks passed; waiting for phone interaction"
+}

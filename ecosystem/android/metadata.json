@@ -1,0 +1,6 @@
+{
+  "name": "ClawGrid",
+  "description": "ClawGrid V2.0 Smart Home & Edge AI Console with deterministic SafetyKernel, 4-room interactive floorplan simulation, ESP32-S3 hardware telemetry, offline voice intent parser, RTOS watchdog lab, and Supabase cloud sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

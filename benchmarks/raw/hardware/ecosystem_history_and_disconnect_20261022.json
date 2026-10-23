@@ -1,0 +1,140 @@
+{
+  "source": "HOST_MEASURED",
+  "cloud_status": {
+    "enabled": true,
+    "ready": true,
+    "home_id": "1df3773e-56b5-46ed-9c72-a5e216555aad",
+    "gateway_id": "295dae82-5e2c-4f3f-a0e7-db1a5acfead2",
+    "project_url": "https://ozoizpxxnqtxywpgsgov.supabase.co",
+    "last_upload_at": "2026-10-22T09:16:33.331588+00:00",
+    "error": null,
+    "command_ttl_seconds": 10,
+    "physical_state": "not independently measured",
+    "realtime": {
+      "connected": true,
+      "last_publish_at_ms": 1792660603652,
+      "snapshot_interval_ms": 1000,
+      "diagnostics_interval_ms": 5000,
+      "encrypted": true,
+      "session_id": "28cb735e-e21b-41c9-b8b3-0b1bd8aed3d0",
+      "received_frames": 0,
+      "invalid_frames": 0,
+      "received_commands": 0,
+      "last_ingress_error": null
+    }
+  },
+  "persisted_telemetry": {
+    "id": "8631ee60-dbef-41e8-a404-069a80c7ca75",
+    "home_id": "1df3773e-56b5-46ed-9c72-a5e216555aad",
+    "room_id": "bedroom",
+    "source": "HARDWARE_MEASURED",
+    "processing_source": "HARDWARE_MEASURED",
+    "observed_at": "2026-10-22T09:16:32.272665+00:00",
+    "received_at": "2026-10-22T09:16:32.269865+00:00",
+    "known": false,
+    "age_ms": null,
+    "occupancy": "UNKNOWN",
+    "temperature_c": null,
+    "illuminance_lux": null,
+    "light": null,
+    "fan": null,
+    "motion": null,
+    "outputs_enabled": false
+  },
+  "persisted_receipts": [
+    {
+      "id": "6f670017-5a34-55f0-986c-b8ffeafa0218",
+      "source": "HOST_MEASURED",
+      "producer": "dashboard",
+      "received_at": "2026-10-22T08:56:48.285418+00:00",
+      "receipt": {
+        "cloud_id": "5c081016-9087-4de2-9474-ad74c4df4393",
+        "evidence_source": "HARDWARE_MEASURED",
+        "physical_state": "not measured",
+        "result": {
+          "attempts": 1,
+          "fan": false,
+          "id": 3,
+          "light": false,
+          "outcome_known": true,
+          "phase": 2,
+          "processing_us": 29,
+          "rtt_us": 15192,
+          "source": "HARDWARE_MEASURED",
+          "status": 0
+        }
+      }
+    },
+    {
+      "id": "8422a7b2-2ae4-5bd7-a707-3f1028edc983",
+      "source": "HOST_MEASURED",
+      "producer": "dashboard",
+      "received_at": "2026-10-22T08:56:47.316964+00:00",
+      "receipt": {
+        "cloud_id": "09c8dd3d-9f6d-4a6d-8aa5-fa5808370a41",
+        "evidence_source": "HARDWARE_MEASURED",
+        "physical_state": "not measured",
+        "result": {
+          "attempts": 1,
+          "fan": false,
+          "id": 2,
+          "light": false,
+          "outcome_known": true,
+          "phase": 2,
+          "processing_us": 28,
+          "rtt_us": 45257,
+          "source": "HARDWARE_MEASURED",
+          "status": 0
+        }
+      }
+    },
+    {
+      "id": "1c4f22c0-a7ad-5074-97d2-0e4544b69c76",
+      "source": "HOST_MEASURED",
+      "producer": "dashboard",
+      "received_at": "2026-10-22T08:56:46.407204+00:00",
+      "receipt": {
+        "cloud_id": "f611dc83-3315-41cc-881c-35aee9ccadde",
+        "evidence_source": "HARDWARE_MEASURED",
+        "physical_state": "not measured",
+        "result": {
+          "attempts": 1,
+          "fan": false,
+          "id": 1,
+          "light": false,
+          "outcome_known": true,
+          "phase": 2,
+          "processing_us": 25,
+          "rtt_us": 85196,
+          "source": "HARDWARE_MEASURED",
+          "status": 0
+        }
+      }
+    },
+    {
+      "id": "18de04c6-724f-5836-a467-a37d861d2b6b",
+      "source": "HOST_MEASURED",
+      "producer": "dashboard",
+      "received_at": "2026-10-22T08:56:45.408773+00:00",
+      "receipt": {
+        "cloud_id": "093d13d5-6059-4924-b464-0a14a1d257ff",
+        "evidence_source": "HARDWARE_MEASURED",
+        "physical_state": "not measured",
+        "result": {
+          "attempts": 1,
+          "fan": false,
+          "id": 6,
+          "light": true,
+          "outcome_known": true,
+          "phase": 2,
+          "processing_us": 33,
+          "rtt_us": 18101,
+          "source": "HARDWARE_MEASURED",
+          "status": 0
+        }
+      }
+    }
+  ],
+  "passed": true,
+  "hardware_currently_available": false
+}

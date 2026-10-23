@@ -1,0 +1,170 @@
+[
+  {
+    "port": "COM7",
+    "expected_role": "A",
+    "commands": [
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM7",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "flash-id"
+        ],
+        "exit_code": 0,
+        "log": "A-identity.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM7",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "get-security-info"
+        ],
+        "exit_code": 0,
+        "log": "A-security.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM7",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "read-flash",
+          "0x8000",
+          "0x6000",
+          "C:\\Users\\hares\\Downloads\\ClawGrid-software\\AUTOHOME-main\\benchmarks\\backups\\usb-bringup\\A-partition-nvs-before.bin"
+        ],
+        "exit_code": 0,
+        "log": "A-partition-nvs.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM7",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "read-flash",
+          "0x10000",
+          "0x200000",
+          "C:\\Users\\hares\\Downloads\\ClawGrid-software\\AUTOHOME-main\\benchmarks\\backups\\usb-bringup\\A-application-before.bin"
+        ],
+        "exit_code": 0,
+        "log": "A-application.log"
+      }
+    ]
+  },
+  {
+    "port": "COM8",
+    "expected_role": "B",
+    "commands": [
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM8",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "flash-id"
+        ],
+        "exit_code": 0,
+        "log": "B-identity.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM8",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "get-security-info"
+        ],
+        "exit_code": 0,
+        "log": "B-security.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM8",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "read-flash",
+          "0x8000",
+          "0x6000",
+          "C:\\Users\\hares\\Downloads\\ClawGrid-software\\AUTOHOME-main\\benchmarks\\backups\\usb-bringup\\B-partition-nvs-before.bin"
+        ],
+        "exit_code": 0,
+        "log": "B-partition-nvs.log"
+      },
+      {
+        "command": [
+          "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+          "-m",
+          "esptool",
+          "--chip",
+          "esp32s3",
+          "--port",
+          "COM8",
+          "--baud",
+          "460800",
+          "--after",
+          "no-reset",
+          "read-flash",
+          "0x10000",
+          "0x200000",
+          "C:\\Users\\hares\\Downloads\\ClawGrid-software\\AUTOHOME-main\\benchmarks\\backups\\usb-bringup\\B-application-before.bin"
+        ],
+        "exit_code": 0,
+        "log": "B-application.log"
+      }
+    ]
+  }
+]

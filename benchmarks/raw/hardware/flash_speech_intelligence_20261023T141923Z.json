@@ -1,0 +1,23 @@
+{
+  "role": "B-speech",
+  "port": "COM9",
+  "mac": "e0:72:a1:f6:a9:68",
+  "environment": "speech_intelligence",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "installed_missing_model": true,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "speech\\.pio\\build\\speech_intelligence\\firmware.bin",
+      "sha256": "13579ec09414ff39b76cadad4e1c1381009bcc95d643d3da10fc0a93f79732ec"
+    },
+    {
+      "address": "0x610000",
+      "path": "speech\\.pio\\build\\speech_intelligence\\srmodels\\srmodels.bin",
+      "sha256": "b46a65befe47187f793ffb8108f74ab091338060060a54d23b69c385c3213d80"
+    }
+  ]
+}

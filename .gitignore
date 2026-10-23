@@ -21,3 +21,35 @@ venv/
 # Application images and board dumps can contain compiled credentials.
 *.bin
 *.elf
+.voice-env/
+.speech_models/
+
+# Generated editor databases contain local SDK paths.
+.vscode/compile_commands.*.json
+
+# Backend-only cloud credentials.
+supabase.local.json
+.env
+.env.*
+!.env.example
+
+.android-tools/
+ecosystem/android/.gradle/
+ecosystem/android/**/build/
+ecosystem/android/local.properties
+
+# Local signing identities, install packages and generated dependency caches.
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.apk
+*.aab
+*.zip
+*.rar
+.kotlin/
+.idea/
+node_modules/
+local-artifacts/
+# Root command transcripts are scratch; retained evidence is under benchmarks/.
+/*.log

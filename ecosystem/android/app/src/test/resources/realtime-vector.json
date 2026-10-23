@@ -1,0 +1,19 @@
+{
+  "token": "test-control-token-not-a-secret",
+  "home_id": "11111111-1111-4111-8111-111111111111",
+  "gateway_id": "22222222-2222-4222-8222-222222222222",
+  "payload": {
+    "kind": "snapshot",
+    "sequence": 7,
+    "sent_at_ms": 123456,
+    "source": "HARDWARE_MEASURED",
+    "sensor": null
+  },
+  "envelope": {
+    "v": 1,
+    "home_id": "11111111-1111-4111-8111-111111111111",
+    "gateway_id": "22222222-2222-4222-8222-222222222222",
+    "iv": "LELB1QETovFrODh8",
+    "ct": "tJ0bwW29lpd7v8OgIrFwKsQnGgiyfeKB/bRGMHraT9YX1W5wynmOrcS1UdEPMskSB0OL43lynO8wZdIuZFRWkmNIXNnS1w2JC1idTu1YuRRrm5gHKWCY8PAZbLJwJCh1jN8W3o9QhN2XdfFT92G9"
+  }
+}

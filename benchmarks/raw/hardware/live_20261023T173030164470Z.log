@@ -1,0 +1,232 @@
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2160585,"link_jobs":2160585,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2160598,"link_jobs":2160598,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10805415,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2160934,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2160938,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2161014,"link_jobs":2161014,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2038653,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2037,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":407527,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2161429,"link_jobs":2161429,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2161849,"link_jobs":2161849,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10810415,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2161934,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2161938,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2162265,"link_jobs":2162265,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2043656,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2042,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":408528,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2162679,"link_jobs":2162679,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10815419,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2162935,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2162939,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2163089,"link_jobs":2163089,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2048659,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2047,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":409528,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2163505,"link_jobs":2163505,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2163916,"link_jobs":2163916,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10820419,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2163935,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2163939,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2164332,"link_jobs":2164332,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2053662,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2052,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":410529,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2164747,"link_jobs":2164747,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10825423,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2164936,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2164940,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2165162,"link_jobs":2165162,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2058665,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2057,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":411529,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2165576,"link_jobs":2165576,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10830423,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2165936,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2165940,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2165992,"link_jobs":2165992,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM10 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2063668,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2166406,"link_jobs":2166406,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2062,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":412530,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2166819,"link_jobs":2166819,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10835424,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2166936,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2166940,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2167233,"link_jobs":2167233,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2068670,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2067,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":413530,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2167645,"link_jobs":2167645,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10840428,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2167937,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2167941,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2168058,"link_jobs":2168058,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2073673,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2072,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":414531,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2168468,"link_jobs":2168468,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2168879,"link_jobs":2168879,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10845429,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2168937,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2168941,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2169293,"link_jobs":2169293,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2078676,"flash_bytes":16777216,"internal_free":92579,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2077,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":415532,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2169706,"link_jobs":2169706,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10850433,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2169938,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2169942,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2170122,"link_jobs":2170122,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2083680,"flash_bytes":16777216,"internal_free":92159,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089295,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2082,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":416532,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2170536,"link_jobs":2170536,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10855433,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2170938,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2170942,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2170948,"link_jobs":2170948,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2171360,"link_jobs":2171360,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2088682,"flash_bytes":16777216,"internal_free":92103,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4086207,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2087,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":417533,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2171769,"link_jobs":2171769,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":10860434,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":12,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":2171938,"max_exec_us":406,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2171942,"max_exec_us":980,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":2172179,"link_jobs":2172179,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"kind":"speech_job","job":2,"samples":64000,"frames":157,"peak":15392,"clipped":0,"command_id":0,"error":0}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":2093685,"flash_bytes":16777216,"internal_free":91759,"internal_min":43227,"internal_largest":47104,"psram_total":8388608,"psram_free":4089303,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":2092,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":418533,"max_exec_us":1886,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":3508,"watchdog":true,"diagnostic_dropped":0}

@@ -1,0 +1,17 @@
+{
+  "role": "B",
+  "port": "COM7",
+  "mac": "e0:72:a1:f6:a9:68",
+  "environment": "native_intelligence",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "native\\.pio\\build\\native_intelligence\\firmware.bin",
+      "sha256": "4488ce5bc7ca8941b2796e570b5bf00887dd1bf6a6668808d57859f9a80a75ca"
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "model": "vosk-model-small-en-us-0.15",
+  "cases": [
+    {
+      "name": "command_01.wav",
+      "phrase": "turn on bedroom light",
+      "expected": {
+        "room": "bedroom",
+        "device": "light",
+        "action": "ON"
+      },
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "turn on bedroom life"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": false
+    },
+    {
+      "name": "command_02.wav",
+      "phrase": "turn off bedroom light",
+      "expected": {
+        "room": "bedroom",
+        "device": "light",
+        "action": "OFF"
+      },
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "turn off bedroom life"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": false
+    },
+    {
+      "name": "command_03.wav",
+      "phrase": "turn on bedroom fan",
+      "expected": {
+        "room": "bedroom",
+        "device": "fan",
+        "action": "ON"
+      },
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "turn on bedroom fed"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": false
+    },
+    {
+      "name": "command_04.wav",
+      "phrase": "turn off bedroom fan",
+      "expected": {
+        "room": "bedroom",
+        "device": "fan",
+        "action": "OFF"
+      },
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "turn off bedroom fan"
+      ],
+      "proposals": [
+        {
+          "proposal_id": 2,
+          "target": "physical_bedroom",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "requested_room": "bedroom",
+          "bench_alias": false,
+          "acoustic_fallback": false,
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": {
+        "room": "bedroom",
+        "device": "light",
+        "action": "ON"
+      },
+      "phrase": "bedroom light on",
+      "file": "light_on.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "bedroom light on"
+      ],
+      "proposals": [
+        {
+          "proposal_id": 3,
+          "target": "physical_bedroom",
+          "room": "bedroom",
+          "device": "light",
+          "action": "ON",
+          "requested_room": "bedroom",
+          "bench_alias": false,
+          "acoustic_fallback": false,
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": {
+        "room": "bedroom",
+        "device": "light",
+        "action": "OFF"
+      },
+      "phrase": "bedroom lights off",
+      "file": "lights_off.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "bedroom lights off"
+      ],
+      "proposals": [
+        {
+          "proposal_id": 4,
+          "target": "physical_bedroom",
+          "room": "bedroom",
+          "device": "light",
+          "action": "OFF",
+          "requested_room": "bedroom",
+          "bench_alias": false,
+          "acoustic_fallback": false,
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": {
+        "room": "bedroom",
+        "device": "fan",
+        "action": "ON"
+      },
+      "phrase": "bedroom fan on",
+      "file": "fan_on.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "bedroom fan on"
+      ],
+      "proposals": [
+        {
+          "proposal_id": 5,
+          "target": "physical_bedroom",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "ON",
+          "requested_room": "bedroom",
+          "bench_alias": false,
+          "acoustic_fallback": false,
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": {
+        "room": "bedroom",
+        "device": "fan",
+        "action": "OFF"
+      },
+      "phrase": "bedroom fan off",
+      "file": "fan_off.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "bedroom fan of"
+      ],
+      "proposals": [
+        {
+          "proposal_id": 6,
+          "target": "physical_bedroom",
+          "room": "bedroom",
+          "device": "fan",
+          "action": "OFF",
+          "requested_room": "bedroom",
+          "bench_alias": false,
+          "acoustic_fallback": true,
+          "expires_in_ms": 15000,
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": null,
+      "phrase": "do not turn on bedroom light",
+      "file": "negative_not.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "do not turn on bedroom life"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": null,
+      "phrase": "don't turn bedroom light on",
+      "file": "negative_dont.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "don't turn bedroom light on"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "expected": null,
+      "phrase": "the weather is nice today",
+      "file": "unrelated.wav",
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [
+        "the weather is nice today"
+      ],
+      "proposals": [
+        {
+          "http_status": 400,
+          "error": "Invalid target or proposal",
+          "authorized": false
+        }
+      ],
+      "passed": true
+    },
+    {
+      "name": "silence",
+      "phrase": "",
+      "expected": null,
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [],
+      "proposals": [],
+      "passed": true
+    },
+    {
+      "name": "noise",
+      "phrase": "",
+      "expected": null,
+      "audio_source": "SIMULATED",
+      "recognition_source": "HOST_MEASURED",
+      "parser_source": "HOST_MEASURED",
+      "transcripts": [],
+      "proposals": [],
+      "passed": true
+    }
+  ],
+  "passed": 10,
+  "total": 13,
+  "limitation": "Synthetic fixtures; no human accuracy or physical actuation measured"
+}

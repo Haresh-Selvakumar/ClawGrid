@@ -1,0 +1,9 @@
+* text=auto
+# Evidence manifests hash exact bytes. Do not normalize recorded datasets/logs.
+/benchmarks/raw/** -text
+/benchmarks/data/** -text
+*.wav binary
+*.png binary
+*.jpg binary
+*.docx binary
+*.pdf binary

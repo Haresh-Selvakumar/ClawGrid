@@ -1,0 +1,18 @@
+{
+  "role": "B-speech",
+  "port": "COM9",
+  "mac": "e0:72:a1:f6:a9:68",
+  "environment": "speech_intelligence_uart",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "installed_missing_model": false,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "speech\\.pio\\build\\speech_intelligence_uart\\firmware.bin",
+      "sha256": "a225740aa6af9445f9959994141dfc5723944c7f59daa957d039638cafbaf2b2"
+    }
+  ]
+}

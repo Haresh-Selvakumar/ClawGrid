@@ -1,0 +1,24 @@
+{
+  "source": "HOST_MEASURED",
+  "recorded_utc": "2026-10-23T17:36:45.830939+00:00",
+  "apk_absolute_path": "C:\\Users\\hares\\OneDrive\\Desktop\\ESD-imp\\ClawGrid-physical-integration-prep\\ecosystem\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+  "bytes": 18570202,
+  "sha256": "a44b9cc4dc3571c71b334b95049d4ab2221af10f1da8b04f6f1b13d1a4366119",
+  "debug_certificate_sha256": "71ce1bf6f415db7a355e7c63d941c53e7b52fba6a4c33c25042582af0a464bf9",
+  "debug_keystore_sha256": "9e46ca0710b2b27e98782f3421545427e8ad60e39be8db05a466fc2fbed89b3e",
+  "gradle_result": "BUILD SUCCESSFUL in 1m35s; 39 actionable tasks:7 executed,32 up-to-date",
+  "control_jvm_tests": 42,
+  "wire_jvm_tests": 3,
+  "apk_signature_verified": true,
+  "client_boundary_check": "PASS: zero exact configured private-value matches and zero privileged BuildConfig fields; bounded scan only",
+  "private_inputs_unchanged": true,
+  "release_signing_changed": false,
+  "installed_on_phone": false,
+  "on_phone_layout_verified": false,
+  "prior_phone_test_apk_sha256": "d12778de7b8ecab0d141f71bf26dea4919c458a068aa7ee79453e045c98b0bfd",
+  "changed_sources": [
+    "ecosystem/android/app/src/main/java/com/example/ui/components/HardwareRequestStatus.kt",
+    "ecosystem/android/app/src/main/java/com/example/MainActivity.kt",
+    "ecosystem/android/app/src/main/java/com/example/ui/screens/RoomsAndRelaysScreen.kt"
+  ]
+}

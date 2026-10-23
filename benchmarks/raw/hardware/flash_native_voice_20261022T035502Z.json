@@ -1,0 +1,17 @@
+{
+  "role": "A",
+  "port": "COM7",
+  "mac": "e0:72:a1:f6:a9:68",
+  "environment": "native_voice",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "artifacts": [
+    {
+      "address": "0x10000",
+      "path": "native\\.pio\\build\\native_voice\\firmware.bin",
+      "sha256": "2cce3d140e58a3e83bb8d6f88a7d338b2aca452afbb8a0b019ecc9798ec9dacf"
+    }
+  ]
+}

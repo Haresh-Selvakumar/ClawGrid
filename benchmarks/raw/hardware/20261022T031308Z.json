@@ -1,0 +1,190 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "started_utc": "2026-10-22T03:13:08.582244+00:00",
+  "duration_seconds_requested": 12.0,
+  "ports": [
+    "COM8"
+  ],
+  "firmware_sha256": {},
+  "records": [
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409725147231500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "selftest",
+        "node": "B",
+        "passed": true,
+        "rtos_ready": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409725157777900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 25009,
+        "flash_bytes": 16777216,
+        "internal_free": 107679,
+        "internal_min": 55455,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 4128,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409725157797800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 0,
+        "invalid": 0,
+        "replayed": 0,
+        "nonprogress": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409725157820800,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 4762,
+        "max_exec_us": 60,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4676,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409730155660500,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 30010,
+        "flash_bytes": 16777216,
+        "internal_free": 107679,
+        "internal_min": 55455,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 4096,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409730155683200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 0,
+        "invalid": 0,
+        "replayed": 0,
+        "nonprogress": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409730166216900,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 5762,
+        "max_exec_us": 60,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4676,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409735160467200,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "memory",
+        "node": "B",
+        "uptime_ms": 35011,
+        "flash_bytes": 16777216,
+        "internal_free": 107679,
+        "internal_min": 55455,
+        "internal_largest": 59392,
+        "psram_total": 8388608,
+        "psram_free": 4089807,
+        "psram_largest": 3866624,
+        "stack_free_bytes": 4096,
+        "rx_dropped": 0,
+        "tx_failed": 0,
+        "memory_config_ok": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409735160492600,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "link",
+        "node": "B",
+        "accepted": 0,
+        "invalid": 0,
+        "replayed": 0,
+        "nonprogress": 0,
+        "authenticated": true,
+        "radio": true
+      }
+    },
+    {
+      "port": "COM8",
+      "capture_monotonic_ns": 409735160515100,
+      "device": {
+        "source": "HARDWARE_MEASURED",
+        "kind": "rtos",
+        "node": "B",
+        "task": "LinkTask",
+        "core": 0,
+        "priority": 3,
+        "period_ms": 5,
+        "jobs": 6762,
+        "max_exec_us": 60,
+        "max_late_us": 2,
+        "deadline_misses": 0,
+        "stack_free_bytes": 4676,
+        "watchdog": true,
+        "diagnostic_dropped": 0
+      }
+    }
+  ]
+}

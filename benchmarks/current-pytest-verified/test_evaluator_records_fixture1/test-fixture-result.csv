@@ -1,0 +1,2 @@
+name,audio_source,speaker,session,conditions,split,expected_id,recognized_id,outcome,samples,pcm_sha256,host_job_ms
+fixture.wav,SYNTHETIC,,,,diagnostic,1,2,wrong_command,1600,5a312281df4bd8dfbb4d4a94ad0bf44d01bb8cfced1206b90e21b4ca0568cdb1,0.434

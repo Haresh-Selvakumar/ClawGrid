@@ -26,10 +26,10 @@ class DevAdapter:
         if method=='POST' or path in ('/api/transaction','/api/speech'):
             if token!=DEV_TOKEN:return 401,{'error':'Host development token required'}
         commands={'/api/state':'state','/api/simulation':'simstate','/api/simulation/input':'siminput',
-                  '/api/proposal':'proposal','/api/confirm':'confirm','/api/control':'control',
+                  '/api/proposal':'proposal','/api/confirm':'confirm','/api/control':'control','/api/text':'text',
                   '/api/transaction':'transaction','/api/speech':'speech','/api/dev/scenario':'scenario',
                   '/api/dev/speech':'speechfixture'}
-        expected='POST' if path in ('/api/simulation/input','/api/proposal','/api/confirm','/api/control','/api/dev/scenario','/api/dev/speech','/api/speech/audio','/api/voice') else 'GET'
+        expected='POST' if path in ('/api/simulation/input','/api/proposal','/api/confirm','/api/control','/api/text','/api/dev/scenario','/api/dev/speech','/api/speech/audio','/api/voice') else 'GET'
         if method!=expected:return 405,{'error':'Method not allowed'}
         if path=='/api/dev/scenario' and data not in ('connected','stale','disconnected','reject','timeout'):return 400,{'error':'Invalid host scenario'}
         if path=='/api/dev/scenario':self.scenario=data

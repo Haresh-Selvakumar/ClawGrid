@@ -1,6 +1,7 @@
 // Host-only adapter around actual portable firmware routing and SafetyKernel.
 // No ESP32 inference, GPIO, radio, or hardware timing is emulated as measured.
 #include "command_target.h"
+#include "serial_text_command.h"
 #include "house_simulation.h"
 #include "automation.h"
 #include "pcm16.h"
@@ -42,6 +43,15 @@ int main() {
             else {speech_id=(uint8_t)value;++job;proposal.consume();std::cout<<"{\"job\":"<<job<<",\"command_id\":"<<value<<",\"fixture\":true}";}
         } else if(verb=="speech") {
             std::cout<<"{\"supported\":false,\"fixture\":true,\"engine\":\"HOST FIXTURE ONLY - no recognition\",\"phase\":4,\"job\":"<<job<<",\"command_id\":"<<(unsigned)speech_id<<",\"confidence\":0,\"inference_us\":null,\"authorized\":false}";
+        } else if(verb=="text") {
+            SerialTextCommand parsed;
+            if(!parse_serial_text(body.c_str(),parsed)) {proposal.consume();fail("Invalid target or proposal",400);}
+            else {
+                auto result=proposal.prepare(parsed.target,boot,fresh,now,false,0);
+                const CommandTarget &t=parsed.target;
+                if(result!=ProposalResult::Ok) fail(proposal_error(result));
+                else std::cout<<"{\"proposal_id\":"<<proposal.id<<",\"target\":\""<<target_mode(t.mode)<<"\",\"room\":\""<<target_room(t.room)<<"\",\"device\":\""<<target_device(t.device)<<"\",\"action\":\""<<target_action(t.action)<<"\",\"requested_room\":\""<<(parsed.requested_hall?"hall":"bedroom")<<"\",\"bench_alias\":"<<(parsed.bench_alias?"true":"false")<<",\"acoustic_fallback\":"<<(parsed.acoustic_fallback?"true":"false")<<",\"expires_in_ms\":15000,\"authorized\":false}";
+            }
         } else if(verb=="proposal") {
             char source[24];CommandTarget target;uint32_t source_job=0;
             if(!proposal_fields(body.c_str(),source,target,source_job)||(strcmp(source,"manual")&&strcmp(source,"speech"))) {proposal.consume();fail("Invalid target or proposal",400);}

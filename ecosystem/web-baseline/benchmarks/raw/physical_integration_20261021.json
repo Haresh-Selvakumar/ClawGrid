@@ -1,0 +1,188 @@
+{
+  "source": "HOST_MEASURED",
+  "recorded_utc": "2026-10-21T18:37:19.955977+00:00",
+  "hardware_access": false,
+  "flashed": false,
+  "branch": "physical-integration-prep",
+  "commands": [
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests",
+        "-q",
+        "--basetemp=benchmarks/review/physical-integration/pytest-after-console",
+        "--junitxml=benchmarks/review/physical-integration/host-after-console.xml"
+      ],
+      "exit_code": 0,
+      "result": "167 passed in 26.81s",
+      "log": "host-after-console.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "pytest",
+        "tests/unit/test_watchdog_campaign.py",
+        "-q",
+        "--basetemp=benchmarks/review/physical-integration/pytest-guards",
+        "--junitxml=benchmarks/review/physical-integration/guards.xml"
+      ],
+      "exit_code": 0,
+      "result": "35 passed in 8.27s",
+      "log": "guards.log"
+    },
+    {
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check_frontend.cjs"
+      ],
+      "exit_code": 0,
+      "result": "Passed",
+      "log": "frontend.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "platformio",
+        "run",
+        "-d",
+        "native",
+        "-e",
+        "native_voice_uart",
+        "-e",
+        "native_voice",
+        "-e",
+        "native_voice_bench",
+        "-e",
+        "native_voice_uart_bench"
+      ],
+      "exit_code": 0,
+      "result": "4 environments compiled; mode/console/watchdog checked separately",
+      "log": "build-native-console-fixed.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "platformio",
+        "run",
+        "-d",
+        "speech",
+        "-e",
+        "speech_intelligence"
+      ],
+      "exit_code": 0,
+      "result": "Compiled; mode/console/watchdog checked separately",
+      "log": "build-speech-final.log"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "scripts/audio_bench.py",
+        "--validate-only",
+        "--output",
+        "benchmarks/review/physical-integration/dataset.json"
+      ],
+      "exit_code": 0,
+      "result": "16 clips; no recognition executed"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "exit_code": 0,
+      "result": "No broken requirements found"
+    },
+    {
+      "command": [
+        "C:\\Users\\hares\\Documents\\Codex\\2026-10-21\\i-h\\work\\clawgrid-env\\Scripts\\python.exe",
+        "-m",
+        "serial.tools.list_ports",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "result": "Bluetooth COM3/COM4 only; no ESP32/CH343 available",
+      "log": "ports.log"
+    }
+  ],
+  "images": [
+    {
+      "environment": "native_voice",
+      "path": "native/.pio/build/native_voice/firmware.bin",
+      "sha256": "b86539ead33cf15bae00f1851209e8802a6a2d249e6412d54714f8e5417a6316",
+      "bytes": 650896,
+      "outputs_enabled": false,
+      "faults_enabled": false,
+      "console": "usb_serial_jtag",
+      "mode_console_watchdog_guards": "PASS",
+      "deployed": false
+    },
+    {
+      "environment": "native_voice_uart",
+      "path": "native/.pio/build/native_voice_uart/firmware.bin",
+      "sha256": "8f0bc04a94922abbf5650035bf804cb2be188963e64b034d81eb70e4fc6b3174",
+      "bytes": 672736,
+      "outputs_enabled": false,
+      "faults_enabled": false,
+      "console": "uart0",
+      "mode_console_watchdog_guards": "PASS",
+      "deployed": false
+    },
+    {
+      "environment": "speech_intelligence",
+      "path": "speech/.pio/build/speech_intelligence/firmware.bin",
+      "sha256": "69d74bac4b349e32dca6a8469927e07366731016a33d7d98a0aacc20000f7367",
+      "bytes": 1068448,
+      "outputs_enabled": false,
+      "faults_enabled": false,
+      "console": "usb_serial_jtag",
+      "mode_console_watchdog_guards": "PASS",
+      "deployed": false
+    },
+    {
+      "environment": "native_voice_bench",
+      "path": "native/.pio/build/native_voice_bench/firmware.bin",
+      "sha256": "caf16c46fcdbcd7a7774033f7b43d6ed9f79c59cefbd95648f079952905c4742",
+      "bytes": 650928,
+      "outputs_enabled": true,
+      "faults_enabled": false,
+      "console": "usb_serial_jtag",
+      "mode_console_watchdog_guards": "PASS",
+      "deployed": false
+    },
+    {
+      "environment": "native_voice_uart_bench",
+      "path": "native/.pio/build/native_voice_uart_bench/firmware.bin",
+      "sha256": "40a36d2d4fdb06b4372954ccd06c5f651883853165a1d5dd40283ae287ceab9c",
+      "bytes": 672752,
+      "outputs_enabled": true,
+      "faults_enabled": false,
+      "console": "uart0",
+      "mode_console_watchdog_guards": "PASS",
+      "deployed": false
+    }
+  ],
+  "installed_credentials_match_backup": true,
+  "changed_files_secret_scan": "PASS",
+  "diff_check": "PASS",
+  "retained_failures": [
+    {
+      "log": "host.log",
+      "exit_code": 1,
+      "result": "80 passed, 4 failed, 70 compiler setup errors in sandbox; permitted rerun passed"
+    },
+    {
+      "log": "build-native-final.log",
+      "exit_code": 0,
+      "result": "Initial UART bench linked with USB console; post-build guard rejected; clean CMake defaults repair and recompile passed"
+    }
+  ],
+  "logs_directory": "benchmarks/review/physical-integration",
+  "limitations": "No current S3 execution, recognition, timing/heap measurements, physical GPIO or components. Historical deployed images were not altered."
+}

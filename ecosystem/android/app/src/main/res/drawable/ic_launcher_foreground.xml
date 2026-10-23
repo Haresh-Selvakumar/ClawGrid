@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Outer subtle hexagonal/shield ring -->
+    <path
+        android:fillColor="#3338BDF8"
+        android:pathData="M54,22 L80,35 L80,61 C80,75 68,85 54,90 C40,85 28,75 28,61 L28,35 Z" />
+    <!-- Bold ClawGrid Lightning Bolt Emblem -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M58,28 L36,56 L51,56 L47,80 L72,50 L56,50 Z" />
+    <!-- Accent Cyan Spark Dot -->
+    <path
+        android:fillColor="#FF34D399"
+        android:pathData="M70,34m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0" />
+</vector>

@@ -1,0 +1,32 @@
+{
+  "role": "B",
+  "port": "COM7",
+  "mac": "e0:72:a1:f6:a9:68",
+  "environment": "native_intelligence",
+  "physical_outputs_enabled": false,
+  "diagnostic_faults_enabled": false,
+  "tool": "esptool 5.4.0",
+  "exit_code": 0,
+  "artifacts": [
+    {
+      "address": "0x0",
+      "path": "native\\.pio\\build\\native_intelligence\\bootloader.bin",
+      "sha256": "f84fbe17cd3cbbf98807d45dca98a2de757e92f3a27e6e1389fd269fe2340b1c"
+    },
+    {
+      "address": "0x8000",
+      "path": "native\\.pio\\build\\native_intelligence\\partitions.bin",
+      "sha256": "6c2f8eacfd2126b45bf0f67d75b6ce8e0b142d2e3ca7c427066376881d632674"
+    },
+    {
+      "address": "0xe000",
+      "path": "native\\.pio\\build\\native_intelligence\\ota_data_initial.bin",
+      "sha256": "7d2c7ac4888bfd75cd5f56e8d61f69595121183afc81556c876732fd3782c62f"
+    },
+    {
+      "address": "0x10000",
+      "path": "native\\.pio\\build\\native_intelligence\\firmware.bin",
+      "sha256": "a492d0f5054cac1809f02df870b7511071b6c01da9c9903b6a002a4957a3590b"
+    }
+  ]
+}

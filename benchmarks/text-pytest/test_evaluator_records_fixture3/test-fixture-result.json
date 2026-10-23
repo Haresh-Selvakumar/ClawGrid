@@ -1,0 +1,73 @@
+{
+  "processing_source": "HARDWARE_MEASURED",
+  "firmware_sha256": {
+    "B": "609948738fe59f93e4528350057de49a446c3aa3be8f8e19d193f395e4860f78",
+    "model": "609948738fe59f93e4528350057de49a446c3aa3be8f8e19d193f395e4860f78"
+  },
+  "results": [
+    {
+      "name": "fixture.wav",
+      "expected_id": 1,
+      "audio_source": "SYNTHETIC",
+      "speaker": "",
+      "session": "",
+      "conditions": "",
+      "split": "diagnostic",
+      "phrase": "",
+      "pcm_sha256": "5a312281df4bd8dfbb4d4a94ad0bf44d01bb8cfced1206b90e21b4ca0568cdb1",
+      "processing_source": "HARDWARE_MEASURED",
+      "samples": 1600,
+      "recognized_id": 0,
+      "board": {
+        "processing_source": "HARDWARE_MEASURED",
+        "phase": 4,
+        "job": 1,
+        "command_id": 0,
+        "pcm_crc32": 3413874854,
+        "error_code": 11
+      },
+      "control": null,
+      "phase_before_control": 4,
+      "outcome": "engine_error",
+      "host_job_ms": 0.2767
+    }
+  ],
+  "summary": {
+    "attempted": 1,
+    "positive_attempts": 1,
+    "positive_evaluable": 0,
+    "exact_command_accuracy": null,
+    "negative_attempts": 0,
+    "negative_evaluable": 0,
+    "counts": {
+      "correct_command": 0,
+      "wrong_command": 0,
+      "no_detection": 0,
+      "negative_detection": 0,
+      "negative_rejection": 0,
+      "engine_error": 1,
+      "transport_error": 0
+    },
+    "per_command": {
+      "1": {
+        "attempted": 1,
+        "evaluable": 0,
+        "correct_command": 0,
+        "wrong_command": 0,
+        "no_detection": 0,
+        "negative_detection": 0,
+        "negative_rejection": 0,
+        "engine_error": 1,
+        "transport_error": 0
+      }
+    },
+    "by_audio_source": {
+      "SYNTHETIC": {
+        "attempted": 1,
+        "positive_evaluable": 0,
+        "exact_command_accuracy": null
+      }
+    }
+  },
+  "limitations": "Dataset provenance is supplied by the manifest, not attested by the API. No physical switching or accuracy generalization follows from synthetic clips."
+}

@@ -1,0 +1,328 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "status": "PARTIAL_USB_BLOCKED",
+  "identities": {
+    "COM10": {
+      "role": "A",
+      "mac": "e0:72:a1:f5:bc:b0"
+    },
+    "COM7": {
+      "role": "B",
+      "mac": "e0:72:a1:f6:a9:68"
+    }
+  },
+  "firmware": {
+    "A": {
+      "path": "native/.pio/build/native_voice_uart/firmware.bin",
+      "bytes": 683008,
+      "sha256": "8f028bd90f65a55a72b09f4b886db7a3fa851f8a2108c6b79659136db8713cdf",
+      "deployed": true
+    },
+    "B": {
+      "path": "speech/.pio/build/speech_intelligence/firmware.bin",
+      "bytes": 1243952,
+      "sha256": "13579ec09414ff39b76cadad4e1c1381009bcc95d643d3da10fc0a93f79732ec",
+      "deployed": false
+    }
+  },
+  "backups": {
+    "A": {
+      "source": "HARDWARE_MEASURED",
+      "port": "COM10",
+      "flash_bytes": 16777216,
+      "sha256": "b8fc29e051eaeed1418b1aeba83245c3bd23e6f125ccdfd70f22d68ba1117cb2",
+      "partitions": [
+        {
+          "name": "nvs",
+          "type": 1,
+          "subtype": 2,
+          "offset": "0x9000",
+          "bytes": 20480
+        },
+        {
+          "name": "otadata",
+          "type": 1,
+          "subtype": 0,
+          "offset": "0xe000",
+          "bytes": 8192
+        },
+        {
+          "name": "app0",
+          "type": 0,
+          "subtype": 16,
+          "offset": "0x10000",
+          "bytes": 3145728
+        },
+        {
+          "name": "app1",
+          "type": 0,
+          "subtype": 17,
+          "offset": "0x310000",
+          "bytes": 3145728
+        },
+        {
+          "name": "model",
+          "type": 1,
+          "subtype": 64,
+          "offset": "0x610000",
+          "bytes": 6291456
+        },
+        {
+          "name": "storage",
+          "type": 1,
+          "subtype": 130,
+          "offset": "0xc10000",
+          "bytes": 4128768
+        }
+      ],
+      "partition_matches_current_build": true,
+      "app0_mode_markers": [
+        "ClawGrid:outputs=inhibited;faults=default"
+      ],
+      "app0_pair_markers": [
+        "ClawGrid:pair:A=e0:72:a1:f5:bc:b0;B=e0:72:a1:f6:a9:68"
+      ]
+    },
+    "B": {
+      "source": "HARDWARE_MEASURED",
+      "port": "COM7",
+      "flash_bytes": 16777216,
+      "sha256": "5be4246fe4cc349f827c2fa46f813d99d62549a516762ac3cba4a7b27ecd2d6e",
+      "partitions": [
+        {
+          "name": "nvs",
+          "type": 1,
+          "subtype": 2,
+          "offset": "0x9000",
+          "bytes": 20480
+        },
+        {
+          "name": "otadata",
+          "type": 1,
+          "subtype": 0,
+          "offset": "0xe000",
+          "bytes": 8192
+        },
+        {
+          "name": "app0",
+          "type": 0,
+          "subtype": 16,
+          "offset": "0x10000",
+          "bytes": 3145728
+        },
+        {
+          "name": "app1",
+          "type": 0,
+          "subtype": 17,
+          "offset": "0x310000",
+          "bytes": 3145728
+        },
+        {
+          "name": "model",
+          "type": 1,
+          "subtype": 64,
+          "offset": "0x610000",
+          "bytes": 6291456
+        },
+        {
+          "name": "storage",
+          "type": 1,
+          "subtype": 130,
+          "offset": "0xc10000",
+          "bytes": 4128768
+        }
+      ],
+      "model_partition_sha256": "7d333ab0fce26d8901ab4b7d1922f3d989d194833e3f00e7f318950604ceeb09",
+      "model_non_ff_bytes": 0,
+      "app0_mode_markers": [
+        "ClawGrid:outputs=inhibited;faults=default"
+      ],
+      "app0_pair_markers": [
+        "ClawGrid:pair:A=e0:72:a1:f5:bc:b0;B=e0:72:a1:f6:a9:68"
+      ]
+    }
+  },
+  "A_runtime": [
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "A",
+      "passed": true,
+      "rtos_ready": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "memory",
+      "node": "A",
+      "uptime_ms": 55031,
+      "flash_bytes": 16777216,
+      "internal_free": 178019,
+      "internal_min": 168771,
+      "internal_largest": 139264,
+      "psram_total": 8388608,
+      "psram_free": 8385863,
+      "psram_largest": 8257536,
+      "stack_free_bytes": 3848,
+      "rx_dropped": 0,
+      "tx_failed": 0,
+      "memory_config_ok": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "safety",
+      "node": "A",
+      "rejected": 0,
+      "duplicates": 0,
+      "last_command": 0,
+      "command_dropped": 0,
+      "radio": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "ControlTask",
+      "core": 1,
+      "priority": 5,
+      "period_ms": 5,
+      "jobs": 10858,
+      "max_exec_us": 214,
+      "max_late_us": 67,
+      "deadline_misses": 0,
+      "stack_free_bytes": 5216,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "LinkTask",
+      "core": 0,
+      "priority": 3,
+      "period_ms": 5,
+      "jobs": 10862,
+      "max_exec_us": 771,
+      "max_late_us": 5,
+      "deadline_misses": 0,
+      "stack_free_bytes": 4288,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "policy_saved",
+      "boot": 8,
+      "reset_reason": 1,
+      "grace_ms": 120000,
+      "auto_flags": 1,
+      "away": false,
+      "physical_outputs_enabled": false
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 8,
+      "control_jobs": 11266,
+      "link_jobs": 11266,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false,
+      "pir_ready": false,
+      "pir_warmup_remaining_ms": 3620,
+      "wifi_channel_known": true,
+      "wifi_channel": 1
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 8,
+      "control_jobs": 11688,
+      "link_jobs": 11688,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false,
+      "pir_ready": false,
+      "pir_warmup_remaining_ms": 1510,
+      "wifi_channel_known": true,
+      "wifi_channel": 1
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "memory",
+      "node": "A",
+      "uptime_ms": 60031,
+      "flash_bytes": 16777216,
+      "internal_free": 177899,
+      "internal_min": 168771,
+      "internal_largest": 139264,
+      "psram_total": 8388608,
+      "psram_free": 8385863,
+      "psram_largest": 8257536,
+      "stack_free_bytes": 3848,
+      "rx_dropped": 0,
+      "tx_failed": 0,
+      "memory_config_ok": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "safety",
+      "node": "A",
+      "rejected": 0,
+      "duplicates": 0,
+      "last_command": 0,
+      "command_dropped": 0,
+      "radio": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "ControlTask",
+      "core": 1,
+      "priority": 5,
+      "period_ms": 5,
+      "jobs": 11858,
+      "max_exec_us": 214,
+      "max_late_us": 67,
+      "deadline_misses": 0,
+      "stack_free_bytes": 5216,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "LinkTask",
+      "core": 0,
+      "priority": 3,
+      "period_ms": 5,
+      "jobs": 11862,
+      "max_exec_us": 771,
+      "max_late_us": 5,
+      "deadline_misses": 0,
+      "stack_free_bytes": 4288,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    }
+  ],
+  "blocker": "B USB absent: COM7 FileNotFoundError(2), user confirms B not showing up",
+  "B_written": false,
+  "models_written": false,
+  "manual_commands_tested": false,
+  "phone_AP_tested": false,
+  "phone_microphone_tested": false,
+  "recognition_tested": false,
+  "physical_switching_tested": false,
+  "APK_installed": "USER_REPORTED",
+  "private_input_hashes_unchanged": true,
+  "host_checks": {
+    "firmware_watchdog_cpp": "76 passed in 18.83s",
+    "flash_guard_watchdog": "39 passed in 5.01s"
+  },
+  "limits": [
+    "NVS is not byte-immutable during normal boot: normal boot counters may advance; no erase or provisioning writes were issued",
+    "Initial installed B telemetry was observed before USB removal; no fresh postdeployment B or phone result exists"
+  ]
+}

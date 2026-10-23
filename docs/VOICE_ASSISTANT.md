@@ -1,3 +1,26 @@
+# Actual phone trials: upload/inference observed; recognition failed — 23 October 2026 IST
+
+This current result supersedes the older preparation-only statements below. Native Android manual light control passed proposal/confirmation/matching ACK/fresh readback with GPIO outputs inhibited; it unlocked phone voice without enabling outputs. Two real phone clips prompted TURN OFF BEDROOM LIGHT reached B's pinned ESP-SR1.7.0 MultiNet6 English engine over the local AP. No cloud or Android default recognizer was used.
+
+| HARDWARE_MEASURED | Job1 | Job2: instructed full four-second cap |
+|---|---|---|
+| Samples / input seconds / board CRC32 | 33,280 / 2.080 / 3561804158 | 64,000 / 4.000 / 1757513135 |
+| Peak / clipped / nonzero | 15,349 / 0 / 32,313 | 15,392 / 0 / 62,932 |
+| Inference microseconds / frames | 1,438,407 / 97 | 2,382,320 / 157 |
+| Result | No detection | No detection |
+
+Both completed phase4/error_code0/engine_errors0, stateDETECTING, accepted command0/confidence0, candidate0/score0, empty decoder text; threshold remains0.7. User reports voice stopped, no confident recognition, no proposal, no automatic retry or confirmation. Capture/upload and ESP processing were observed, **recognition failed**, and actual speech proposal/confirmation/actuation remains **NOT_EXERCISED**. Current fresh controller boot9 remains light/fan OFF, last_command12, physical_outputs_enabled=false. No physical switching was tested. Raw phone audio was cleared, so independent source-byte CRC comparison, acoustic inspection and transcription are unavailable. Two diagnostic trials are not a human accuracy evaluation. The longer clip did not fix the failure; root cause is not identified.
+
+See raw `benchmarks/raw/android_phone_voice_trial1_20261023.json`, `android_phone_voice_trial2_20261023.json` and the [master](../CLAWGRID_MASTER_INTEGRATION.md). Preserve earlier 0/16 synthetic evidence below. Next investigate the pinned reference PCM/model/decoder setup with labelled diagnostic clips; AFE is still an unproven hypothesis. Do not request more identical phone trials without a new diagnostic reason, lower thresholds, bypass confirmation or enable outputs. New request-ID UI is host-built only and was not the APK used for these trials.
+
+---
+
+# Historical preparation: Android phone microphone path — 23 October 2026 IST
+
+Current phone path: raw AudioRecord capture → direct ClawGrid AP http://192.168.4.1 → B `/api/speech/audio` on-device ESP-SR recognition, with no cloud or Android default recognizer. Voice is gated behind current-boot manual ACK/readback; recognized IDs 1/2 create job-bound speech proposals and always need explicit confirmation. See [phone installation and bench guide](../ecosystem/android/PHONE_INSTALL_AND_LOCAL_VOICE.md) and [current master](../CLAWGRID_MASTER_INTEGRATION.md) for exact format, checks and blockers. Source/host tests pass; no real phone/acoustic or RF validation occurred. Earlier browser/PC evidence below is preserved and is not phone validation.
+
+---
+
 # Local push to talk assistant
 
 Updated 21 October 2026. Recognition runs only on Node B's pinned ESP-SR 1.7.0 MultiNet6 English build. A owns SafetyKernel. No hardware is available in this software session, so target recognition is still unverified after these repairs. The last retained target corpus detected 0/16 synthetic commands despite 18/18 matching PCM checksums; successful host tests do not replace that result.

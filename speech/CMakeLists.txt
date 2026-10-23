@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 set(SDKCONFIG_DEFAULTS "${CMAKE_CURRENT_LIST_DIR}/../native/sdkconfig.defaults;${CMAKE_CURRENT_LIST_DIR}/sdkconfig.defaults")
+# The pinned PlatformIO builder does not forward board_build.sdkconfig_defaults.
+# Select the same verified UART0 defaults before IDF generates a fresh config.
+get_filename_component(CLAWGRID_SDKCONFIG_NAME "${SDKCONFIG}" NAME)
+if(CLAWGRID_SDKCONFIG_NAME STREQUAL "sdkconfig.speech_intelligence_uart")
+    list(APPEND SDKCONFIG_DEFAULTS "${CMAKE_CURRENT_LIST_DIR}/../native/sdkconfig.uart.defaults")
+endif()
 set(COMPONENTS main __pio_env esp-sr)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 project(clawgrid_speech)

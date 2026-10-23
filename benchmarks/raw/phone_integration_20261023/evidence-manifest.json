@@ -1,0 +1,60 @@
+{
+  "copied_existing_evidence": true,
+  "tests_rerun_for_copy": false,
+  "files": [
+    {
+      "name": "android-request-id-build.log",
+      "bytes": 4514,
+      "sha256": "65542182243f3caf52a9767e3ec6473dd8538e57fd0bd0f70cafb5e45279bea9",
+      "classification": "HOST_MEASURED"
+    },
+    {
+      "name": "request-id-control-tests.log",
+      "bytes": 98,
+      "sha256": "61cbd70f914a673478b51a5de8f4efcc18a4c0c59df5c3c5e4314113f751028b",
+      "classification": "HOST_MEASURED"
+    },
+    {
+      "name": "request-id-wire-tests.log",
+      "bytes": 58,
+      "sha256": "8d30b23dedeefb23f2d56838c9fcbeedd764741bed6d81280ddbbb9b50da2d2f",
+      "classification": "HOST_MEASURED"
+    },
+    {
+      "name": "request-id-apk-signature.log",
+      "bytes": 972,
+      "sha256": "60a6f26fb4f3989b4cba0d345d12e13c6e9975fb58e96133a0dc20d69b9bca4b",
+      "classification": "HOST_MEASURED"
+    },
+    {
+      "name": "request-id-client-boundary.json",
+      "bytes": 398,
+      "sha256": "6c0c2181728be4535da8ce85289cbd8a21eba80e22a5a4ead5812bdd8f96bb6a",
+      "classification": "HOST_MEASURED"
+    },
+    {
+      "name": "voice1-diagnostics.json",
+      "bytes": 24999,
+      "sha256": "e5e441ee16680e9facd23116577e62c7c046f2b1137980ef0419f43f7307304b",
+      "classification": "HARDWARE_MEASURED"
+    },
+    {
+      "name": "voice2-diagnostics.json",
+      "bytes": 25507,
+      "sha256": "e7a3f56174857afc3a6008304c097641d94294f3f003c05b70b6971f57bf7391",
+      "classification": "HARDWARE_MEASURED"
+    },
+    {
+      "name": "phone-voice-recognition-1.json",
+      "bytes": 58726,
+      "sha256": "2c691e745e54f268bd0b3771585afda0ef7a6cb0da580fec9a8a73ddb2c52316",
+      "classification": "HARDWARE_MEASURED"
+    },
+    {
+      "name": "phone-voice-recognition-2.json",
+      "bytes": 57281,
+      "sha256": "50ab38b3148f15f0ad7d96dc0bb223187564eea6447d8d539ccb78b003f016c9",
+      "classification": "HARDWARE_MEASURED"
+    }
+  ]
+}

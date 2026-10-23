@@ -1,0 +1,117 @@
+{
+  "source": "HARDWARE_MEASURED_WITH_HOST_JS_CHECKS",
+  "recorded_utc": "2026-10-23T17:00:02.205082+00:00",
+  "user_reports": {
+    "phone_IPv4_before_B_restart": "192.168.4.2",
+    "gateway_and_prefix": "not shown",
+    "browser": "Android Chrome",
+    "URL_upgrades_to_HTTPS": true,
+    "legacy_root_opened_with_simulated_values": true
+  },
+  "identified_causes": [
+    "Chrome upgrades explicit local HTTP to HTTPS; gateway serves HTTP80",
+    "Legacy root dashboard initializes virtual_rooms and generated demo metrics"
+  ],
+  "fix": "normal inhibited B app-only deployment serving read-only hardware status at root, no-store; scoped Chrome Continue-to-site guidance",
+  "current_gateway_manifest": {
+    "role": "B-speech",
+    "port": "COM9",
+    "mac": "e0:72:a1:f6:a9:68",
+    "environment": "speech_intelligence_uart",
+    "physical_outputs_enabled": false,
+    "diagnostic_faults_enabled": false,
+    "tool": "esptool 5.4.0",
+    "exit_code": 0,
+    "installed_missing_model": false,
+    "artifacts": [
+      {
+        "address": "0x10000",
+        "path": "speech\\.pio\\build\\speech_intelligence_uart\\firmware.bin",
+        "sha256": "a225740aa6af9445f9959994141dfc5723944c7f59daa957d039638cafbaf2b2"
+      }
+    ]
+  },
+  "verified_root_HTTP": {
+    "path": "/",
+    "status": 200,
+    "bytes": 5864,
+    "sha256": "e8f73c74c9631fca7a3746e1390732affcc05d4624a9dce57ceb442b929e9fd6",
+    "cache_control": "no-store",
+    "matches_hardware_page": true
+  },
+  "state": {
+    "room": "bedroom",
+    "known": true,
+    "occupancy": "UNKNOWN",
+    "motion": false,
+    "light": false,
+    "fan": false,
+    "age_ms": 45,
+    "reports": 48,
+    "invalid": 0,
+    "replayed": 0,
+    "boot_id": 9,
+    "sample_uptime_ms": 8817999,
+    "nonprogress": 0,
+    "authenticated": true,
+    "mode": "HOME",
+    "auto_flags": 1,
+    "manual_flags": 0,
+    "grace_ms": 120000,
+    "light_timer_ms": 0,
+    "fan_timer_ms": 0,
+    "light_on_ms": 5745,
+    "fan_on_ms": 0,
+    "last_command": 3,
+    "physical_state": "not measured",
+    "physical_outputs_enabled": false,
+    "relay_active_low_assumption": true
+  },
+  "rtos": {
+    "source": "HARDWARE_MEASURED",
+    "task": "LinkTask",
+    "core": 0,
+    "priority": 3,
+    "period_ms": 5,
+    "jobs": 9594,
+    "max_exec_us": 1073,
+    "max_late_us": 137,
+    "deadline_misses": 0,
+    "stack_free_bytes": 4180,
+    "watchdog": true,
+    "task_count": 13,
+    "wifi_channel_known": true,
+    "wifi_channel": 1,
+    "ap_ip_valid": true,
+    "ap_ip": "192.168.4.1",
+    "ap_clients_known": true,
+    "ap_clients": 1
+  },
+  "speech_ready": true,
+  "private_inputs_unchanged": true,
+  "models_written": false,
+  "Android_APK_changed": false,
+  "physical_switching_tested": false,
+  "phone_confirmed_new_landing_page": "USER_REPORTED fresh/inhibited",
+  "phone_manual_tested": false,
+  "phone_audio_tested": false,
+  "remaining": "phone confirmation then app-owned manual OFF/ACK/readback and gated real phone PCM/recognition",
+  "files_sha256": {
+    "firmware/node_intelligence/src/main.cpp": "feada7f659b9ef96201a7046b2f7a77ae5c7d3167955bbf808ff971af2029890",
+    "firmware/node_intelligence/src/hardware_status.h": "05e41c9691489b7683c93f38024dd15c08b7fe61f1e6134755dbbbbc86fe158b",
+    "scripts/check_gateway_status.cjs": "76d58b50d33941e8eb621b03937fe479875ee880eef7022956da7035acb2e00a",
+    "scripts/check_frontend.cjs": "ecb8cd040f74702d861e222e571331b0caa7dbd980e0495d33d7cd808435be1c",
+    "ecosystem/android/PHONE_INSTALL_AND_LOCAL_VOICE.md": "947c7ab59388bf11dc00f19265c6e6dcae078dec8629ed2c2dd80f27dd93fbb1"
+  },
+  "current_blocker": "App UNKNOWN: AP count dropped 1 to 0; asked phone to remain associated while app foreground, plus exact status/URL/token-field check",
+  "native_app_check_AP_clients": [
+    {
+      "host_ns": 545838007505000,
+      "clients": 1
+    },
+    {
+      "host_ns": 545933507053800,
+      "clients": 0
+    }
+  ]
+}

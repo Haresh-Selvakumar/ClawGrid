@@ -1,0 +1,23 @@
+{
+  "source": "HOST_MEASURED",
+  "checkpoint": "Publication preflight; not a new build or hardware test",
+  "existing_repository": "Haresh-Selvakumar/ClawGrid",
+  "base_commit": "79ea76f0dc030477f138927b9a20faca5b79a3d1",
+  "scanned_files_at_checkpoint": 1365,
+  "configured_private_value_and_pattern_scan_failures": 0,
+  "archive_contents_scanned": true,
+  "remote_only_files_removed": 0,
+  "existing_evidence_preserved": true,
+  "android_gradlew_executable": true,
+  "new_APK_installed_on_phone": false,
+  "firmware_flashed_during_publication": false,
+  "global_git_diff_check": {
+    "exit_code": 2,
+    "whitespace_warnings": 50167,
+    "affected_files": 244,
+    "explanation": "Imported historical evidence retains original CRLF/whitespace; historical documentation/baseline files also contain whitespace. Preserved byte-for-byte instead of changing unrelated evidence. This is not a build or functional test failure."
+  },
+  "packaging_setup_failure": "First APK recursive scan mistook embedded ZIP constants in a binary entry for an actual archive and stopped with BadZipFile before copying or publishing. Restricted recursion to entries with ZIP-format headers and reran successfully; actual archive entries still scanned.",
+  "functional_checks": "Previously completed debug APK build,42 control/voice JVM tests,3 wire JVM tests and APK signature checks remain their original host evidence; no new functional code changed for publication.",
+  "remaining_blocker": "Two actual phone speech jobs completed but recognized no command; no voice confirmation or physical switching pass claimed."
+}

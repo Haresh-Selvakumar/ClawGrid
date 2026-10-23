@@ -1,0 +1,94 @@
+ESP-ROM:esp32s3-20210327
+Build:Mar 27 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x8 (SPI_FAST_FLASH_BOOT)
+Saved PC:0x420b538a
+SPIWP:0xee
+mode:DIO, clock div:1
+load:0x3fce3808,len:0x1820
+load:0x403c9700,len:0xe6c
+load:0x403cc700,len:0x3048
+entry 0x403c997c
+[0;32mI (24) boot: ESP-IDF 4.4.7 2nd stage bootloader[0m
+[0;32mI (24) boot: compile time 14:49:25[0m
+[0;32mI (25) boot: Multicore bootloader[0m
+[0;32mI (26) boot: chip revision: v0.2[0m
+[0;32mI (30) qio_mode: Enabling default flash chip QIO[0m
+[0;32mI (35) boot.esp32s3: Boot SPI Speed : 80MHz[0m
+[0;32mI (40) boot.esp32s3: SPI Mode       : QIO[0m
+[0;32mI (45) boot.esp32s3: SPI Flash Size : 16MB[0m
+[0;32mI (50) boot: Enabling RNG early entropy source...[0m
+[0;32mI (55) boot: Partition Table:[0m
+[0;32mI (59) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (66) boot:  0 nvs              WiFi data        01 02 00009000 00005000[0m
+[0;32mI (74) boot:  1 otadata          OTA data         01 00 0000e000 00002000[0m
+[0;32mI (81) boot:  2 app0             OTA app          00 10 00010000 00300000[0m
+[0;32mI (89) boot:  3 app1             OTA app          00 11 00310000 00300000[0m
+[0;32mI (96) boot:  4 model            Unknown data     01 40 00610000 00600000[0m
+[0;32mI (103) boot:  5 storage          Unknown data     01 82 00c10000 003f0000[0m
+[0;32mI (111) boot: End of partition table[0m
+[0;32mI (115) esp_image: segment 0: paddr=00010020 vaddr=3c0c0020 size=32da0h (208288) map[0m
+[0;32mI (155) esp_image: segment 1: paddr=00042dc8 vaddr=3fc97850 size=06c1ch ( 27676) load[0m
+[0;32mI (161) esp_image: segment 2: paddr=000499ec vaddr=40374000 size=0662ch ( 26156) load[0m
+[0;32mI (166) esp_image: segment 3: paddr=00050020 vaddr=42000020 size=b7a48h (752200) map[0m
+[0;32mI (284) esp_image: segment 4: paddr=00107a70 vaddr=4037a62c size=0d220h ( 53792) load[0m
+[0;32mI (303) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (303) boot: Disabling RNG early entropy source...[0m
+
+[B] radio=ready HTTP=ready IP=192.168.4.1
+Build fst from commands.
+Quantized MultiNet6:rnnt_ctc_1.0, name:mn6_en, (Feb 28 2024 20:06:28)
+Quantized MultiNet6 search method: 2, time out:6.0 s
+Build fst from commands.
+16 active speech commands:
+Command 1: TURN ON BEDROOM LIGHT
+Command 2: TURN OFF BEDROOM LIGHT
+Command 3: TURN ON BEDROOM FAN
+Command 4: TURN OFF BEDROOM FAN
+Command 5: TURN ON LIVING ROOM LIGHT
+Command 6: TURN OFF LIVING ROOM LIGHT
+Command 7: TURN ON LIVING ROOM FAN
+Command 8: TURN OFF LIVING ROOM FAN
+Command 9: TURN ON KITCHEN LIGHT
+Command 10: TURN OFF KITCHEN LIGHT
+Command 11: TURN ON KITCHEN FAN
+Command 12: TURN OFF KITCHEN FAN
+Command 13: TURN ON STUDY LIGHT
+Command 14: TURN OFF STUDY LIGHT
+Command 15: TURN ON STUDY FAN
+Command 16: TURN OFF STUDY FAN
+
+{"kind":"speech_init","model":"mn6_en","commands":16,"sample_rate":16000,"chunk_samples":512,"threshold":0.7,"afe":false}
+
+{"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}
+
+{"kind":"bridge","id":101,"status":401,"body":{"error":"Control token required"}}
+
+{"kind":"bridge","id":102,"status":200,"body":{"source":"HARDWARE_MEASURED","id":0,"phase":0,"status":2,"light":false,"fan":false,"attempts":0,"rtt_us":0,"processing_us":0,"outcome_known":false}}
+
+{"kind":"bridge","id":103,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":12,"reports":3,"invalid":0,"replayed":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":0,"fan_on_ms":0,"last_command":0,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+
+{"kind":"bridge","id":104,"status":200,"body":{"source":"HARDWARE_MEASURED","internal_free":105919,"internal_min":56039,"internal_largest":59392,"psram_total":8388608,"psram_free":4088263,"psram_largest":3866624,"stack_task":"http","stack_free_bytes":4088,"rx_dropped":0,"memory_config_ok":true}}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":5038,"flash_bytes":16777216,"internal_free":106435,"internal_min":56039,"internal_largest":59392,"psram_total":8388608,"psram_free":4089807,"psram_largest":3866624,"stack_free_bytes":4016,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":4,"invalid":0,"replayed":0,"authenticated":true,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":807,"max_exec_us":841,"max_late_us":2,"deadline_misses":0,"stack_free_bytes":4212,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":10039,"flash_bytes":16777216,"internal_free":106427,"internal_min":55179,"internal_largest":59392,"psram_total":8388608,"psram_free":4089807,"psram_largest":3866624,"stack_free_bytes":4016,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":9,"invalid":0,"replayed":0,"authenticated":true,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":1808,"max_exec_us":841,"max_late_us":2,"deadline_misses":0,"stack_free_bytes":4212,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":15040,"flash_bytes":16777216,"internal_free":106427,"internal_min":55179,"internal_largest":59392,"psram_total":8388608,"psram_free":4089807,"psram_largest":3866624,"stack_free_bytes":4016,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":14,"invalid":0,"replayed":0,"authenticated":true,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":2808,"max_exec_us":841,"max_late_us":2,"deadline_misses":0,"stack_free_bytes":4212,"watchdog":true,"diagnostic_dropped":0}
+
+{"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":20041,"flash_bytes":16777216,"internal_free":106427,"internal_min":55179,"internal_largest":59392,"psram_total":8388608,"psram_free":4089807,"psram_largest":3866624,"stack_free_bytes":4016,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+
+{"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":19,"invalid":0,"replayed":0,"authenticated":true,"radio":true}
+
+{"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":3808,"max_exec_us":841,"max_late_us":2,"deadline_misses":0,"stack_free_bytes":4212,"watchdog":true,"diagnostic_dropped":0}

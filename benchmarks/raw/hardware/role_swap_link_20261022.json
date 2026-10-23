@@ -1,0 +1,51 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "at_utc": "2026-10-22T05:44:07.717633+00:00",
+  "method": "Read-only state through USB B COM7 and authenticated ESP-NOW A; no relay or microphone commands",
+  "state": {
+    "room": "bedroom",
+    "known": true,
+    "occupancy": "UNKNOWN",
+    "motion": false,
+    "light": false,
+    "fan": false,
+    "age_ms": 412,
+    "reports": 136,
+    "invalid": 0,
+    "replayed": 0,
+    "boot_id": 1,
+    "sample_uptime_ms": 176238,
+    "nonprogress": 0,
+    "authenticated": true,
+    "mode": "HOME",
+    "auto_flags": 1,
+    "manual_flags": 0,
+    "grace_ms": 120000,
+    "light_timer_ms": 0,
+    "fan_timer_ms": 0,
+    "light_on_ms": 0,
+    "fan_on_ms": 0,
+    "last_command": 0,
+    "physical_state": "not measured",
+    "physical_outputs_enabled": false,
+    "relay_active_low_assumption": true
+  },
+  "flashes": [
+    {
+      "manifest": "benchmarks\\raw\\hardware\\flash_native_voice_20261022T054056Z.json",
+      "role": "A",
+      "port": "COM8",
+      "mac": "e0:72:a1:f5:bc:b0",
+      "exit_code": 0,
+      "current_application_matches": true
+    },
+    {
+      "manifest": "benchmarks\\raw\\hardware\\flash_native_intelligence_20261022T054135Z.json",
+      "role": "B",
+      "port": "COM7",
+      "mac": "e0:72:a1:f6:a9:68",
+      "exit_code": 0,
+      "current_application_matches": true
+    }
+  ]
+}

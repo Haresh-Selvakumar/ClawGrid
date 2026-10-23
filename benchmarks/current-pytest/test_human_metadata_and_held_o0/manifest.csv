@@ -1,0 +1,2 @@
+file,expected_id,audio_source,speaker,session,conditions,split
+clip.wav,1,HUMAN_RECORDING,speaker1,s2,quiet,held_out

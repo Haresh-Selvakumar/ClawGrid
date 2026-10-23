@@ -1,0 +1,6 @@
+esptool v5.4.0
+Serial port COM7:
+
+ERROR: A fatal error occurred: Could not open COM7, the port is busy or doesn't exist.
+(Cannot configure port, something went wrong. Original message: PermissionError(13, 'A device attached to the system is not functioning.', None, 31))
+

@@ -1,0 +1,8 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "virtual_test": true,
+  "physical_load_tested": false,
+  "cases": [],
+  "passed": false,
+  "error": "/api/state: 429 USB busy; request not sent. Try again when the current request completes."
+}

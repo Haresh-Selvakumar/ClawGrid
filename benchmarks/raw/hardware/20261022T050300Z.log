@@ -1,0 +1,7 @@
+COM8 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}
+COM8 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":65004,"flash_bytes":16777216,"internal_free":178355,"internal_min":168687,"internal_largest":147456,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":4368,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM8 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":0,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM8 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":12741,"max_exec_us":66,"max_late_us":173,"deadline_misses":0,"stack_free_bytes":4644,"watchdog":true,"diagnostic_dropped":0}
+COM8 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":70004,"flash_bytes":16777216,"internal_free":178355,"internal_min":168687,"internal_largest":147456,"psram_total":8388608,"psram_free":8386111,"psram_largest":8257536,"stack_free_bytes":4368,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM8 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":0,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM8 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":13741,"max_exec_us":66,"max_late_us":173,"deadline_misses":0,"stack_free_bytes":4644,"watchdog":true,"diagnostic_dropped":0}

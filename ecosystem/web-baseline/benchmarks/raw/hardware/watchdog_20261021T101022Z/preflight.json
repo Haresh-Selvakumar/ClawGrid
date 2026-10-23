@@ -1,0 +1,81 @@
+{
+  "original_policy": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "policy_saved",
+    "boot": 20,
+    "reset_reason": 1,
+    "grace_ms": 120000,
+    "auto_flags": 1,
+    "away": false,
+    "physical_outputs_enabled": false
+  },
+  "task_health": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "task_health",
+    "boot": 20,
+    "control_jobs": 11870,
+    "link_jobs": 11870,
+    "control_stalled": false,
+    "diagnostic_faults_enabled": true,
+    "physical_outputs_enabled": false
+  },
+  "A_selftest": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "selftest",
+    "node": "A",
+    "passed": true,
+    "rtos_ready": true
+  },
+  "B_selftest": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "selftest",
+    "node": "B",
+    "passed": true,
+    "rtos_ready": true
+  },
+  "state": {
+    "kind": "bridge",
+    "id": 9,
+    "status": 200,
+    "body": {
+      "room": "bedroom",
+      "known": true,
+      "occupancy": "UNKNOWN",
+      "motion": false,
+      "light": false,
+      "fan": false,
+      "age_ms": 433,
+      "reports": 40,
+      "invalid": 0,
+      "replayed": 0,
+      "authenticated": true,
+      "mode": "HOME",
+      "auto_flags": 1,
+      "manual_flags": 0,
+      "grace_ms": 120000,
+      "light_timer_ms": 0,
+      "fan_timer_ms": 0,
+      "light_on_ms": 0,
+      "fan_on_ms": 0,
+      "last_command": 0,
+      "physical_state": "not measured",
+      "physical_outputs_enabled": false,
+      "relay_active_low_assumption": true
+    }
+  },
+  "policy_reference": {
+    "source": "HARDWARE_MEASURED",
+    "kind": "policy_saved",
+    "boot": 15,
+    "reset_reason": 0,
+    "grace_ms": 120000,
+    "auto_flags": 1,
+    "away": false,
+    "physical_outputs_enabled": false
+  },
+  "ports": {
+    "A": "COM9",
+    "B": "COM8"
+  },
+  "A_transport": "UART0 through verified CH343 USB adapter"
+}

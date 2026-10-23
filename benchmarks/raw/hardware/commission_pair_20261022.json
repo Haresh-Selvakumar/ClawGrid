@@ -1,0 +1,113 @@
+{
+  "source": "HARDWARE_MEASURED",
+  "node_a_records": [
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "selftest",
+      "node": "A",
+      "passed": true,
+      "rtos_ready": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "policy_saved",
+      "boot": 34,
+      "reset_reason": 0,
+      "grace_ms": 120000,
+      "auto_flags": 1,
+      "away": false,
+      "physical_outputs_enabled": false
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 34,
+      "control_jobs": 8917,
+      "link_jobs": 8917,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false,
+      "pir_ready": false,
+      "pir_warmup_remaining_ms": 15268
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "task_health",
+      "boot": 34,
+      "control_jobs": 9035,
+      "link_jobs": 9035,
+      "control_stalled": false,
+      "diagnostic_faults_enabled": false,
+      "physical_outputs_enabled": false,
+      "pir_ready": false,
+      "pir_warmup_remaining_ms": 14678
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "memory",
+      "node": "A",
+      "uptime_ms": 50031,
+      "flash_bytes": 16777216,
+      "internal_free": 190067,
+      "internal_min": 180843,
+      "internal_largest": 151552,
+      "psram_total": 8388608,
+      "psram_free": 8386111,
+      "psram_largest": 8257536,
+      "stack_free_bytes": 4016,
+      "rx_dropped": 0,
+      "tx_failed": 0,
+      "memory_config_ok": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "safety",
+      "node": "A",
+      "rejected": 0,
+      "duplicates": 0,
+      "last_command": 0,
+      "command_dropped": 0,
+      "radio": true
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "ControlTask",
+      "core": 1,
+      "priority": 5,
+      "period_ms": 5,
+      "jobs": 9758,
+      "max_exec_us": 195,
+      "max_late_us": 133,
+      "deadline_misses": 0,
+      "stack_free_bytes": 5224,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    },
+    {
+      "source": "HARDWARE_MEASURED",
+      "kind": "rtos",
+      "node": "A",
+      "task": "LinkTask",
+      "core": 0,
+      "priority": 3,
+      "period_ms": 5,
+      "jobs": 9759,
+      "max_exec_us": 1216,
+      "max_late_us": 4,
+      "deadline_misses": 0,
+      "stack_free_bytes": 4248,
+      "watchdog": true,
+      "diagnostic_dropped": 0
+    }
+  ],
+  "flash_manifest": "flash_native_voice_20261022T040151Z.json",
+  "bridge_launcher_pid": 14308,
+  "node_a_checks_passed": true,
+  "node_b_check": "USB serial timeout after reconnect; physical power cycle requested",
+  "physical_load_tested": false,
+  "all_checks_passed": false,
+  "nvs_flash_range_not_written": true,
+  "full_backup_sha256": "c0cfd18e23a0fab9ea2b944dcfb73b6da58cf9d232e129004875690755f80605"
+}

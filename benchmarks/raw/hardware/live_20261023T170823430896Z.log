@@ -1,0 +1,52 @@
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":707538,"flash_bytes":16777216,"internal_free":89411,"internal_min":43263,"internal_largest":47104,"psram_total":8388608,"psram_free":4089567,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":706,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":141304,"max_exec_us":1094,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":4148,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"A","passed":true,"rtos_ready":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"policy_saved","boot":9,"reset_reason":1,"grace_ms":120000,"auto_flags":1,"away":false,"physical_outputs_enabled":false}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"task_health","boot":9,"control_jobs":1895286,"link_jobs":1895286,"control_stalled":false,"diagnostic_faults_enabled":false,"physical_outputs_enabled":false,"pir_ready":true,"pir_warmup_remaining_ms":0,"wifi_channel_known":true,"wifi_channel":1}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"selftest","node":"B","passed":true,"rtos_ready":true}
+COM9 
+COM9 {"kind":"bridge","id":8,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":339,"reports":707,"invalid":0,"replayed":0,"boot_id":9,"sample_uptime_ms":9476999,"nonprogress":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":5745,"fan_on_ms":0,"last_command":3,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+COM9 
+COM9 {"kind":"bridge","id":9,"status":200,"body":{"source":"HARDWARE_MEASURED","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":141533,"max_exec_us":1094,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":4148,"watchdog":true,"task_count":13,"wifi_channel_known":true,"wifi_channel":1,"ap_ip_valid":true,"ap_ip":"192.168.4.1","ap_clients_known":true,"ap_clients":1}}
+COM9 
+COM9 {"kind":"bridge","id":10,"status":200,"body":{"source":"HARDWARE_MEASURED","internal_free":88899,"internal_min":43263,"internal_largest":47104,"psram_total":8388608,"psram_free":4088023,"psram_largest":3866624,"stack_task":"http","stack_free_bytes":3584,"rx_dropped":0,"memory_config_ok":true}}
+COM9 
+COM9 {"kind":"bridge","id":11,"status":200,"body":{"processing_source":"HARDWARE_MEASURED","supported":true,"engine":"ESP-SR 1.7.0 MultiNet6 English","phase":1,"job":0,"command_id":0,"confidence":0.00000,"samples":0,"inference_us":0,"max_frame_us":0,"frames":0,"stack_free_bytes":0,"pcm_crc32":0,"diagnostic_text":"","error_code":0,"last_state":0,"candidate_id":0,"candidate_score":0.00000,"peak":0,"clipped_samples":0,"nonzero_samples":0,"chunk_samples":0,"padded_samples":0,"detecting_frames":0,"engine_errors":0,"authorized":false}}
+COM9 
+COM9 {"kind":"bridge","id":12,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":339,"reports":709,"invalid":0,"replayed":0,"boot_id":9,"sample_uptime_ms":9478999,"nonprogress":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":5745,"fan_on_ms":0,"last_command":3,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"memory","node":"A","uptime_ms":9479768,"flash_bytes":16777216,"internal_free":177899,"internal_min":168771,"internal_largest":139264,"psram_total":8388608,"psram_free":8385863,"psram_largest":8257536,"stack_free_bytes":3848,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"safety","node":"A","rejected":0,"duplicates":0,"last_command":3,"command_dropped":0,"radio":true}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"ControlTask","core":1,"priority":5,"period_ms":5,"jobs":1895805,"max_exec_us":276,"max_late_us":185,"deadline_misses":0,"stack_free_bytes":4000,"watchdog":true,"diagnostic_dropped":0}
+COM10 
+COM10 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"A","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":1895809,"max_exec_us":902,"max_late_us":4,"deadline_misses":0,"stack_free_bytes":4144,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"kind":"bridge","id":13,"status":200,"body":{"source":"HARDWARE_MEASURED","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":141933,"max_exec_us":1094,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":4148,"watchdog":true,"task_count":13,"wifi_channel_known":true,"wifi_channel":1,"ap_ip_valid":true,"ap_ip":"192.168.4.1","ap_clients_known":true,"ap_clients":1}}
+COM9 
+COM9 {"kind":"bridge","id":18,"status":200,"body":{"processing_source":"HARDWARE_MEASURED","supported":true,"engine":"ESP-SR 1.7.0 MultiNet6 English","phase":1,"job":0,"command_id":0,"confidence":0.00000,"samples":0,"inference_us":0,"max_frame_us":0,"frames":0,"stack_free_bytes":0,"pcm_crc32":0,"diagnostic_text":"","error_code":0,"last_state":0,"candidate_id":0,"candidate_score":0.00000,"peak":0,"clipped_samples":0,"nonzero_samples":0,"chunk_samples":0,"padded_samples":0,"detecting_frames":0,"engine_errors":0,"authorized":false}}
+COM9 
+COM9 {"kind":"bridge","id":19,"status":200,"body":{"source":"HARDWARE_MEASURED","id":0,"phase":0,"status":2,"light":false,"fan":false,"attempts":0,"rtt_us":0,"processing_us":0,"outcome_known":false}}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"memory","node":"B","uptime_ms":712542,"flash_bytes":16777216,"internal_free":89411,"internal_min":43263,"internal_largest":47104,"psram_total":8388608,"psram_free":4089567,"psram_largest":3866624,"stack_free_bytes":3728,"rx_dropped":0,"tx_failed":0,"memory_config_ok":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"link","node":"B","accepted":711,"invalid":0,"replayed":0,"nonprogress":0,"authenticated":true,"radio":true}
+COM9 
+COM9 {"source":"HARDWARE_MEASURED","kind":"rtos","node":"B","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":142305,"max_exec_us":1094,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":4148,"watchdog":true,"diagnostic_dropped":0}
+COM9 
+COM9 {"kind":"bridge","id":23,"status":200,"body":{"room":"bedroom","known":true,"occupancy":"UNKNOWN","motion":false,"light":false,"fan":false,"age_ms":89,"reports":712,"invalid":0,"replayed":0,"boot_id":9,"sample_uptime_ms":9481999,"nonprogress":0,"authenticated":true,"mode":"HOME","auto_flags":1,"manual_flags":0,"grace_ms":120000,"light_timer_ms":0,"fan_timer_ms":0,"light_on_ms":5745,"fan_on_ms":0,"last_command":3,"physical_state":"not measured","physical_outputs_enabled":false,"relay_active_low_assumption":true}}
+COM9 
+COM9 {"kind":"bridge","id":24,"status":200,"body":{"source":"HARDWARE_MEASURED","task":"LinkTask","core":0,"priority":3,"period_ms":5,"jobs":142483,"max_exec_us":1094,"max_late_us":1828,"deadline_misses":0,"stack_free_bytes":4148,"watchdog":true,"task_count":13,"wifi_channel_known":true,"wifi_channel":1,"ap_ip_valid":true,"ap_ip":"192.168.4.1","ap_clients_known":true,"ap_clients":1}}
+COM9 
+COM9 {"kind":"bridge","id":25,"status":200,"body":{"processing_source":"HARDWARE_MEASURED","supported":true,"engine":"ESP-SR 1.7.0 MultiNet6 English","phase":1,"job":0,"command_id":0,"confidence":0.00000,"samples":0,"inference_us":0,"max_frame_us":0,"frames":0,"stack_free_bytes":0,"pcm_crc32":0,"diagnostic_text":"","error_code":0,"last_state":0,"candidate_id":0,"candidate_score":0.00000,"peak":0,"clipped_samples":0,"nonzero_samples":0,"chunk_samples":0,"padded_samples":0,"detecting_frames":0,"engine_errors":0,"authorized":false}}
+COM9 
+COM9 {"kind":"bridge","id":26,"status":200,"body":{"source":"HARDWARE_MEASURED","id":0,"phase":0,"status":2,"light":false,"fan":false,"attempts":0,"rtt_us":0,"processing_us":0,"outcome_known":false}}

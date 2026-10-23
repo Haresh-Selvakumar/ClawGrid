@@ -1,6 +1,25 @@
 # ClawGrid embedded home control and research prototype
 
-ClawGrid uses two ESP32-S3 N16R8 boards with native ESP-IDF/FreeRTOS. A owns deterministic control and SafetyKernel; B owns the browser API and ESP-SR speech model. Their memories are separate. The four-room house interface supplies explicitly synthetic sensors; output policy and recognition run on MCUs.
+**Current integration, 23 October 2026 (India time):** the native Android app in `ecosystem/android` is the product UI. Phone → gateway B → authenticated ESP-NOW → controller A manual light ON/OFF passed proposal/confirmation, matching ACK and fresh authoritative readback with **outputs inhibited**. Physical switching is untested. The phone uses ClawGrid-Assistant Wi-Fi and editable gateway URL **http://192.168.4.1**; local control does not require Internet or Supabase. Phone microphone audio reached ESP for two real recognition-only trials, but **both returned no detection**. No speech command was proposed or confirmed, and recognition thresholds were unchanged.
+
+Start with the [master implementation and actual results](CLAWGRID_MASTER_INTEGRATION.md), [current handoff](NEXT_CHAT_HANDOFF.md), [Android installation/local voice guide](ecosystem/android/PHONE_INSTALL_AND_LOCAL_VOICE.md), and [distribution notes](DISTRIBUTION.md). The latest request-ID UI debug APK built successfully; 42 control/voice JVM tests and 3 wire tests passed. That updated APK has not yet been installed/layout-tested on the phone. Full Gradle/Robolectric tests remain blocked by the previously uncached native-runtime dependency. Source publication does not change deployed firmware, credentials, NVS, models or output inhibition.
+
+The dated sections below are retained history. Their old USB-unavailable/browser-only/PC-voice descriptions do not supersede the current master or the native Android requirement. Do not regenerate existing provisioning or enable physical outputs when resuming this milestone.
+
+---
+
+**Latest ecosystem integration (22 October 2026):** Supabase encrypted Broadcast now carries real A reports and measured B diagnostics to the shared live webpage and Android source. Independent public-key client verification passed virtual ON/OFF through Supabase → B → A, with matching ACK and state. Physical GPIOs remain inhibited; missing temperature/lux and A RTOS/heap are unavailable. See [ecosystem integration and exact field mapping](docs/ECOSYSTEM_INTEGRATION.md). Current B USB is unavailable (Windows device error 31); the gateway reports UNKNOWN until that connection recovers. Earlier dated deployment notes below are retained history.
+
+For the current ESP32-S3 hookup and deployment steps, start with
+[programming, wiring and the supplied checklist](docs/PROGRAM_AND_WIRE.md). It includes the
+HW-416B PIR, both separate relay modules, low-voltage load contacts, and the
+explicit output-enable step. The dated results below are retained history;
+see [current integration status](docs/CURRENT_INTEGRATION.md) for this session.
+
+The supplied USB text-command sketch is now available alongside the existing
+firmware: [text aliases, confirmation and shared relay-pair mode](docs/SERIAL_TEXT_COMMANDS.md).
+
+ClawGrid uses two ESP32-S3 N16R8 boards with native ESP-IDF/FreeRTOS. A owns deterministic control and SafetyKernel; B owns the browser API and USB/radio command bridge. Offline speech recognition runs on the PC. Their memories are separate. The four-room house interface supplies explicitly synthetic sensors; output policy runs on A. See [code/upload paths](docs/UPLOAD_CODE.md) and [continuous PC voice](docs/PC_OFFLINE_VOICE.md).
 
 **Current software work, 21 October 2026:** no hardware is available. Default outputs remain inhibited. Confirmed physical-bedroom/virtual routing, portable PCM handling, explicit host development mode, and dataset provenance repairs are implemented. Real recognition and physical behavior require fresh target validation. The newest retained hardware evidence is the returned-pair campaign on 20 October, not the older absent-A descriptions.
 

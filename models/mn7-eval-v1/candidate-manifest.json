@@ -1,0 +1,21 @@
+{
+  "state": "BLOCKED",
+  "reason": "Pinned MN7 public threshold API cannot express equivalent log probability0.7; no private ABI patch allowed",
+  "threshold_verified": false,
+  "private_abi_access": false,
+  "installed": false,
+  "model": {
+    "path": "C:\\Users\\hares\\OneDrive\\Desktop\\ESD-imp\\ClawGrid-physical-integration-prep\\models\\mn7-eval-v1\\candidate\\mn7-eval-v1.bin",
+    "bytes": 2758776,
+    "sha256": "14bd40dcebd109a479c82fe76f8b73ad6a22af766ad058339ae98f073164b23c"
+  },
+  "copack": {
+    "bytes": 6539556,
+    "partition_bytes": 6291456,
+    "fits": false
+  },
+  "frozen_plan_sha256": "a583cdb413f71b46f3472c72b055b386bc3435d6168bd7b371a9bbeb1411b49e",
+  "registration": "internal FLITE G2P on lowercase graphemes; factory file2columns",
+  "runtime_resource_measurements": null,
+  "app": null
+}

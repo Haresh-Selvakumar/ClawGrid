@@ -1,0 +1,19 @@
+{
+  "id": "phone-offline-outcome-diagnostic-v1-20261025",
+  "status": "PREPARED_NOT_AUTHORIZED_NOT_RUN",
+  "reason": "Original phone batch stopped after one LIGHT OFF capture/no proposal. Cancellation overwrote terminal status and null concealed rejection category. New metadata-only visibility implementation is host/build verified; no ASR correction is claimed.",
+  "original_failed_plan_sha256": "c41797aae499b94b79fb628f06b73e5c2bddd008640a790e25544ef70cc8c67a",
+  "apk": "deliverables/ClawGrid-Phone-Offline-debug-20261025b.apk",
+  "apk_sha256": "38c89a14fdc46914c1c71aaed058dd74e0bc13cc87b6a95e024f26971137fd86",
+  "unchanged": ["Vosk Android0.3.75", "small-en-us0.15 bundled archive30f26242...", "unrestricted16kHz PCM final decoding", "same6complete phrase mappings", "0.7minimum each-word confidence", "explicitBedroom and current controller boot", "confirmation/SafetyKernel/expiry/ACK-readback requirements"],
+  "prerequisites": ["user approves this one-shot diagnostic after reviewing original failure", "verified install/update without data clear", "mobile dataOFF and ClawGrid AP only", "fresh boot-bound OFF/inhibited telemetry", "existing per-session manual OFF ACK/readback gate if app update cleared it"],
+  "phone_recording_limit": 1,
+  "phrase": "LIGHT OFF",
+  "purpose": "Observe only ACCEPTED/SILENCE/UNSUPPORTED_WORDS/LOW_CONFIDENCE/INVALID_RESULT/ROOM_REQUIRED or exact context/decoder/proposal error stage, word-count/minconfidence and proposal phase without saving a transcript.",
+  "action": "Cancel any proposal, including correct Bedroom/light/OFF. Never Confirm. Do not record ON or negatives in this diagnostic.",
+  "diagnostic_pass": "One unambiguous metadata-only terminal outcome remains visible after cancellation/background; gateway command ID does not advance.",
+  "voice_success_criteria": "Not evaluated by this single diagnostic. Correct ON/OFF, negative controls, explicit confirmation and matching ACK/readback still need a separately reviewed finite continuation.",
+  "stop": "Stop after exactly one attempt regardless of acceptance. No retry/tuning. Stop immediately on wrong target, stale/reboot/disconnect or outputs not inhibited.",
+  "outputs": "INHIBITED",
+  "sensors_relays_loads": "DISCONNECTED"
+}

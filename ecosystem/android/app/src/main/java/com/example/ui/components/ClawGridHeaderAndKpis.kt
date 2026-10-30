@@ -426,8 +426,8 @@ fun ContextModeBanner(
                         modifier = Modifier.weight(1f, fill = false)
                     )
                     StatusPillBadge(
-                        text = if (isHardware) "Source: HARDWARE / HOST" else "Source: SIMULATED",
-                        tone = if (isHardware) PillTone.EMERALD else PillTone.CYAN
+                        text = if (isHardware) { if (uiState.hardwareState.connected) "Source: BOARD" else "Source: UNKNOWN" } else "Source: SIMULATED",
+                        tone = if (isHardware) { if (uiState.hardwareState.connected) PillTone.EMERALD else PillTone.AMBER } else PillTone.CYAN
                     )
                 }
 
@@ -530,6 +530,7 @@ fun ClawGridKpiGrid(
     onKpiClick: (ClawGridTab) -> Unit
 ) {
     val isHardware = uiState.mode == TelemetryMode.HARDWARE_NODE_A
+    val hardwareTemperature = uiState.hardwareState.temperaturePresentation(android.os.SystemClock.elapsedRealtime())
     val rooms = uiState.rooms
     val occupiedCount = rooms.count { it.state == OccupancyState.OCCUPIED }
     val energizedRelays = rooms.sumOf { (if (it.lightOn) 1 else 0) + (if (it.fanOn) 1 else 0) }
@@ -545,12 +546,12 @@ fun ClawGridKpiGrid(
             KpiCardContainer(
                 title = "ROOM OCCUPANCY",
                 mainValue = if (isHardware) {
-                    if (uiState.hardwareTelemetry.connected) { if (uiState.hardwareTelemetry.bedroomOccupied) "1 / 1" else "0 / 1" } else "UNKNOWN"
+                    if (uiState.hardwareState.sample?.pirAvailable == false) "Unavailable" else "UNKNOWN"
                 } else {
                     "$occupiedCount / 4"
                 },
                 badgeText = if (isHardware) {
-                    uiState.rooms.firstOrNull()?.state?.label ?: "UNKNOWN"
+                    if (uiState.hardwareState.sample?.pirAvailable == false) "PIR REMOVED" else "UNKNOWN"
                 } else {
                     "${(occupiedCount * 100) / 4}% Active"
                 },
@@ -560,7 +561,7 @@ fun ClawGridKpiGrid(
                     PillTone.BLUE_MUTED
                 },
                 subtitle = if (isHardware) {
-                    "Zone: Physical Bedroom (PIR_1)"
+                    "Physical PIR / occupancy AUTO unavailable"
                 } else if (occupiedCount > 0) {
                     "Active: ${rooms.filter { it.state == OccupancyState.OCCUPIED }.joinToString { it.name }}"
                 } else {
@@ -643,12 +644,12 @@ fun ClawGridKpiGrid(
         ) {
             // KPI 3: AVG ROOM TEMP & LUX
             KpiCardContainer(
-                title = "AVG ROOM TEMP & LUX",
-                mainValue = if (isHardware) "Unavailable" else "${"%.1f".format(avgTemp)} °C",
-                badgeText = if (isHardware) "No sensor transport" else "$avgLux lx Avg",
-                badgeTone = PillTone.AMBER,
+                title = if (isHardware) "BEDROOM TEMPERATURE" else "AVG ROOM TEMP & LUX",
+                mainValue = if (isHardware) hardwareTemperature.valueText else "${"%.1f".format(avgTemp)} °C",
+                badgeText = if (isHardware) hardwareTemperature.detail else "$avgLux lx Avg",
+                badgeTone = if (isHardware && hardwareTemperature.available) PillTone.EMERALD else PillTone.AMBER,
                 subtitle = if (isHardware) {
-                    "Node A Digital PIR_1 Telemetry"
+                    "Board-reported DHT11 · Lux unavailable"
                 } else {
                     "4-Zone Ambient Fusion"
                 },

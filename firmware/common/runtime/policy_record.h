@@ -7,8 +7,9 @@
 struct PolicyConfig {
     bool away=false, light_auto=true, fan_auto=false;
     uint32_t grace_ms=120000;
+    uint8_t manual_flags=0; // Stored under a separate backward-compatible NVS key.
     bool operator==(const PolicyConfig &b) const {
-        return away==b.away && light_auto==b.light_auto && fan_auto==b.fan_auto && grace_ms==b.grace_ms;
+        return away==b.away && light_auto==b.light_auto && fan_auto==b.fan_auto && grace_ms==b.grace_ms && manual_flags==b.manual_flags;
     }
     bool operator!=(const PolicyConfig &b) const { return !(*this==b); }
 };
@@ -24,7 +25,7 @@ inline void policy_put32(uint8_t *p,uint32_t value) {
 inline uint32_t policy_get32(const uint8_t *p) {
     return (uint32_t)p[0]<<24|(uint32_t)p[1]<<16|(uint32_t)p[2]<<8|p[3];
 }
-inline bool valid_policy(const PolicyConfig &c) { return c.grace_ms>=30000 && c.grace_ms<=1800000; }
+inline bool valid_policy(const PolicyConfig &c) { return c.grace_ms>=30000 && c.grace_ms<=1800000 && c.manual_flags<=3; }
 inline void encode_policy(const PolicyConfig &c,uint8_t *p) {
     memset(p,0,kPolicyRecordBytes); memcpy(p,"CGP",3); p[3]=1;
     p[4]=c.away|(c.light_auto<<1)|(c.fan_auto<<2); policy_put32(p+8,c.grace_ms);
@@ -36,4 +37,13 @@ inline bool decode_policy(const uint8_t *p,size_t n,PolicyConfig &out) {
     PolicyConfig c; c.away=p[4]&1; c.light_auto=p[4]&2; c.fan_auto=p[4]&4;
     c.grace_ms=policy_get32(p+8); if(!valid_policy(c)) return false;
     out=c; return true;
+}
+static constexpr size_t kManualRecordBytes=12;
+inline void encode_manual_policy(uint8_t flags,uint8_t *p) {
+    memset(p,0,kManualRecordBytes); memcpy(p,"CGM",3); p[3]=1; p[4]=flags;
+    policy_put32(p+8,policy_crc(p,8));
+}
+inline bool decode_manual_policy(const uint8_t *p,size_t n,uint8_t &flags) {
+    if(!p || n!=kManualRecordBytes || memcmp(p,"CGM",3) || p[3]!=1 || p[4]>3 || p[5] || p[6] || p[7] || policy_get32(p+8)!=policy_crc(p,8)) return false;
+    flags=p[4]; return true;
 }

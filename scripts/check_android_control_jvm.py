@@ -21,15 +21,19 @@ def main():
     sources = [app / 'src/main/java/com/example/data/remote/HardwareRepository.kt',
                app / 'src/main/java/com/example/data/remote/LocalVoiceRepository.kt',
                app / 'src/main/java/com/example/data/remote/GatewayAddress.kt',
+               app / 'src/main/java/com/example/data/remote/PhoneVoiceDiagnostic.kt',
+               app / 'src/main/java/com/example/data/remote/PhoneVoicePolicy.kt',
+               app / 'src/test/java/com/example/PhoneOfflineVoiceTest.kt',
                app / 'src/test/java/com/example/HardwareRepositoryTest.kt',
                app / 'src/test/java/com/example/LocalVoiceTest.kt',
-               app / 'src/test/java/com/example/HttpBoardApiTest.kt']
+               app / 'src/test/java/com/example/HttpBoardApiTest.kt',
+               app / 'src/test/java/com/example/PhoneVoiceDiagnosticTest.kt']
     subprocess.run([str(JAVA), '-cp', os.pathsep.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
                     '-no-stdlib', '-no-reflect', '-jvm-target', '11', '-classpath', os.pathsep.join(dependencies),
                     '-d', str(classes), *map(str, sources)], check=True, cwd=ROOT)
     subprocess.run([str(JAVA), '-cp', os.pathsep.join([str(classes), *dependencies]),
                     'org.junit.runner.JUnitCore', 'com.example.HardwareRepositoryTest',
-                    'com.example.HttpBoardApiTest', 'com.example.LocalVoiceTest'], check=True, cwd=ROOT)
+                    'com.example.HttpBoardApiTest', 'com.example.LocalVoiceTest', 'com.example.PhoneVoiceDiagnosticTest', 'com.example.PhoneOfflineVoiceTest'], check=True, cwd=ROOT)
 
 
 if __name__ == '__main__':

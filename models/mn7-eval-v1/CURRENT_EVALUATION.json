@@ -1,0 +1,18 @@
+{
+  "experiment": "mn7-eval-v1",
+  "status": "CLOSED_FAILED_PREFLIGHT_BASELINE_RESTORED",
+  "target_jobs": 3,
+  "negative_controls_run": 0,
+  "phone_clips": 0,
+  "commands": 0,
+  "current_installed_model": "original mn6_en baseline",
+  "current_app_prefix_sha256": "f30b10cfb74a4dd79ff28588de2d3be9f6c760c934b48cf1475bf6f7c271b9a4",
+  "current_full_model_sha256": "49b9215a315a06e900e1a2f4538b2513611253cc30a243802a5a58aedf9dbc7e",
+  "controller_a_unchanged": true,
+  "controller_a_boot": 17,
+  "outputs_inhibited": true,
+  "serial_closed": true,
+  "workers_active": false,
+  "report": "docs/MN7_EVALUATION_20261025.md",
+  "updated_utc": "2026-10-25T07:52:02.831333+00:00"
+}

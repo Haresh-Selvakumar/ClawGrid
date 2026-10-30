@@ -37,7 +37,7 @@ fun HardwareRequestStatus(state: HardwareState) {
                 modifier = Modifier.testTag("hardware_request_id")
             )
             Text(
-                text = request?.let { "Phase: ${it.phase} · Requested light ${if (it.on) "ON" else "OFF"}" } ?: "No request sent by this app session",
+                text = request?.let { "Phase: ${it.phase} · Requested ${it.device} ${it.action}" } ?: "No request sent by this app session",
                 style = MaterialTheme.typography.titleMedium, color = ClawAmberLight,
                 modifier = Modifier.testTag("hardware_request_phase")
             )
@@ -46,7 +46,7 @@ fun HardwareRequestStatus(state: HardwareState) {
                 style = MaterialTheme.typography.bodySmall, color = ClawTextMuted
             )
             Text(
-                text = sample?.let { "Board-reported last command #${it.lastCommand} · light ${if (it.light) "ON" else "OFF"} · boot #${it.boot}" }
+                text = sample?.let { "Board-reported last command #${it.lastCommand} · light ${if (it.light) "ON" else "OFF"} · fan ${if (it.fan) "ON" else "OFF"} · boot #${it.boot}" }
                     ?: "Board-reported state: UNKNOWN",
                 style = MaterialTheme.typography.bodyMedium, color = ClawTextMain,
                 modifier = Modifier.testTag("hardware_reported_command_id")
@@ -56,6 +56,11 @@ fun HardwareRequestStatus(state: HardwareState) {
                 style = MaterialTheme.typography.bodyMedium, color = ClawAmberLight
             )
             Text(state.message, style = MaterialTheme.typography.bodySmall, color = ClawTextMuted)
+            state.connectionIssue?.let { Text("Local connection issue: $it", style = MaterialTheme.typography.bodySmall, color = ClawAmberLight) }
+            if (request != null && !request.active) Text(
+                "Request above is historical; use the fresh board-reported state for current outputs.",
+                style = MaterialTheme.typography.bodySmall, color = ClawTextMuted
+            )
         }
     }
 }

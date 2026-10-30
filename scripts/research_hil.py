@@ -26,8 +26,8 @@ class Bench:
         self.speech=speech
         journal_dir=ROOT/'benchmarks/raw/hardware'; journal_dir.mkdir(parents=True,exist_ok=True)
         journal_stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
-        self.journal=self.stack.enter_context((journal_dir/f'live_{journal_stamp}.jsonl').open('w'))
-        self.text_log=self.stack.enter_context((journal_dir/f'live_{journal_stamp}.log').open('w'))
+        self.journal=self.stack.enter_context((journal_dir/f'live_{journal_stamp}.jsonl').open('w',encoding='utf-8'))
+        self.text_log=self.stack.enter_context((journal_dir/f'live_{journal_stamp}.log').open('w',encoding='utf-8'))
         for port in ports:
             connection=serial.Serial(port=None,baudrate=115200,timeout=0,write_timeout=1)
             connection.dtr=False; connection.rts=False; connection.port=port; connection.open()

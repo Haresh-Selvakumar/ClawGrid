@@ -74,7 +74,14 @@ fun TelemetryAndDiagnosticsScreen(
         Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("Hardware telemetry · ${uiState.hardwareState.message}", color = ClawTextMain)
             diagnosticRows.forEach { row -> Text("${row.roomName} ${row.type}: ${row.latestValue} · ${row.freshness}", color = ClawTextMuted) }
-            Text("Temperature and lux charts unavailable: no measured sensor fields in schema 3. A task counters, heap and watchdog health unavailable.", color = ClawAmberLight)
+            val temperature = uiState.hardwareState.temperaturePresentation(android.os.SystemClock.elapsedRealtime())
+            Text("Bedroom temperature: ${temperature.valueText} · ${temperature.detail}", color = ClawTextMain)
+            val sample = uiState.hardwareState.sample
+            val fresh = uiState.hardwareState.connected && sample?.fresh(android.os.SystemClock.elapsedRealtime()) == true
+            Text("Wiring: light GPIO4 / fan GPIO5 / DHT11 GPIO7 / PIR removed", color = ClawTextMuted)
+            Text(if (sample?.pirAvailable == false) "PIR and occupancy: UNAVAILABLE (removed from milestone)" else if (fresh) "PIR motion: ${sample?.motion ?: "UNKNOWN"} · occupancy: ${sample?.occupancy ?: "UNKNOWN"}. Warm-up and a LOW baseline are required; UNKNOWN is not vacancy." else "PIR: UNKNOWN / STALE", color = ClawTextMain)
+            Text(if (sample?.automationAvailable == false) "Occupancy AUTO: UNAVAILABLE; manual control only" else if (fresh) "Board policy: ${sample?.mode} · AUTO flags ${sample?.autoFlags} · manual flags ${sample?.manualFlags} · vacancy grace ${sample?.graceMs?.let { "${it / 1000}s" } ?: "unavailable"}" else "Manual/AUTO policy: UNKNOWN / STALE", color = ClawTextMain)
+            Text("Temperature history and lux charts unavailable. A task counters, heap and watchdog health are not ingested by this screen.", color = ClawAmberLight)
         }
         return
     }

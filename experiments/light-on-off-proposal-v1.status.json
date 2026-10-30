@@ -1,0 +1,6 @@
+{
+  "status": "CLOSED_FAILED_REFERENCE_PREFLIGHT",
+  "preflight_result": "experiments\\light-on-off-reference-preflight-v1.result.json",
+  "phone_recordings_authorized": false,
+  "phone_stages_not_started": true
+}

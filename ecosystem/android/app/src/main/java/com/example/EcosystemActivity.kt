@@ -90,8 +90,8 @@ private fun LiveEcosystemScreen() {
                     Text("Relay contacts and real load state are not independently measured.")
                 }
                 LiveCard("Physical sensor map") {
-                    Text("Bedroom: one PIR on A GPIO6. Light GPIO4; fan GPIO5.")
-                    Text("Temperature: not installed. Illuminance: not installed.")
+                    Text("Bedroom: light GPIO4; fan GPIO5. Physical PIR and occupancy AUTO unavailable.")
+                    Text("DHT11 DATA: A GPIO7. Values require fresh valid sensor telemetry; illuminance unavailable.")
                     Text("Living room, kitchen and study: no physical sensors assigned.")
                 }
                 LiveCard("Command through Supabase") {

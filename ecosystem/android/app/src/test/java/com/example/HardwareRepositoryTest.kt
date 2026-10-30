@@ -236,4 +236,165 @@ class HardwareRepositoryTest {
         sample = report(uptime = 105, on = true, command = 42); repo.poll()
         assertEquals(RequestPhase.OUTCOME_UNKNOWN, repo.state.value.request!!.phase)
     }
+
+    @Test fun fanUsesImmutableTargetAndRequiresFanAckAndNewFanReport() = runBlocking {
+        repo.poll(); proposal.put("device", "fan"); repo.prepare(true, "fan"); repo.confirm()
+        assertTrue(calls.contains("/api/proposal" to "manual physical_bedroom bedroom fan ON 0"))
+        assertTrue(calls.contains("/api/confirm" to "7 physical_bedroom bedroom fan ON"))
+        assertFalse(repo.state.value.sample!!.fan)
+        // Light ACK/state must never complete a fan command.
+        ack(); transaction.put("fan", false)
+        sample = report(uptime = 105, on = true, command = 42); repo.poll()
+        assertEquals(RequestPhase.PENDING, repo.state.value.request!!.phase)
+        transaction.put("fan", true); repo.poll()
+        assertEquals(RequestPhase.PENDING, repo.state.value.request!!.phase)
+        sample = report(uptime = 110, on = true, command = 42).put("fan", true); repo.poll()
+        assertEquals(RequestPhase.REPORTED, repo.state.value.request!!.phase)
+        assertEquals("fan", repo.state.value.request!!.device)
+        assertFalse(repo.voiceReady()) // A fan result does not replace the manual-light proof.
+    }
+
+    @Test fun fanOffNeedsItsOwnReadback() = runBlocking {
+        sample.put("fan", true); repo.poll()
+        proposal.put("device", "fan").put("action", "OFF")
+        repo.prepare(false, "fan"); repo.confirm(); ack(false); transaction.put("fan", false)
+        repo.poll(); assertEquals(RequestPhase.PENDING, repo.state.value.request!!.phase)
+        sample = report(uptime = 105, command = 42); repo.poll()
+        assertEquals(RequestPhase.REPORTED, repo.state.value.request!!.phase)
+        assertTrue(calls.contains("/api/confirm" to "7 physical_bedroom bedroom fan OFF"))
+    }
+
+    @Test fun lightProposalCannotAuthorizeFanAndInvalidDeviceNeverPosts() = runBlocking {
+        repo.poll(); repo.prepare(true, "fan"); repo.confirm()
+        assertEquals(RequestPhase.REJECTED, repo.state.value.request!!.phase)
+        assertFalse(calls.any { it.first == "/api/confirm" })
+        val postsBefore = calls.count { it.second != null }
+        try { repo.prepare(true, "heater"); fail("Unsupported target accepted") } catch (_: IllegalArgumentException) { }
+        assertEquals(postsBefore, calls.count { it.second != null })
+    }
+
+    @Test fun fanRebootOrConnectionLossNeverReplaysOn() = runBlocking {
+        repo.poll(); proposal.put("device", "fan"); repo.prepare(true, "fan"); repo.confirm()
+        fail = "/api/state"; repo.poll()
+        assertEquals(RequestPhase.OUTCOME_UNKNOWN, repo.state.value.request!!.phase)
+        fail = null; sample = report(boot = 10, uptime = 1)
+        repeat(3) { repo.poll(); repo.confirm() }
+        assertEquals(1, calls.count { it.first == "/api/confirm" })
+        assertFalse(repo.state.value.sample!!.fan)
+    }
+
+    @Test fun realTemperatureRequiresVersionValueStatusAndAge() = runBlocking {
+        sample.put("telemetry_schema", 4).put("temperature_status", "OK")
+            .put("temperature_deci_c", 253).put("temperature_age_ms", 2500)
+        repo.poll(); assertEquals(25.3, repo.state.value.sample!!.temperatureAt(now)!!, 0.001)
+        now += 3000; assertNull(repo.state.value.sample!!.temperatureAt(now)) // Board stale independently.
+        for ((field, value) in listOf("telemetry_schema" to 3, "temperature_status" to "CHECKSUM",
+            "temperature_deci_c" to 999, "temperature_deci_c" to 25.3, "temperature_age_ms" to 10000)) {
+            sample = report(uptime = now).put("telemetry_schema", 4).put("temperature_status", "OK")
+                .put("temperature_deci_c", 253).put("temperature_age_ms", 2500).put(field, value)
+            repo.poll(); assertTrue(repo.state.value.connected)
+            assertNull(field, repo.state.value.sample!!.temperatureAt(now))
+            now++
+        }
+    }
+
+    @Test fun missingOrInvalidTemperatureNeverGeneratesValueOrDisconnectsManualControl() = runBlocking {
+        repo.poll(); assertNull(repo.state.value.sample!!.temperatureAt(now))
+        sample = report(uptime = 105).put("telemetry_schema", 4).put("temperature_status", "TIMEOUT")
+            .put("temperature_deci_c", JSONObject.NULL).put("temperature_age_ms", JSONObject.NULL)
+        repo.poll(); assertTrue(repo.state.value.connected); assertNull(repo.state.value.sample!!.temperatureAt(now))
+        repo.prepare(false); assertEquals(RequestPhase.REJECTED, repo.state.value.request!!.phase) // Fixture ON proposal mismatches OFF.
+        assertTrue(calls.any { it.first == "/api/proposal" })
+    }
+
+    @Test fun fanAutoNeedsItsOwnModeAckAndFreshReport() = runBlocking {
+        sample.put("control_policy_version", 2).put("mode", "HOME").put("manual_flags", 3).put("auto_flags", 1)
+        proposal.put("device", "fan").put("action", "AUTO")
+        repo.poll(); repo.prepareAuto("fan"); repo.confirm()
+        assertTrue(calls.contains("/api/proposal" to "manual physical_bedroom bedroom fan AUTO 0"))
+        assertTrue(calls.contains("/api/confirm" to "7 physical_bedroom bedroom fan AUTO"))
+        assertEquals(RequestPhase.PENDING, repo.state.value.request!!.phase)
+        ack(); transaction.put("fan", true)
+        sample = report(uptime = 105, command = 42).put("control_policy_version", 2).put("mode", "HOME").put("auto_flags", 1).put("manual_flags", 2)
+        repo.poll(); assertEquals(RequestPhase.PENDING, repo.state.value.request!!.phase) // Light AUTO is insufficient.
+        sample = report(uptime = 110, command = 42).put("control_policy_version", 2).put("mode", "HOME").put("auto_flags", 3).put("manual_flags", 1)
+        repo.poll(); assertEquals(RequestPhase.REPORTED, repo.state.value.request!!.phase)
+        assertFalse(repo.state.value.sample!!.fan) // Mode confirmation does not invent output state.
+        assertFalse(repo.voiceReady())
+    }
+
+    @Test fun legacyOrAwayControllerCannotPrepareAuto() = runBlocking {
+        repo.poll(); repo.prepareAuto("light")
+        sample = report(uptime = 105).put("control_policy_version", 2).put("mode", "AWAY"); repo.poll(); repo.prepareAuto("fan")
+        assertFalse(calls.any { it.first == "/api/proposal" })
+        assertTrue(repo.state.value.message.contains("AWAY"))
+    }
+
+    @Test fun autoContextChangeBeforeConfirmationNeverDispatches() = runBlocking {
+        sample.put("control_policy_version", 2).put("mode", "HOME"); proposal.put("action", "AUTO")
+        repo.poll(); repo.prepareAuto("light")
+        sample = report(uptime = 105).put("control_policy_version", 2).put("mode", "AWAY"); repo.poll(); repo.confirm()
+        assertEquals(RequestPhase.REJECTED, repo.state.value.request!!.phase)
+        assertFalse(calls.any { it.first == "/api/confirm" })
+    }
+
+    @Test fun voiceOutputGateRequiresInhibitionOrExactLedPolicyProfile() = runBlocking {
+        for ((version, profile, expected) in listOf(Triple(1, "LED_INDICATORS_10K_ACTIVE_LOW", false),
+            Triple(2, "GENERIC_ENABLED", false), Triple(2, "UNKNOWN", false),
+            Triple(2, "LED_INDICATORS_10K_ACTIVE_LOW", true), Triple(2, "LED_INDICATORS_10K_ACTIVE_HIGH", true))) {
+            sample = report(uptime = now).put("physical_outputs_enabled", true).put("control_policy_version", version).put("output_profile", profile)
+            repo.poll(); assertEquals(expected, repo.state.value.sample!!.voiceOutputModeAllowed()); now++
+        }
+    }
+
+    @Test fun hardwareTemperatureTileUsesFreshMeasuredRoomRatherThanUnavailablePlaceholder() = runBlocking {
+        sample.put("telemetry_schema", 4).put("temperature_status", "OK").put("temperature_deci_c", 289).put("temperature_age_ms", 500)
+        repo.poll(); val ui = repo.state.value.temperaturePresentation(now)
+        assertTrue(ui.available); assertEquals("28.9 °C", ui.valueText); assertTrue(ui.detail.contains("monitoring only"))
+        now += 3000; assertFalse(repo.state.value.temperaturePresentation(now).available)
+        assertEquals("Unavailable", repo.state.value.temperaturePresentation(now).valueText)
+        sample = report(uptime = 105).put("temperature_status", "TIMEOUT"); repo.poll()
+        assertFalse(repo.state.value.temperaturePresentation(now).available)
+    }
+
+    @Test fun connectionFailureCategoryDoesNotLogPayloadAndClearsOnlyOnValidReport() = runBlocking {
+        repo.poll(); fail = "/api/state"; repo.poll()
+        assertEquals("LOCAL_CONNECTION_IO", repo.state.value.connectionIssue)
+        assertFalse(repo.state.value.connected)
+        fail = null; sample = report(uptime = 105); repo.poll()
+        assertTrue(repo.state.value.connected); assertNull(repo.state.value.connectionIssue)
+        reject = "/api/state"; repo.poll(); assertEquals("HTTP_409", repo.state.value.connectionIssue)
+        reject = null; sample = report(uptime = 110).put("known", false); repo.poll()
+        assertEquals("INVALID_OR_STALE_REPORT", repo.state.value.connectionIssue)
+    }
+    @Test fun removedPirIsUnavailableAndCannotDispatchAuto() = runBlocking {
+        sample.put("control_policy_version", 2).put("mode", "HOME").put("pir_available", false)
+            .put("automation_available", false).put("occupancy", "UNAVAILABLE").put("motion", JSONObject.NULL)
+        repo.poll(); calls.clear(); repo.prepareAuto("light")
+        assertEquals(false, repo.state.value.sample!!.pirAvailable)
+        assertEquals(false, repo.state.value.sample!!.automationAvailable)
+        assertNull(repo.state.value.sample!!.motion)
+        assertEquals("UNAVAILABLE", repo.state.value.sample!!.occupancy)
+        assertTrue(calls.isEmpty()); assertTrue(repo.state.value.message.contains("AUTO unavailable"))
+    }
+    @Test fun proposalTargetIsImmutableAndDoubleConfirmDispatchesOnce() = runBlocking {
+        repo.poll(); repo.prepare(true, "light")
+        repo.prepare(false, "fan")
+        assertEquals("light", repo.state.value.request!!.device)
+        assertTrue(repo.state.value.request!!.on)
+        repo.confirm(); repo.confirm()
+        assertEquals(1, calls.count { it.first == "/api/confirm" })
+        assertTrue(calls.contains("/api/confirm" to "7 physical_bedroom bedroom light ON"))
+    }
+    @Test fun reconnectClearsDisconnectedMessageWithHistoricalCompletedRequest() = runBlocking {
+        submit(); ack(); sample = report(uptime = 105, on = true, command = 42); repo.poll()
+        assertEquals(RequestPhase.REPORTED, repo.state.value.request!!.phase)
+        fail = "/api/state"; repo.poll()
+        assertFalse(repo.state.value.connected); assertTrue(repo.state.value.message.contains("Disconnected"))
+        fail = null; sample = report(uptime = 110, on = true, command = 42); repo.poll()
+        assertTrue(repo.state.value.connected); assertNull(repo.state.value.connectionIssue)
+        assertTrue(repo.state.value.message.startsWith("Fresh board report"))
+        assertEquals(RequestPhase.REPORTED, repo.state.value.request!!.phase)
+        assertEquals(1, calls.count { it.first == "/api/confirm" })
+    }
 }

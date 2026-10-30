@@ -1,0 +1,12 @@
+{
+  "json_start": 83352,
+  "json_bytes": 6016,
+  "probability": 0.7,
+  "constructor_log_threshold": -0.35667494393873245,
+  "outside_json_unchanged": true,
+  "index_unchanged": true,
+  "runtime_private_abi_access": false,
+  "public_setter_called": false,
+  "original_sha256": "f9d646f6301041d22de3dc3b1ae842ce9b314af6410b35814087d8042410a8e6",
+  "configured_sha256": "3024358eea24325814e58dfc51416fdffb41ddb73bff8b629bd211837ee055c3"
+}

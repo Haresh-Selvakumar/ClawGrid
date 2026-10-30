@@ -8,6 +8,7 @@
 #include "memory_runtime.h"
 #include "rx_mailbox.h"
 #include "pir_tracker.h"
+#include "dht11_gpio.h"
 #include "runtime_selftest.h"
 #include "automation_selftest.h"
 #include "security_selftest.h"
@@ -20,6 +21,10 @@ static RxMailbox s_rx;
 static StaticMailbox<ControlCommand,8> s_commands;
 static StaticMailbox<ControlAck,8> s_acks;
 static StaticMailbox<RoomReport,1> s_state;
+static StaticMailbox<TemperatureSample,1> s_temperature;
+static StaticTask_t s_sensor_tcb;
+static StackType_t s_sensor_stack[3072];
+static TaskTiming s_sensor_timing;
 static DiagnosticLog s_log;
 static PolicyStore s_store;
 static StaticMailbox<PolicyConfig,1> s_policy_updates;
@@ -38,6 +43,20 @@ static CommandGate s_gate;
 static ControlAck s_cached_ack;
 static bool s_radio=false,s_ok=false;
 static uint32_t s_boot=0;
+static void sensor_task(void*) {
+    Dht11Gpio sensor; const bool driver_ok=sensor.begin();
+    s_sensor_timing.watchdog.store(esp_task_wdt_add(nullptr)==ESP_OK);
+    s_log.write("{\"kind\":\"temperature_config\",\"model\":\"DHT11\",\"data_pin\":%u,\"supply_mv\":3300,\"period_ms\":2500,\"capture\":\"bounded_GPIO_edges\",\"driver_ready\":%s}\n",NODE_A_DHT_PIN,driver_ok?"true":"false");
+    vTaskDelay(pdMS_TO_TICKS(2000)); // Sensor power-up settling; never in ControlTask.
+    for(;;) {
+        const uint32_t now=millis(); TemperatureSample value;
+        if(driver_ok) value=sensor.read(now); else value.status=TemperatureStatus::DriverError;
+        s_temperature.latest(value); ++s_sensor_timing.jobs;
+        s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"temperature_sample\",\"input\":\"PHYSICAL_DHT11\",\"status\":\"%s\",\"pulse_count\":%u,\"valid\":%s,\"temperature_deci_c_when_valid\":%d}\n",temperature_status_name(value.status),value.pulse_count,value.status==TemperatureStatus::Ok?"true":"false",value.status==TemperatureStatus::Ok?value.deci_c:0);
+        if(s_sensor_timing.watchdog.load()) esp_task_wdt_reset();
+        vTaskDelay(pdMS_TO_TICKS(2500)); // Manufacturer requires >2 seconds between reads.
+    }
+}
 static std::atomic<uint32_t> s_tx_failed{0},s_rejected{0},s_duplicates{0},s_last_command{0},s_command_dropped{0};
 static std::atomic<bool> s_drop_ack{false},s_muted{false};
 static std::atomic<bool> s_stall_control{false};
@@ -59,7 +78,7 @@ static void control(const ControlCommand &c,uint32_t now) {
     else {
         bool enabled=s_ok&&s_health.healthy(kControlReady|kLinkReady);
         portENTER_CRITICAL(&s_audit_mux);
-        a.status=!control_fresh(c,now)?ControlStatus::Expired:!enabled?ControlStatus::Disabled:c.op==ControlOp::Simulation?s_house.manual(c,now):s_automation.execute(c,now);
+        a.status=!control_fresh(c,now)?ControlStatus::Expired:!enabled?ControlStatus::Disabled:c.op==ControlOp::Simulation?s_house.manual(c,now):s_automation.execute(c,now,CLAWGRID_PIR_AVAILABLE);
         portEXIT_CRITICAL(&s_audit_mux);
         s_gate.commit(payload,c.id); s_last_command.store(c.id); committed=true;
     }
@@ -73,26 +92,30 @@ static void control_task(void*) {
     s_health.ready(kControlReady,s_control_timing);
     TickType_t release=xTaskGetTickCount(); uint32_t expected=micros();
     PolicyConfig published=s_saved_policy;
+    TemperatureSample temperature;
     for(;;) {
         if(s_stall_control.load()) for(;;) vTaskDelay(pdMS_TO_TICKS(1000));
         uint32_t start=micros(),now=millis();
         safety_kernel_tick_periodic(now);
-        bool changed=s_pir.sample(digitalRead(NODE_A_PIR_PIN)==HIGH,now);
-        s_pir_ready.store(s_pir.ready()); s_pir_warmup_remaining.store(s_pir.warmup_remaining(now));
+        bool changed=CLAWGRID_PIR_AVAILABLE && s_pir.sample(digitalRead(NODE_A_PIR_PIN)==HIGH,now);
+        s_pir_ready.store(CLAWGRID_PIR_AVAILABLE && s_pir.ready()); s_pir_warmup_remaining.store(CLAWGRID_PIR_AVAILABLE?s_pir.warmup_remaining(now):0);
         if(changed) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"motion_event\",\"input\":\"PHYSICAL_DIGITAL_GPIO\",\"room\":\"bedroom\",\"at_ms\":%u,\"motion\":%s}\n",now,s_pir.motion()?"true":"false");
         if(s_ok&&s_health.healthy(kControlReady|kLinkReady))
-            s_automation.tick(now,changed&&s_pir.motion(),s_pir.occupancy(now,s_automation.grace));
+            s_automation.tick(now,changed&&s_pir.motion(),CLAWGRID_PIR_AVAILABLE?s_pir.occupancy(now,s_automation.grace):Occupancy::Unknown,CLAWGRID_PIR_AVAILABLE);
         ControlCommand c; for(int i=0;i<2&&s_commands.pop(c);++i) control(c,now);
         SimInput sim; if(s_sim_inputs.pop(sim)) s_house.input(sim,s_boot,now);
         uint32_t sim_start=micros(); SimState simulated=s_house.tick(s_boot,now);
         simulated.processing_us=micros()-sim_start;
         simulated.physical_outputs_enabled=CLAWGRID_PHYSICAL_OUTPUTS; s_sim_states.latest(simulated);
-        RoomReport r; r.boot_id=s_boot; r.uptime_ms=now; r.motion=s_pir.motion();
-        r.occupancy=s_pir.occupancy(now,s_automation.grace); r.last_command=s_gate.last;
+        RoomReport r; r.boot_id=s_boot; r.uptime_ms=now; r.pir_available=CLAWGRID_PIR_AVAILABLE;
+        r.motion=CLAWGRID_PIR_AVAILABLE && s_pir.motion();
+        r.occupancy=CLAWGRID_PIR_AVAILABLE?s_pir.occupancy(now,s_automation.grace):Occupancy::Unknown; r.last_command=s_gate.last;
         r.light=safety_kernel_get_device(0)->is_on; r.fan=safety_kernel_get_device(1)->is_on;
         r.physical_outputs_enabled=CLAWGRID_PHYSICAL_OUTPUTS;
         r.relay_active_low=NODE_A_RELAY_ACTIVE_LOW;
-        s_automation.report(r,now); s_state.latest(r);
+        r.led_only_bench=CLAWGRID_LED_ONLY_BENCH;
+        s_temperature.pop(temperature); report_temperature(r,temperature,now);
+        s_automation.report(r,now); if(!CLAWGRID_PIR_AVAILABLE) r.auto_flags=0; s_state.latest(r);
         PolicyConfig policy=s_automation.policy();
         if(policy!=published) { s_policy_updates.latest(policy); published=policy; }
         if(s_control_timing.watchdog.load()) esp_task_wdt_reset();
@@ -150,10 +173,12 @@ static void link_task(void*) {
 }
 void setup() {
     Serial.begin(115200); traffic_led_begin(); s_log.begin(); s_commands.begin(); s_acks.begin(); s_state.begin(); s_rx.begin();
-    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":3,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
+    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":5,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
     Serial.printf("{\"kind\":\"console_transport\",\"transport\":\"%s\"}\n",native_serial_transport());
+    Serial.printf("{\"kind\":\"load_profile\",\"declared_profile\":\"%s\",\"physically_verified\":false}\n",CLAWGRID_LOAD_PROFILE);
     s_policy_updates.begin();
     s_sim_inputs.begin(); s_sim_states.begin();
+    s_temperature.begin();
     bool safety=safety_boot_selftest(),automation=automation_selftest(),house=house_selftest();
     safety_kernel_init();
     bool registry=safety_kernel_register_device("bedroom","light",DEVICE_TYPE_LIGHT,CLAWGRID_PHYSICAL_OUTPUTS?NODE_A_RELAY_LIGHT_PIN:-1,NODE_A_RELAY_ACTIVE_LOW)==0;
@@ -164,15 +189,17 @@ void setup() {
     s_ok=storage&&safety&&automation&&house&&registry&&runtime_selftest()&&security_selftest()&&s_health.begin();
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":%s,\"boot\":%u}\n",storage?"true":"false",s_boot);
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":%u,\"boot\":%u,\"physical_outputs_enabled\":%s}\n",(unsigned)esp_reset_reason(),s_boot,CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
-    pinMode(NODE_A_PIR_PIN,INPUT_PULLDOWN);
-    s_pir.begin(millis(),NODE_A_PIR_WARMUP_MS);
-    Serial.printf("{\"kind\":\"physical_input_config\",\"pin\":%u,\"pull\":\"DOWN\",\"warmup_ms\":%u,\"filter_ms\":200,\"requires_low_baseline\":true,\"relay_active_low_assumption\":%s}\n",NODE_A_PIR_PIN,NODE_A_PIR_WARMUP_MS,NODE_A_RELAY_ACTIVE_LOW?"true":"false");
+    if(CLAWGRID_PIR_AVAILABLE) { pinMode(NODE_A_PIR_PIN,INPUT_PULLDOWN); s_pir.begin(millis(),NODE_A_PIR_WARMUP_MS); }
+    Serial.printf("{\"kind\":\"input_availability\",\"profile\":\"%s\",\"pir_available\":%s,\"automation_available\":%s}\n",CLAWGRID_INPUT_PROFILE,CLAWGRID_PIR_AVAILABLE?"true":"false",CLAWGRID_PIR_AVAILABLE?"true":"false");
+    if(CLAWGRID_PIR_AVAILABLE) Serial.printf("{\"kind\":\"physical_input_config\",\"pin\":%u,\"pull\":\"DOWN\",\"warmup_ms\":%u,\"filter_ms\":200,\"requires_low_baseline\":true,\"relay_active_low_assumption\":%s}\n",NODE_A_PIR_PIN,NODE_A_PIR_WARMUP_MS,NODE_A_RELAY_ACTIVE_LOW?"true":"false");
     WiFi.mode(WIFI_STA); WiFi.setSleep(false);
     s_radio=esp_wifi_set_channel(CLAWGRID_WIFI_CHANNEL,WIFI_SECOND_CHAN_NONE)==ESP_OK && esp_now_init()==ESP_OK && secure_peer(kNodeB);
     if(s_radio) { esp_now_register_recv_cb(receive); esp_now_register_send_cb(traffic_send_complete); }
     if(s_ok) {
         s_control_timing.handle=xTaskCreateStaticPinnedToCore(control_task,"ControlTask",sizeof(s_control_stack),nullptr,5,s_control_stack,&s_control_tcb,1);
         s_link_timing.handle=xTaskCreateStaticPinnedToCore(link_task,"LinkTask",sizeof(s_link_stack),nullptr,3,s_link_stack,&s_link_tcb,0);
+        s_sensor_timing.handle=xTaskCreateStaticPinnedToCore(sensor_task,"SensorTask",sizeof(s_sensor_stack),nullptr,1,s_sensor_stack,&s_sensor_tcb,0);
+        if(!s_sensor_timing.handle) { TemperatureSample failed; failed.status=TemperatureStatus::DriverError; s_temperature.latest(failed); }
         if(!s_control_timing.handle || !s_link_timing.handle) s_health.fail();
     }
 }
@@ -198,8 +225,8 @@ void loop() {
         }
         if(c=='X' && !CLAWGRID_DIAGNOSTIC_FAULTS)
             Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");
-        if(c=='P') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":%u,\"reset_reason\":%u,\"grace_ms\":%u,\"auto_flags\":%u,\"away\":%s,\"physical_outputs_enabled\":%s}\n",s_boot,(unsigned)esp_reset_reason(),s_saved_policy.grace_ms,s_saved_policy.light_auto|(s_saved_policy.fan_auto<<1),s_saved_policy.away?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
-        if(c=='q') { uint8_t channel=0; wifi_second_chan_t secondary; bool channel_ok=esp_wifi_get_channel(&channel,&secondary)==ESP_OK; Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":%u,\"control_jobs\":%u,\"link_jobs\":%u,\"control_stalled\":%s,\"diagnostic_faults_enabled\":%s,\"physical_outputs_enabled\":%s,\"pir_ready\":%s,\"pir_warmup_remaining_ms\":%u,\"wifi_channel_known\":%s,\"wifi_channel\":%u}\n",s_boot,s_control_timing.jobs.load(),s_link_timing.jobs.load(),s_stall_control.load()?"true":"false",CLAWGRID_DIAGNOSTIC_FAULTS?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false",s_pir_ready.load()?"true":"false",s_pir_warmup_remaining.load(),channel_ok?"true":"false",channel); }
+        if(c=='P') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":%u,\"reset_reason\":%u,\"grace_ms\":%u,\"auto_flags\":%u,\"saved_manual_flags\":%u,\"away\":%s,\"physical_outputs_enabled\":%s}\n",s_boot,(unsigned)esp_reset_reason(),s_saved_policy.grace_ms,s_saved_policy.light_auto|(s_saved_policy.fan_auto<<1),s_saved_policy.manual_flags,s_saved_policy.away?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
+        if(c=='q') { uint8_t channel=0; wifi_second_chan_t secondary; bool channel_ok=esp_wifi_get_channel(&channel,&secondary)==ESP_OK; Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":%u,\"control_jobs\":%u,\"link_jobs\":%u,\"control_stalled\":%s,\"diagnostic_faults_enabled\":%s,\"physical_outputs_enabled\":%s,\"pir_ready\":%s,\"pir_warmup_remaining_ms\":%u,\"wifi_channel_known\":%s,\"wifi_channel\":%u,\"sensor_jobs\":%u,\"sensor_watchdog\":%s}\n",s_boot,s_control_timing.jobs.load(),s_link_timing.jobs.load(),s_stall_control.load()?"true":"false",CLAWGRID_DIAGNOSTIC_FAULTS?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false",s_pir_ready.load()?"true":"false",s_pir_warmup_remaining.load(),channel_ok?"true":"false",channel,s_sensor_timing.jobs.load(),s_sensor_timing.watchdog.load()?"true":"false"); }
         if(c=='d' || c=='O') {
             if(!CLAWGRID_DIAGNOSTIC_FAULTS) {
                 Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");

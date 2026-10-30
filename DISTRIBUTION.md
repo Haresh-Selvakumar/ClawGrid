@@ -1,3 +1,7 @@
+**Current declared LED demonstration, 28 October 2026:** [installed identities, verified results, limitations and short demo](docs/VOICE_LED_DEMONSTRATION_20261028.md). PIR/physicalAUTO removed; finalAPKj; existingVoskmodel preserved. Earlier dated sections below are history.
+
+**Current integration, 28 October 2026:** see [the integrated LED checkpoint](docs/INTEGRATED_LED_CHECKPOINT_20261028.md) for installed identities, GPIO8 wiring, verified manual LEDs/DHT11 and the unresolved PIR electrical gate. Older dated sections below are retained history.
+
 # ClawGrid source snapshot — 23 October 2026, India time
 
 This snapshot continues the existing [Haresh-Selvakumar/ClawGrid](https://github.com/Haresh-Selvakumar/ClawGrid) repository and preserves its history. It includes the native Android project, firmware and guarded tooling, actual benchmark records, master implementation and handoff. Existing remote-only files are retained. Read the current master before using older documentation or images.

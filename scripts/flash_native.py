@@ -21,7 +21,15 @@ def validate_image_mode(image,diagnostic,bench=False):
     if expected+b'\0' not in image or any(marker in image for marker in markers if marker!=expected):
         raise RuntimeError('Application build marker does not match the explicitly requested output/fault mode')
 
-def build_environment(role,uart_console=False,diagnostic=False,bench=False):
+def build_environment(role,uart_console=False,diagnostic=False,bench=False,voice_experiment=None,led_indicators=False,led_active_high=False):
+    if led_active_high and not led_indicators:
+        raise RuntimeError('Active-HIGH requires explicit --led-indicators')
+    if led_indicators:
+        if role!='A' or not uart_console or not bench or diagnostic or voice_experiment:
+            raise RuntimeError('LED indicators require explicit A --uart-console --bench --led-indicators')
+        return 'native_voice_uart_led_high_bench' if led_active_high else 'native_voice_uart_led_bench'
+    if voice_experiment and (voice_experiment not in ("short-v1","light-preflight-v1") or role!="B-speech" or not uart_console or diagnostic or bench):
+        raise RuntimeError("Short voice experiment requires normal inhibited B-speech UART")
     if uart_console and role not in ('A','B-speech'): raise RuntimeError('UART console variant is supported only for A and B-speech')
     if uart_console and role=='B-speech' and (diagnostic or bench): raise RuntimeError('B-speech UART console requires the normal inhibited mode')
     if bench and role!='A': raise RuntimeError('Bench outputs are supported only for Node A')
@@ -31,6 +39,7 @@ def build_environment(role,uart_console=False,diagnostic=False,bench=False):
     if uart_console: env += '_uart'
     if diagnostic: env += '_diagnostic'
     if bench: env += '_bench'
+    if voice_experiment: env += "_short_v1" if voice_experiment=="short-v1" else "_light_preflight"
     return env
 
 def validate_console_mode(image,sdk,uart_console):
@@ -38,6 +47,12 @@ def validate_console_mode(image,sdk,uart_console):
     required='CONFIG_ESP_CONSOLE_UART_DEFAULT=y' if uart_console else 'CONFIG_ESP_CONSOLE_USB_SERIAL_JTAG=y'
     if required not in sdk.splitlines() or transport not in image:
         raise RuntimeError('Console configuration does not match the requested image transport')
+
+def validate_led_profile(image,led,active_high=False):
+    low=b'ClawGrid:load=led_indicators_10k_active_low\0' in image
+    high=b'ClawGrid:load=led_indicators_10k_active_high\0' in image
+    if low!=(led and not active_high) or high!=(led and active_high) or (active_high and not led):
+        raise RuntimeError('LED indicator build requires matching explicit --led-indicators selection')
 
 
 def validate_pair_identity(image,config):
@@ -79,16 +94,27 @@ def main(args):
     config=json.loads((ROOT/'local_credentials.json').read_text())
     expected=config['node_a_mac' if a else 'node_b_mac'].lower()
     project=ROOT/('speech' if speech else 'native')
-    env=build_environment(args.role,args.uart_console,args.diagnostic,args.bench)
+    led=getattr(args,'led_indicators',False)
+    high=getattr(args,'led_active_high',False)
+    env=build_environment(args.role,args.uart_console,args.diagnostic,args.bench,getattr(args,"voice_experiment",None),led,high)
+    experiment=getattr(args,"voice_experiment",None)
     missing_model=getattr(args,'install_missing_speech_model',False)
     if missing_model and (not speech or not args.app_only or args.diagnostic or args.bench):
         raise RuntimeError('Missing-model installation requires normal inhibited B-speech --app-only')
+    if experiment=='light-preflight-v1' and (not args.app_only or missing_model):
+        raise RuntimeError('Light reference preflight permits an application-only write; never model/NVS/table installation')
     if args.bench: print('Explicit BENCH selection: this image enables Node A relay GPIOs. Verify the low-voltage interface first.',flush=True)
     build=project/'.pio/build'/env
     # CMake compile_commands omits PlatformIO's application build_flags. Read
     # the retained application marker instead of mistaking that file for proof.
     validate_image_mode((build/'firmware.bin').read_bytes(),args.diagnostic,args.bench)
-    validate_pair_identity((build/'firmware.bin').read_bytes(),config)
+    image=(build/"firmware.bin").read_bytes()
+    validate_led_profile(image,led,high)
+    if (b"ClawGrid:voice=short-v1\0" in image) != (experiment=="short-v1"):
+        raise RuntimeError("Voice experiment image does not match explicit selection")
+    if (b"ClawGrid:voice=light-preflight-v1\0" in image) != (experiment=="light-preflight-v1"):
+        raise RuntimeError("Light preflight image does not match explicit selection")
+    validate_pair_identity(image,config)
     sdk=(project/('sdkconfig.'+env)).read_text()
     validate_console_mode((build/'firmware.bin').read_bytes(),sdk,args.uart_console)
     required=['CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y','CONFIG_ESP32S3_SPIRAM_SUPPORT=y','CONFIG_SPIRAM_MODE_OCT=y']
@@ -129,7 +155,7 @@ def main(args):
         output.write(identity.stdout); output.flush()
         result=subprocess.run(command+arguments,stdout=output,stderr=subprocess.STDOUT,timeout=180)
     manifest=dict(role=args.role,port=port,mac=expected,environment=env,physical_outputs_enabled=args.bench,diagnostic_faults_enabled=args.diagnostic,tool='esptool 5.4.0',exit_code=result.returncode,
-                  installed_missing_model=missing_model,
+                  installed_missing_model=missing_model,voice_experiment=experiment,led_indicators_profile=led,led_active_high=high,
                   artifacts=[dict(address=hex(address),path=str(path.relative_to(ROOT)),sha256=hashlib.sha256(path.read_bytes()).hexdigest()) for address,path in files])
     log.with_suffix('.json').write_text(json.dumps(manifest,indent=2)+'\n')
     print(f'Flash {"PASS" if result.returncode==0 else "FAIL"}: {args.role}; log {log}',flush=True)
@@ -143,5 +169,8 @@ if __name__=='__main__':
     mode=parser.add_mutually_exclusive_group()
     mode.add_argument('--diagnostic',action='store_true',help='Explicit inhibited USB fault/replay build; restore default firmware after the campaign')
     mode.add_argument('--bench',action='store_true',help='EXPLICIT OUTPUT-ENABLED Node A bench image; requires verified low-voltage interface/polarity; never use for USB-only work')
+    parser.add_argument('--voice-experiment',choices=['short-v1','light-preflight-v1'],help='Explicit normal inhibited two-phrase feasibility image')
     parser.add_argument('--uart-console',action='store_true',help='A or normal B-speech variant using its verified UART0 USB adapter')
+    parser.add_argument('--led-indicators',action='store_true',help='With explicit A/UART/bench only: inspected3.3V LEDs with separate10k resistors; no relays/appliance loads')
+    parser.add_argument('--led-active-high',action='store_true',help='With explicit LED-only bench: GPIO->10k->LEDanode/cathode->GND; never the activeLOW wiring')
     raise SystemExit(main(parser.parse_args()))

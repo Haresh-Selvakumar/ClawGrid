@@ -1,0 +1,33 @@
+{
+  "experiment": "light-on-off-reference-preflight-v1",
+  "status": "CLOSED_FAILED_FIRST_REFERENCE_BASELINE_RESTORED",
+  "executed_audio_jobs": 1,
+  "maximum_authorized_jobs": 4,
+  "not_run": [
+    "LIGHT OFF",
+    "silence",
+    "noncommand"
+  ],
+  "phone_recordings_authorized": false,
+  "phone_clips": 0,
+  "proposals": 0,
+  "commands": 0,
+  "accepted_command_id": null,
+  "accepted_score": null,
+  "board_candidate_id": 0,
+  "error_code": 0,
+  "engine_errors": 0,
+  "pcm_samples": 23280,
+  "pcm_crc32": 1936402414,
+  "pcm_integrity": "MATCH",
+  "selected_room": "bedroom",
+  "controller_boot": 18,
+  "outputs_inhibited": true,
+  "current_app_sha256": "f30b10cfb74a4dd79ff28588de2d3be9f6c760c934b48cf1475bf6f7c271b9a4",
+  "current_model_sha256": "49b9215a315a06e900e1a2f4538b2513611253cc30a243802a5a58aedf9dbc7e",
+  "restore": "BASELINE_FLASH_AND_RUNTIME_VERIFIED",
+  "serial_closed": true,
+  "workers_active": false,
+  "report": "docs/LIGHT_REFERENCE_PREFLIGHT_20261025.md",
+  "updated_utc": "2026-10-25T08:35:36.748433+00:00"
+}

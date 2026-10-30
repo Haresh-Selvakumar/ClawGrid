@@ -53,3 +53,14 @@ node_modules/
 local-artifacts/
 # Root command transcripts are scratch; retained evidence is under benchmarks/.
 /*.log
+
+# Source defaults for the explicit MN7 evaluation, not generated local SDK config.
+!speech/sdkconfig.mn7.defaults
+
+# Bundled offline phone model required by the current Android app.
+!ecosystem/android/app/src/main/assets/model.zip
+
+# Local raw diagnostics and generated test runs.
+benchmarks/raw/
+benchmarks/*pytest*/
+benchmarks/pc-voice-verified/

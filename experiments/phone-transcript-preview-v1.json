@@ -1,0 +1,30 @@
+{
+  "id": "phone-transcript-preview-v1-20261025",
+  "prepared_ist": "2026-10-25T18:45:17.203412+05:30",
+  "authorization": "User requested exactly ONE diagnostic after preview implementation; no ESP firmware change",
+  "apk_sha256": "29c295701e6ba7235f4265b960f45602915968da2e7efafa27185f6cbb876a87",
+  "recording_limit": 1,
+  "phrase": "light off",
+  "room": "bedroom",
+  "device": "light",
+  "threshold_each_word": 0.7,
+  "recognizer": "Vosk0.3.75 unrestricted; no grammar override",
+  "model": "small-en-us0.15 unchanged",
+  "model_word_audit": {
+    "bedroom": 101349,
+    "light": 4326,
+    "off": 107349,
+    "on": 106591,
+    "the": 152188,
+    "turn": 58832
+  },
+  "diagnostic_action": "Cancel ANY speech proposal; never Confirm; inspect raw final text and normalized parser text only on phone/in RAM; stop after one recording",
+  "privacy": "No transcript or raw UI dump saved to disk/log/cloud; metadata-only comparisons retained",
+  "stop": "Stop after one capture regardless of result; no alias/threshold/model tuning. Reject wrong target, stale/reboot/disconnect or output enablement.",
+  "prerequisite": {
+    "manual_off_ack": 1,
+    "controller_boot": 21,
+    "outputs_inhibited": true
+  },
+  "tests": "66actual-source JVM PASS;3synthetic privacy/pipe PASS; no inference reference campaign"
+}

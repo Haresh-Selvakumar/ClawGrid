@@ -43,7 +43,7 @@ inline bool software_wire_test() {
     uint8_t bytes[kRoomReportBytes];encode_room_report(original,bytes);
     if(!decode_room_report(bytes,sizeof(bytes),decoded)||!decoded.physical_outputs_enabled||decoded.relay_active_low)return false;
     bytes[0]=2;if(decode_room_report(bytes,sizeof(bytes),decoded))return false;
-    bytes[0]=3;bytes[6]=2;return !decode_room_report(bytes,sizeof(bytes),decoded);
+    bytes[0]=5;bytes[6]=2;return !decode_room_report(bytes,sizeof(bytes),decoded);
 }
 inline bool software_policy_test() {
     Automation original;

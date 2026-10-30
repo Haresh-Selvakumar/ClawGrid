@@ -1,0 +1,37 @@
+{
+  "id": "phone-offline-v1-20261025",
+  "architecture": "offline on-phone recognition with embedded control",
+  "engine": "com.alphacephei:vosk-android:0.3.75@aar",
+  "jna": "net.java.dev.jna:jna:5.18.1@aar",
+  "model": "vosk-model-small-en-us-0.15",
+  "model_archive_sha256": "30f26242c4eb449f948e42cb302dd7a686cb29a3423a8367f99ff41780942498",
+  "frontend": "AudioRecord MIC, mono PCM16, 16000 preferred; existing bounded resample fallback 48000/44100 to 16000 S16LE; max 4 seconds; decode every sample plus final flush in unrestricted fresh Vosk recognizer",
+  "threshold": {"minimum_each_word_confidence": 0.7, "note": "Vosk word confidence, not equivalent to an ESP-SR phrase score; no tuning during batch"},
+  "mapping": {
+    "light on": "Bedroom/light/ON",
+    "light off": "Bedroom/light/OFF",
+    "turn on the light": "Bedroom/light/ON",
+    "turn off the light": "Bedroom/light/OFF",
+    "turn on bedroom light": "Bedroom/light/ON",
+    "turn off bedroom light": "Bedroom/light/OFF"
+  },
+  "room_selection": "explicit Bedroom, initially unset; other rooms/device/AUTO unsupported",
+  "binding": "capture nonce, explicit room, controller boot, 30-second local context, <=15-second proposal, existing firmware 3-second command TTL",
+  "network": "mobile data OFF; ClawGrid-Assistant AP only; http://192.168.4.1; no Internet/Supabase/PC ASR; no runtime model download",
+  "privacy": "PCM/transcripts memory only; vendor speech logs disabled; retain only structured command/test evidence by explicit testing, not transcripts",
+  "prerequisites": ["installed APK hash verified or label user-reported if sideload", "bundled model ready on phone", "microphone permission granted", "fresh authenticated controller boot, light OFF, outputs inhibited", "one manual OFF explicitly confirmed with matching ACK plus advancing readback"],
+  "phone_trials": [
+    {"id": 1, "say": "LIGHT OFF", "expect": "Bedroom/light/OFF proposal", "then": "Cancel; no command ID/readback change"},
+    {"id": 2, "say": "LIGHT OFF", "expect": "Bedroom/light/OFF proposal", "then": "Confirm once; matching applied ACK and fresh boot-bound OFF report"},
+    {"id": 3, "say": "LIGHT ON", "expect": "Bedroom/light/ON proposal", "then": "Confirm once after firmware dwell; matching ACK and fresh ON report"},
+    {"id": 4, "say": "LIGHT OFF", "expect": "Bedroom/light/OFF proposal", "then": "Confirm once after firmware dwell; matching ACK and fresh OFF report"},
+    {"id": 5, "say": null, "expect": "2 seconds silence; no proposal or actuator command"},
+    {"id": 6, "say": "WHAT TIME IS IT", "expect": "no proposal or actuator command"},
+    {"id": 7, "say": "DO NOT TURN ON THE LIGHT", "expect": "no proposal or actuator command"},
+    {"id": 8, "say": "LIGHT ON AND LIGHT OFF", "expect": "no proposal or actuator command"}
+  ],
+  "app_checks_without_extra_recordings": ["unselected room disables PTT", "record permission denial leaves manual controls available", "selection/tab/background/context cancellation discards unconfirmed voice intent", "no implicit confirm or HTTP-acceptance success", "no automatic replay after reconnect/reboot; fresh manual gate required for changed controller boot"],
+  "pass": "All 8 actual phone trials meet expected target/rejection, explicit cancellation/confirmation, matching ACK plus fresh readback; outputs remain inhibited and final logical state OFF. Limited smoke-test result only, no accuracy claim.",
+  "stop": "First failed acceptance, wrong target, negative proposal, engine error, stale/reboot/disconnect, rejection, timeout or unexpected output enablement stops batch. Do not repeat/tune clips. Wrong proposal must be cancelled. If ON has been confirmed and test stops, inspect authoritative state and arrange one explicit manual OFF if necessary; never auto-replay.",
+  "physical_switching_tested": false
+}

@@ -16,6 +16,10 @@ public:
             encode_policy(config,bytes);
             if(nvs_set_blob(handle_,"policy",bytes,sizeof(bytes))!=ESP_OK) return false;
         } else if(e!=ESP_OK || !decode_policy(bytes,size,config)) return false;
+        uint8_t manual[kManualRecordBytes]; size=sizeof(manual);
+        e=nvs_get_blob(handle_,"manual",manual,&size);
+        if(e==ESP_ERR_NVS_NOT_FOUND) config.manual_flags=0;
+        else if(e!=ESP_OK || !decode_manual_policy(manual,size,config.manual_flags)) return false;
         // Commit identity before permitting any radio command. Never erase NVS
         // to recover an error, and never silently wrap a boot identity.
         boot=previous+1;
@@ -25,7 +29,9 @@ public:
     bool save(const PolicyConfig &config) {
         if(!handle_ || !valid_policy(config)) return false;
         uint8_t bytes[kPolicyRecordBytes]; encode_policy(config,bytes);
-        return nvs_set_blob(handle_,"policy",bytes,sizeof(bytes))==ESP_OK && nvs_commit(handle_)==ESP_OK;
+        uint8_t manual[kManualRecordBytes]; encode_manual_policy(config.manual_flags,manual);
+        return nvs_set_blob(handle_,"policy",bytes,sizeof(bytes))==ESP_OK &&
+            nvs_set_blob(handle_,"manual",manual,sizeof(manual))==ESP_OK && nvs_commit(handle_)==ESP_OK;
     }
 private:
     nvs_handle_t handle_=0;

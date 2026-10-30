@@ -59,6 +59,7 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
+      versionNameSuffix = "-voice-led-no-pir-20261028j"
       // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
       // AI Studio.
       signingConfig = signingConfigs.getByName("debug")
@@ -84,6 +85,9 @@ googleServices { missingGoogleServicesStrategy = MissingGoogleServicesStrategy.W
 // Some unused dependencies are commented out below instead of being removed.
 // This makes it easy to add them back in the future if needed.
 dependencies {
+  // Pinned to the maintained official Android demo. Bundled English model, no runtime download.
+  implementation("net.java.dev.jna:jna:5.18.1@aar")
+  implementation("com.alphacephei:vosk-android:0.3.75@aar")
   implementation(platform(libs.androidx.compose.bom))
   // implementation(platform(libs.firebase.bom))
   // implementation(libs.accompanist.permissions)

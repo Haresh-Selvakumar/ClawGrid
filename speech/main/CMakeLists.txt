@@ -1,7 +1,11 @@
 set(COMMON "${CMAKE_CURRENT_LIST_DIR}/../../firmware/common")
 set(NATIVE "${CMAKE_CURRENT_LIST_DIR}/../../native/main")
+set(VOICE_RUNTIME "speech_runtime.cpp")
+if(CONFIG_SR_MN_EN_MULTINET7_QUANT)
+    set(VOICE_RUNTIME "speech_runtime_mn7.cpp")
+endif()
 idf_component_register(
-    SRCS "${NATIVE}/app_entry.cpp" "${NATIVE}/native_hal.cpp" "${NATIVE}/traffic_led.cpp" "speech_runtime.cpp"
+    SRCS "${NATIVE}/app_entry.cpp" "${NATIVE}/native_hal.cpp" "${NATIVE}/traffic_led.cpp" "${VOICE_RUNTIME}"
          "${COMMON}/protocol/clawgrid_protocol.c"
          "${COMMON}/safety_kernel/safety_kernel.c" "${COMMON}/safety_kernel/safety_selftest.c"
          "${COMMON}/neural_nlp/neural_agent.c"

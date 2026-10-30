@@ -125,13 +125,8 @@ bool safety_kernel_request_action(const char *room,
 
     /* Manual override lockout check */
     if (!is_manual && target->manual_override) {
-        uint32_t hold_elapsed = current_time_ms - target->manual_override_ms;
-        if (hold_elapsed < DEFAULT_MANUAL_HOLD_MS) {
-            if (out_reason) *out_reason = "Manual override active";
-            return false;
-        } else {
-            target->manual_override = false;
-        }
+        if(target->simulated_hold_ms && (uint32_t)(current_time_ms-target->manual_override_ms)>=target->simulated_hold_ms) target->manual_override=false;
+        else { if (out_reason) *out_reason = "Manual override active until AUTO"; return false; }
     }
 
     /* Authorized state change */
@@ -157,8 +152,7 @@ bool safety_kernel_request_action(const char *room,
 void safety_kernel_tick_periodic(uint32_t current_time_ms) {
     for (int i = 0; i < s_device_count; i++) {
         managed_device_t *dev = &s_devices[i];
-        if (dev->manual_override && (uint32_t)(current_time_ms-dev->manual_override_ms)>=DEFAULT_MANUAL_HOLD_MS)
-            dev->manual_override=false;
+        if(dev->manual_override && dev->simulated_hold_ms && (uint32_t)(current_time_ms-dev->manual_override_ms)>=dev->simulated_hold_ms) dev->manual_override=false;
         if (dev->is_on) {
             uint32_t duration = current_time_ms - dev->turned_on_ms;
             if (duration >= DEFAULT_MAX_RUN_MS) {
@@ -167,7 +161,8 @@ void safety_kernel_tick_periodic(uint32_t current_time_ms) {
                 dev->turned_on_ms = 0;
                 dev->last_transition_ms = current_time_ms;
                 dev->has_transition = true;
-                dev->manual_override = false;
+                /* Preserve a manual mode at safety cutoff: held OFF until AUTO. */
+                if(dev->simulated_hold_ms) dev->manual_override=false;
                 apply_gpio_state(dev);
             }
         }
@@ -193,4 +188,11 @@ bool safety_kernel_release_manual(const char *room, const char *device_id) {
 
 int safety_kernel_get_device_count(void) {
     return s_device_count;
+}
+
+bool safety_kernel_configure_virtual_hold(int index) {
+    /* Only the eight explicitly registered virtual slots, never physical0/1. */
+    if(index<2 || index>=s_device_count || s_devices[index].gpio_pin>=0) return false;
+    s_devices[index].simulated_hold_ms=300000;
+    return true;
 }

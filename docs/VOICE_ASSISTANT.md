@@ -1,3 +1,47 @@
+# Decision update: bounded token investigation closed
+
+No evidence-backed implementation fix emerged. Current MN6/full-room voice is not accepted for this prototype; the debugging loop is closed. Exactly two saved clips completed dense BEDROOM windows, then baseline source and installed firmwaref30b10cf... were restored. No new phone recordings, model/architecture change or threshold lowering. See [decision, uncertainties and one finite proposed alternative](VOICE_DECISION_AND_BOUNDED_EXPERIMENT_20261025.md). Previous next-step token-debug instructions below are historical and superseded.
+
+---
+
+# Update25October: exact rejection now measured
+
+Phone8 reaches the correct completed OFF FST path at0.2945118, below unchanged0.7; no accepted recognition. Main sampled loss is around BEDROOM. Equivalent word-spacing experiment worsened both phone/control scores and was rejected. Final reference/Zira/negative controls pass;10host cases pass; A boot16/OFF/inhibited, B firmwaref30b10cf... . No new phone trial or APK build/install. See [new alignment evidence and next step](VOICE_DECODER_ALIGNMENT_20261025.md). Older sections below remain historical.
+
+---
+
+# Latest observed result: phone clip retained; recognition still fails
+
+Installed phone APK1.0-speech-capture-20261024b/SHA5c932d62... is independently verified. Manual OFF2 has matching ACK/fresh inhibited readback; actual phone8 has complete matching PCM and clear user-reviewed audio but no accepted ESP command. Saved-clip raw/AFE/two-command comparisons also fail; synthetic OFF control still passes0.86229. No more phone recording is justified yet. Latest B imageb2ae88b9.../A boot14/OFF/inhibited, AP192.168.4.1/channel1; no physical switching or voice-confirmation pass. See [actual checks, evidence and next step](PHONE_CLIP_DIAGNOSIS_20261024.md). Older sections below are historical.
+
+---
+
+# Latest installed phone diagnostic: 1.0-speech-capture-20261024b
+
+ADB install/update succeeded and installed APK SHA5c932d62... matches laptop delivery. Speak now follows first microphone samples; debug-only last clip retention is private and bounded.49 focused host tests pass; fresh isolated debug build16s succeeded. Device recognition on this new build is pending; phone job6 on previous69d95b55... APK failed with complete matching PCM. Outputs remain inhibited and lightOFF. See [current phone results and next step](VOICE_THRESHOLD_FIX_AND_PHONE_TEST_20261024.md). Older sections below are history.
+
+---
+
+# Current update: reference recognition repaired — 24 October 2026 IST
+
+Gateway B now accepts the pinned public reference through both comparison paths (probability0.90041) and normal synthetic Bedroom/light/OFF (0.86229). The identified pinned MN6 probability/log-unit mismatch is repaired without relaxing the0.7 policy. See [repair and actual target evidence](VOICE_THRESHOLD_FIX_AND_PHONE_TEST_20261024.md). Current B SHAf7b31d41..., A boot14/OFF/OFF/inhibited; refresh before live testing. Silence/non-command host checks returned command0. New phone recognition/confirmation and phone negative tests are pending. Diagnostic APK version1.0-speech-diag-20261024/SHA69d95b55... is laptop-built; installation remains unverified while user updates by sideload. Outputs stay inhibited, loads disconnected, local HTTP192.168.4.1/channel1; Supabase/Internet optional. Older status sections below are preserved history.
+
+---
+
+# Latest bench result - 24 October 2026 IST
+
+USB cable replacement restored both matched board identities. B now runs normal inhibited image41dfec0a...; A boot13/OFF/OFF/inhibited, AP192.168.4.1/channel1 healthy. Exact public-reference PCM still has no accepted ESP detection after601-call and correctly framed pinned AFE160-to512 experiments. AFE is isolated to public diagnostics; normal phone preprocessing remains unchanged. No new phone repetition is requested and no successful voice confirmation/physical switching is claimed. The new diagnostic APK version1.0-speech-diag-20261024/SHA69d95b55... is laptop-built; installation/on-phone behavior remain unverified. Current master/diagnosis/handoff supersede older pending USB/boot9/12 notes below.
+
+---
+
+# Current diagnostic build — 24 October 2026 IST
+
+Recognition remains unresolved; no more phone repetitions are requested. See [current diagnosis](../docs/SPEECH_PIPELINE_DIAGNOSIS_20261024.md) and [master](../CLAWGRID_MASTER_INTEGRATION.md). New host-built APK is `deliverables/ClawGrid-Speech-Diagnostics-debug-20261024.apk`, version **1.0-speech-diag-20261024**, SHA256 `69d95b5552f1ece7c0d11f41710cd3ffe202d92e95dc97b778877cb4716efa8e`. It adds visible build/capture/delivery diagnostics and failed-job PCM comparison. It has not been installed or phone-tested. Last confirmed real phone trials used d12778de...; yesterday's A44 build is separate/unconfirmed on phone. Preserve existing debug/release signing; use the USB/sideload instructions below when an update is needed. No cloud speech or Internet dependency was added.
+
+Today's A boot12 supersedes yesterday's boot9 and invalidates historical current-boot gates. Latest completed target campaigns remained OFF/OFF/inhibited; B is currently awaiting USB loader recovery, so do not assert current gateway health from historical observations. Final601-frame/pinned-reference source is host-built but not deployed. Existing1s-tail statements below are historical and superseded by the current diagnosis. Do not enable outputs or weaken0.7 threshold to unlock voice; sensors/loads remain disconnected. Recognition and later explicit confirmation are separate tests.
+
+---
+
 # Actual phone trials: upload/inference observed; recognition failed — 23 October 2026 IST
 
 This current result supersedes the older preparation-only statements below. Native Android manual light control passed proposal/confirmation/matching ACK/fresh readback with GPIO outputs inhibited; it unlocked phone voice without enabling outputs. Two real phone clips prompted TURN OFF BEDROOM LIGHT reached B's pinned ESP-SR1.7.0 MultiNet6 English engine over the local AP. No cloud or Android default recognizer was used.

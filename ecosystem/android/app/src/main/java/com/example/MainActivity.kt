@@ -127,6 +127,8 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Prevent transcript pixels being persisted by screenshots/recording/recents thumbnails.
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_SECURE)
         enableEdgeToEdge()
         setContent {
             MyApplicationTheme {
@@ -156,8 +158,12 @@ fun ClawGridAppRoot(
     if (uiState.mode == TelemetryMode.HARDWARE_NODE_A && uiState.hardwareState.request?.phase == RequestPhase.PROPOSED) {
         AlertDialog(
             onDismissRequest = viewModel::cancelHardwareProposal,
-            title = { Text("Confirm Bedroom light ${if (uiState.hardwareState.request?.on == true) "ON" else "OFF"}") },
-            text = { Text((if (uiState.hardwareState.request?.source == "speech") "ESP speech job ${uiState.hardwareState.request?.speechJob} recognized this intent. " else "Manual request. ") + "This requests the physical_bedroom target through SafetyKernel. Current firmware applies a five-minute manual hold and three-second dwell. Board report and ACK are required; the physical load is not measured.") },
+            title = { Text("Confirm Bedroom ${uiState.hardwareState.request?.device} ${uiState.hardwareState.request?.action}") },
+            text = { Text((when (uiState.hardwareState.request?.source) {
+                "phone" -> "Recognized offline on this phone; embedded control. Capture ${uiState.hardwareState.request?.speechJob}, controller boot ${uiState.hardwareState.request?.boot}. "
+                "speech" -> "Legacy ESP speech job ${uiState.hardwareState.request?.speechJob}. "
+                else -> "Manual request. "
+            }) + "Target: Bedroom / ${uiState.hardwareState.request?.device} / ${uiState.hardwareState.request?.action}. This only proposes the physical_bedroom target through SafetyKernel. ${if (uiState.hardwareState.sample?.controlPolicyVersion == 2) "Manual mode holds until AUTO; saved manual mode boots OFF. Policy persistence commits separately after five seconds." else "Legacy controller manual hold is five minutes; AUTO unavailable."} Three-second dwell remains. Confirmation submits the command; matching ACK and fresh readback are required. Outputs must remain inhibited until the LED wiring is verified; physical load not measured.") },
             confirmButton = { TextButton(onClick = viewModel::confirmHardwareLight) { Text("Confirm") } },
             dismissButton = { TextButton(onClick = viewModel::cancelHardwareProposal) { Text("Cancel") } }
         )
@@ -260,7 +266,7 @@ fun ClawGridAppRoot(
                         )
 
                         if (uiState.mode == TelemetryMode.HARDWARE_NODE_A && uiState.activeTab in listOf(ClawGridTab.RELAYS, ClawGridTab.OVERVIEW)) {
-                            PhonePushToTalk(uiState, viewModel::startPhoneVoice, viewModel::stopPhoneVoice, viewModel::cancelPhoneVoice)
+                            PhonePushToTalk(uiState, viewModel::startPhoneVoice, viewModel::stopPhoneVoice, viewModel::cancelPhoneVoice, viewModel::selectVoiceRoom, viewModel::dismissVoicePreview)
                         }
 
                         // 3. Active Screen Content

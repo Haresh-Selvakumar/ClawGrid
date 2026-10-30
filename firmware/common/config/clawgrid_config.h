@@ -15,7 +15,8 @@
 #define CLAWGRID_WIFI_CHANNEL      1
 
 /* Node A (Voice & Fast-path) Pin Mapping (ESP32-S3-N16R8) */
-#define NODE_A_PIR_PIN             6       /* 3-pin PIR sensor input */
+#define NODE_A_PIR_PIN             8       /* PIR OUT; verify 3.3V logic and common GND */
+#define NODE_A_DHT_PIN             7       /* DHT11 DATA, module powered from3V3 */
 #define NODE_A_RELAY_LIGHT_PIN     4       /* Separate single-channel light module */
 #define NODE_A_RELAY_FAN_PIN       5       /* Separate single-channel fan module */
 /* Provisional GPIO-to-interface polarity, not verified module compatibility.
@@ -24,11 +25,43 @@
 #define NODE_A_RELAY_ACTIVE_LOW    true
 #endif
 #define NODE_A_PIR_WARMUP_MS       60000u /* Then require 200 ms LOW before arming. */
+#ifndef CLAWGRID_PIR_AVAILABLE
+#define CLAWGRID_PIR_AVAILABLE     1
+#endif
+#if CLAWGRID_PIR_AVAILABLE
+#define CLAWGRID_INPUT_PROFILE "ClawGrid:pir=available"
+#else
+#define CLAWGRID_INPUT_PROFILE "ClawGrid:pir=unavailable"
+#endif
 #ifndef CLAWGRID_PHYSICAL_OUTPUTS
 #define CLAWGRID_PHYSICAL_OUTPUTS  0 /* Simulation builds never drive relay pins. */
 #endif
 #ifndef CLAWGRID_DIAGNOSTIC_FAULTS
 #define CLAWGRID_DIAGNOSTIC_FAULTS 0 /* Explicit USB diagnostic builds only. */
+#endif
+#ifndef CLAWGRID_LED_ONLY_BENCH
+#define CLAWGRID_LED_ONLY_BENCH 0
+#endif
+#ifndef CLAWGRID_LED_ACTIVE_HIGH
+#define CLAWGRID_LED_ACTIVE_HIGH 0
+#endif
+#if CLAWGRID_LED_ACTIVE_HIGH && !CLAWGRID_LED_ONLY_BENCH
+#error Active-HIGH indicator selection requires explicit LED-only profile
+#endif
+#if CLAWGRID_LED_ONLY_BENCH && (!CLAWGRID_PHYSICAL_OUTPUTS || CLAWGRID_DIAGNOSTIC_FAULTS)
+#error LED indicator profile requires explicit enabled/default-faults bench mode
+#endif
+#if CLAWGRID_LED_ONLY_BENCH
+#ifdef __cplusplus
+static_assert(NODE_A_RELAY_ACTIVE_LOW == !CLAWGRID_LED_ACTIVE_HIGH,"LED profile polarity/configuration mismatch");
+#endif
+#if CLAWGRID_LED_ACTIVE_HIGH
+#define CLAWGRID_LOAD_PROFILE "ClawGrid:load=led_indicators_10k_active_high"
+#else
+#define CLAWGRID_LOAD_PROFILE "ClawGrid:load=led_indicators_10k_active_low"
+#endif
+#else
+#define CLAWGRID_LOAD_PROFILE "ClawGrid:load=generic"
 #endif
 #if CLAWGRID_DIAGNOSTIC_FAULTS && CLAWGRID_PHYSICAL_OUTPUTS
 #error Diagnostic fault injection requires physical outputs inhibited
@@ -59,6 +92,10 @@
 #define I2S_SPK_BCLK_PIN           16
 #define I2S_SPK_LRC_PIN            17
 #define I2S_SPK_DIN_PIN            18
+
+#if NODE_A_PIR_PIN == NODE_A_DHT_PIN || NODE_A_PIR_PIN == NODE_A_RELAY_LIGHT_PIN || NODE_A_PIR_PIN == NODE_A_RELAY_FAN_PIN || NODE_A_PIR_PIN == CLAWGRID_STATUS_LED_PIN || NODE_A_PIR_PIN == I2S_MIC_SCK_PIN || NODE_A_PIR_PIN == I2S_MIC_WS_PIN || NODE_A_PIR_PIN == I2S_MIC_SD_PIN || NODE_A_PIR_PIN == I2S_SPK_BCLK_PIN || NODE_A_PIR_PIN == I2S_SPK_LRC_PIN || NODE_A_PIR_PIN == I2S_SPK_DIN_PIN
+#error PIR conflicts with another assigned hardware pin
+#endif
 
 /* Safety Timing Parameters */
 #define CLAWGRID_MIN_DWELL_MS      3000    /* 3s anti-cycle dwell time */

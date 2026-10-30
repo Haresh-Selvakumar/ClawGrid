@@ -18,8 +18,15 @@ static inline uint32_t millis(void) { return (uint32_t)(esp_timer_get_time()/100
 static inline uint32_t micros(void) { return (uint32_t)esp_timer_get_time(); }
 static inline void delay(uint32_t ms) { vTaskDelay(pdMS_TO_TICKS(ms)); }
 static inline void pinMode(int pin,int mode) {
-    gpio_set_direction((gpio_num_t)pin,mode==OUTPUT?GPIO_MODE_OUTPUT:GPIO_MODE_INPUT);
-    if(mode==INPUT_PULLDOWN) gpio_set_pull_mode((gpio_num_t)pin,GPIO_PULLDOWN_ONLY);
+    // gpio_config selects the GPIO function as well as direction. Keep the
+    // output latch preloaded by SafetyKernel; do not reset it here.
+    gpio_config_t config = {0};
+    config.pin_bit_mask = UINT64_C(1) << pin;
+    config.mode = mode==OUTPUT ? GPIO_MODE_OUTPUT : GPIO_MODE_INPUT;
+    config.pull_up_en = GPIO_PULLUP_DISABLE;
+    config.pull_down_en = mode==INPUT_PULLDOWN ? GPIO_PULLDOWN_ENABLE : GPIO_PULLDOWN_DISABLE;
+    config.intr_type = GPIO_INTR_DISABLE;
+    ESP_ERROR_CHECK(gpio_config(&config));
 }
 static inline void digitalWrite(int pin,int level) { gpio_set_level((gpio_num_t)pin,level); }
 static inline int digitalRead(int pin) { return gpio_get_level((gpio_num_t)pin); }

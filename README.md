@@ -1,80 +1,30 @@
-# ClawGrid embedded home control and research prototype
+# ClawGrid Embedded Home Automation
 
-**Current integration, 23 October 2026 (India time):** the native Android app in `ecosystem/android` is the product UI. Phone → gateway B → authenticated ESP-NOW → controller A manual light ON/OFF passed proposal/confirmation, matching ACK and fresh authoritative readback with **outputs inhibited**. Physical switching is untested. The phone uses ClawGrid-Assistant Wi-Fi and editable gateway URL **http://192.168.4.1**; local control does not require Internet or Supabase. Phone microphone audio reached ESP for two real recognition-only trials, but **both returned no detection**. No speech command was proposed or confirmed, and recognition thresholds were unchanged.
+The current physical prototype uses two ESP32-S3 boards, a native Android app, two LED indicators and a DHT11. The verified integration checkpoint is dated 28 October 2026.
 
-Start with the [master implementation and actual results](CLAWGRID_MASTER_INTEGRATION.md), [current handoff](NEXT_CHAT_HANDOFF.md), [Android installation/local voice guide](ecosystem/android/PHONE_INSTALL_AND_LOCAL_VOICE.md), and [distribution notes](DISTRIBUTION.md). The latest request-ID UI debug APK built successfully; 42 control/voice JVM tests and 3 wire tests passed. That updated APK has not yet been installed/layout-tested on the phone. Full Gradle/Robolectric tests remain blocked by the previously uncached native-runtime dependency. Source publication does not change deployed firmware, credentials, NVS, models or output inhibition.
+## Current implementation
 
-The dated sections below are retained history. Their old USB-unavailable/browser-only/PC-voice descriptions do not supersede the current master or the native Android requirement. Do not regenerate existing provisioning or enable physical outputs when resuming this milestone.
+- Controller A owns SafetyKernel and output transitions: active-HIGH light GPIO4 and fan GPIO5. Each LED has its own 10 kΩ series resistor; cathodes connect to ground.
+- DHT11 DATA connects to GPIO7. Validity and freshness are reported; failed or stale readings are unavailable.
+- Gateway B provides the local Android API and authenticated ESP-NOW transport to A.
+- The existing bundled offline Vosk phone model produces proposals. Explicit confirmation is required before dispatch; completion requires matching controller ACK and fresh authoritative state.
+- PIR is removed. Physical occupancy and occupancy-driven AUTO are unavailable. Simulation remains separately labelled. Relays and appliance loads are unused.
+- Startup holds indicators OFF. Watchdogs, bounded queues, minimum dwell, run limits and boot-context checks remain enabled.
 
----
+## Verified results and limits
 
-**Latest ecosystem integration (22 October 2026):** Supabase encrypted Broadcast now carries real A reports and measured B diagnostics to the shared live webpage and Android source. Independent public-key client verification passed virtual ON/OFF through Supabase → B → A, with matching ACK and state. Physical GPIOs remain inhibited; missing temperature/lux and A RTOS/heap are unavailable. See [ecosystem integration and exact field mapping](docs/ECOSYSTEM_INTEGRATION.md). Current B USB is unavailable (Windows device error 31); the gateway reports UNKNOWN until that connection recovers. Earlier dated deployment notes below are retained history.
+See [demonstration results and installed hashes](docs/VOICE_LED_DEMONSTRATION_20261028.md), [embedded task review](docs/EMBEDDED_LED_REVIEW_20261028.md), [master integration](CLAWGRID_MASTER_INTEGRATION.md), and [handoff](NEXT_CHAT_HANDOFF.md).
 
-For the current ESP32-S3 hookup and deployment steps, start with
-[programming, wiring and the supplied checklist](docs/PROGRAM_AND_WIRE.md). It includes the
-HW-416B PIR, both separate relay modules, low-voltage load contacts, and the
-explicit output-enable step. The dated results below are retained history;
-see [current integration status](docs/CURRENT_INTEGRATION.md) for this session.
+Manual LED operation and eight positive microphone trials have user-reported visible observations with retained controller ACK/readback evidence. The negative/cancellation capture contains additional deliberate commands and is not an isolated zero-dispatch proof for each utterance. The final APK changes recovery status messaging; voice trials were on its preceding version with unchanged recognition/parser sources. Short task observations do not establish hard real-time guarantees or a recognition accuracy rate.
 
-The supplied USB text-command sketch is now available alongside the existing
-firmware: [text aliases, confirmation and shared relay-pair mode](docs/SERIAL_TEXT_COMMANDS.md).
+## Source and build entry points
 
-ClawGrid uses two ESP32-S3 N16R8 boards with native ESP-IDF/FreeRTOS. A owns deterministic control and SafetyKernel; B owns the browser API and USB/radio command bridge. Offline speech recognition runs on the PC. Their memories are separate. The four-room house interface supplies explicitly synthetic sensors; output policy runs on A. See [code/upload paths](docs/UPLOAD_CODE.md) and [continuous PC voice](docs/PC_OFFLINE_VOICE.md).
+- `ecosystem/android/`: native Android project and bundled offline model with notices.
+- `native/platformio.ini`: controller build profiles, including the explicit active-HIGH LED-only profile.
+- `speech/platformio.ini`: gateway build profiles.
+- `firmware/common/`: shared transport, safety and runtime implementation.
+- `tests/` and `scripts/`: host verification and guarded deployment utilities.
 
-**Current software work, 21 October 2026:** no hardware is available. Default outputs remain inhibited. Confirmed physical-bedroom/virtual routing, portable PCM handling, explicit host development mode, and dataset provenance repairs are implemented. Real recognition and physical behavior require fresh target validation. The newest retained hardware evidence is the returned-pair campaign on 20 October, not the older absent-A descriptions.
+Provision private configuration locally from the checked-in examples. Credentials, signing keys, board dumps, compiled firmware, APKs, private diagnostics and build caches are excluded from publication. Never erase provisioning or model partitions as part of a routine update. Verify board identities rather than assuming COM-port roles.
 
-Start the host-only development dashboard after installing `requirements-dev.txt`:
-
-```powershell
-python scripts/browser_bridge.py --host-dev --port 8770
-```
-
-Open http://127.0.0.1:8770/simulation. Use the persistent simulation banner for disconnect/rejection/timeout and labeled speech fixtures. No recognition engine or hardware measurement runs on the host. See [the current software handoff](NEXT_CHAT_HANDOFF.md) for exact validation, remaining checks, and the next three hardware actions.
-
-## Current work
-
-The new deep-review response implements a fixed-memory evidence monitor, fault tests and energy-trace analysis. The monitor is shadow-only and never drives GPIO. Its research candidate is a measured study of fault observability and freshness/availability, with explicit limits; novelty is not established.
-
-- [Response to the supplied analysis](docs/DEEP_REVIEW_RESPONSE.md)
-- [30-issue resolution table](benchmarks/reports/DEEP_REVIEW_RESOLUTION.csv)
-- [Novelty assessment and experiments](docs/NOVELTY_CASE.md)
-- [Monitor contract](docs/EVIDENCE_MONITOR_SPEC.md)
-- [Current validation summary](benchmarks/reports/PROJECT_VALIDATION_SUMMARY.md)
-- [Self-contained next-chat handoff](NEXT_CHAT_HANDOFF.md)
-
-## Retained hardware and earlier host evidence
-
-| Scope | Result | Limit |
-|---|---|---|
-| Current host tests | 83 passed | HOST_MEASURED, actual C/C++ and analysis/preview tests |
-| Current B API/shadow checks | 32/32 passed | MCU execution on synthetic feedback; no actuation |
-| Host fault matrix | 4096 designed conditions | Zero necessary-contract violations; conservative refusals and jointly lying-sensor counterexamples retained |
-| Historical paired controller | 81/81 rows;1000/1000 commands | Earlier image hashes; latest pair needs regression |
-| Current synthetic speech | 0/16 command matches;0/2 negative false accepts | Functional failure; no human accuracy claim |
-
-## Browser
-
-The offline [layout preview](http://127.0.0.1:8765/simulation) reports missing processing. The [live B interface](http://127.0.0.1:8766/simulation) transports API/PCM through USB; enter the local token privately. A-dependent control is unavailable until A returns. No phone changes or browser/cloud speech recognition are used. The byte bridge performs no automation or inference.
-
-```powershell
-python -m pytest tests -q --junitxml=benchmarks/raw/host_tests.xml
-python scripts/evidence_matrix.py
-python scripts/single_board_hil.py --url http://127.0.0.1:8766
-python scripts/audio_bench.py --speech-only --url http://127.0.0.1:8766
-```
-
-## Build and resume
-
-```powershell
-python -m pip install -r requirements-dev.txt
-python scripts/provision_local.py
-python scripts/fetch_speech_dependencies.py
-python -m platformio run -d native -e native_voice
-python -m platformio run -d speech -e speech_intelligence
-# Requires both returned boards; deploys both reviewed images before testing:
-python scripts/resume_validation.py --deploy-staged
-```
-
-Build sequentially. Never open a serial port from two tools at once. Provisioning preserves existing private credentials; binaries embed keys and should not be published. Flashing verifies assigned MAC and preserves NVS. Mains switching is prohibited. One real PIR covers only its assigned zone.
-
-[Submitted proposal comparison](docs/PROPOSAL_VS_IMPLEMENTATION.md) · [RTOS design](docs/EMBEDDED_SYSTEM_DESIGN.md) · [Simulation/API guide](docs/SIMULATION_LAB.md) · [Publication test matrix](docs/PUBLICATION_TEST_MATRIX.md).
+The obsolete duplicate web-baseline tree and superseded delivery drafts have been removed from the current branch. Historical documents elsewhere remain dated supporting evidence, not the current hardware specification. No completed final submission report is included in this source update.

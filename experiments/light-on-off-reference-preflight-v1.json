@@ -1,0 +1,102 @@
+{
+  "experiment": "light-on-off-reference-preflight-v1",
+  "approval": "ONLY_FOUR_REFERENCE_CLIPS",
+  "selected_room": "bedroom",
+  "mapping": {
+    "1": "bedroom/light/ON",
+    "2": "bedroom/light/OFF"
+  },
+  "phrases": {
+    "1": "LIGHT ON",
+    "2": "LIGHT OFF"
+  },
+  "probability_threshold": 0.7,
+  "frontend": {
+    "phone_source": "AudioRecord MIC",
+    "preferred_rate_hz": 16000,
+    "fallback_rates_hz": [
+      48000,
+      44100
+    ],
+    "transport": "mono signed PCM16LE at16000Hz",
+    "maximum_samples": 64000,
+    "esp_afe": false,
+    "frame_samples": 512,
+    "window_ms": 6000,
+    "maximum_frames": 601,
+    "zero_tail": true,
+    "threshold_unit_adapter": "unchanged probability0.7 -> ln(0.7)"
+  },
+  "model": "mn6_en",
+  "audio_preparation": {
+    "generator": "Microsoft Zira Desktop/System.Speech",
+    "rate": 0,
+    "volume": 100,
+    "wav": "16000Hz mono PCM16",
+    "positive_syntheses": 2,
+    "replacements_allowed": false,
+    "edits": "none"
+  },
+  "fixtures": [
+    {
+      "name": "LIGHT ON",
+      "path": "benchmarks/review/light-on-off-preflight-20261025/LIGHT-ON.wav",
+      "expected_id": 1,
+      "samples": 23280,
+      "crc32": 1936402414,
+      "sha256": "b87b69dae4b3ead2f1b02236c1ae384ac0ffdfca09dd92a0ecba1ec56420c720",
+      "wav_sha256": "bc125c45a91e457b96af518d320b079282716c8f811c1de35381309b28ed9692",
+      "audio_source": "SIMULATED",
+      "peak": 23727,
+      "clipped_samples": 0
+    },
+    {
+      "name": "LIGHT OFF",
+      "path": "benchmarks/review/light-on-off-preflight-20261025/LIGHT-OFF.wav",
+      "expected_id": 2,
+      "samples": 23040,
+      "crc32": 2336777373,
+      "sha256": "dcd2baf80de3ca95365e459f2a8781eaa0f33df85eb01f2b8d0f99d3cf132593",
+      "wav_sha256": "f591f83b9437e109d2f6e456de903f15280262655b06b55d9e36616fde2de794",
+      "audio_source": "SIMULATED",
+      "peak": 23378,
+      "clipped_samples": 0
+    },
+    {
+      "name": "silence",
+      "path": "benchmarks/review/speech-fst-20261024/silence-2s.wav",
+      "expected_id": 0,
+      "samples": 32000,
+      "crc32": 2109903275,
+      "sha256": "4f7988030a00d082fe445e00a2ac5dab502300ff1b80e8592dd569867b60ef74",
+      "wav_sha256": "20eaebffe1816e0ffa6f7f854f5ef4ea80d5349faaf0ce1fec1b713e7fde58fa",
+      "audio_source": "SIMULATED",
+      "peak": 0,
+      "clipped_samples": 0
+    },
+    {
+      "name": "noncommand",
+      "path": "benchmarks/review/speech-fst-20261024/zira-non-command.wav",
+      "expected_id": 0,
+      "samples": 33760,
+      "crc32": 3492560341,
+      "sha256": "d61bddb3b96a677b3b08a1279c9888bdc56b705d4e2a635cc627e2b37c5fc45d",
+      "wav_sha256": "076b9df12e4357920435ad5780bdac1009fdf3e2debf650f72a66137cda57b65",
+      "audio_source": "SIMULATED",
+      "peak": 18292,
+      "clipped_samples": 0
+    }
+  ],
+  "maximum_jobs": 4,
+  "phone_recordings_authorized": false,
+  "proposals_allowed": false,
+  "actuator_commands_allowed": false,
+  "physical_outputs": "INHIBITED",
+  "positive_pass": "Exact accepted ID at>=0.7; original PCM matches; error0/engine_errors0",
+  "negative_pass": "No detection/candidate/result; original PCM matches; error0/engine_errors0",
+  "stop": "First recognition/delivery/engine/link/output/reboot failure; remaining clips NOT RUN; no retry",
+  "restore": "Exact saved baseline application after either outcome; never write model/NVS/table",
+  "header_sha256": "5ac5d0e11db26bf34d41a451ed4d091f2e5e9c75fadfa216abe6a626c52fcb1f",
+  "baseline_app_sha256": "f30b10cfb74a4dd79ff28588de2d3be9f6c760c934b48cf1475bf6f7c271b9a4",
+  "baseline_model_sha256": "49b9215a315a06e900e1a2f4538b2513611253cc30a243802a5a58aedf9dbc7e"
+}

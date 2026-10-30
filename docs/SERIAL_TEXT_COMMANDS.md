@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # Text commands from the supplied two-board sketch
 
 The supplied sketch's text commands are integrated into the maintained ClawGrid
@@ -81,7 +85,7 @@ kernel. The maintained speech/PIR/SafetyKernel behavior remains in place.
 
 ## Wiring and deployment
 
-Connections are unchanged: A GPIO4 = light, GPIO5 = fan, GPIO6 = HW-416B OUT.
+Connections are unchanged: A GPIO4 = light, GPIO5 = fan, GPIO8 = HW-416B OUT.
 Use the [full wiring guide](ESP_CONNECTIONS.md) for power, interface checks and
 low-voltage DC load contacts. Actual image mode, not text-parser availability,
 determines whether GPIO4/5 are enabled. Outputs remain inhibited until the

@@ -1781,7 +1781,7 @@ table.dashboard-table tr:hover td { background: rgba(255, 255, 255, 0.02); color
             <div class="actuator-row">
               <div>
                 <strong>Node A — Bedroom Sensor &amp; Relay Controller (ESP32-S3)</strong>
-                <div class="actuator-meta">GPIO 6 PIR_1 (60s warm-up + 200ms LOW arming) · GPIO 4 Light · GPIO 5 Fan · Autonomous if radio drops</div>
+                <div class="actuator-meta">Physical PIR / occupancy AUTO unavailable / GPIO 4 Light / GPIO 5 Fan / GPIO 7 DHT11</div>
               </div>
               <span class="pill-status pill-active" id="tier1Badge">ARMED</span>
             </div>

@@ -1,0 +1,55 @@
+{
+  "commit": "07b0a4d0f6b5de755874d5405150ee0a8eec9865",
+  "version": "1.7.0",
+  "files": [
+    {
+      "path": "LICENSE",
+      "git_blob": "8e206f3bc38f5fa84a4956f2d5030ca17daea0d7",
+      "sha256": "7d916fb00bc0742c47cafb0d0144b67f826d76779730b1cb8796045ea6ba1b9a",
+      "bytes": 1187
+    },
+    {
+      "path": "docs/en/audio_front_end/README.rst",
+      "git_blob": "d4beafe12d68444fe7d8594a21d45bbea209b3bf",
+      "sha256": "bc1f738bf810be54f13292f38cbca4439a8fc8d66b8d050b418eeec9306a560c",
+      "bytes": 19124
+    },
+    {
+      "path": "docs/en/speech_command_recognition/README.rst",
+      "git_blob": "b11cb59ee09b14ae313f9d28c88ac3e0829cf3d1",
+      "sha256": "d49c1df13a94adf66d94086d342202a5af3360abfe267a29ca1704899183d278",
+      "bytes": 12415
+    },
+    {
+      "path": "model/multinet_model/mn7_en/_MODEL_INFO_",
+      "git_blob": "2baff012dc6b1b3070d3657cf28f0fca4d497d15",
+      "sha256": "efdf47e45817535e42c24c5bd5816b3d9fc54113aa7a6943b0d183823830929c",
+      "bytes": 158
+    },
+    {
+      "path": "model/multinet_model/mn7_en/mn7_data",
+      "git_blob": "bcc765db8020d66e7214b2879bc213f71603ab08",
+      "sha256": "f9d646f6301041d22de3dc3b1ae842ce9b314af6410b35814087d8042410a8e6",
+      "bytes": 2739172
+    },
+    {
+      "path": "model/multinet_model/mn7_en/mn7_index",
+      "git_blob": "e019725dd45424444ad6926d48ca95bff06dc6f4",
+      "sha256": "f7234d8a6c6cdf8df7bb49ae86a48e8ecf20c2cd8ebc8f97665389169d50c6d3",
+      "bytes": 4656
+    },
+    {
+      "path": "model/multinet_model/mn7_en/vocab",
+      "git_blob": "429e9681bd3b843ceb5f557d94eeb35b08d7faa9",
+      "sha256": "a94f2dbc3b2783db2891763750aa028f2e1f583945b1696931529d80de61951c",
+      "bytes": 7143
+    },
+    {
+      "path": "tool/multinet_g2p.py",
+      "git_blob": "26b0bff07cd65ae113220d5774e98008b663ac6e",
+      "sha256": "5ec428bf115f5249edc20e06c00b3e50147770debe010f56e966921430b605f2",
+      "bytes": 2079
+    }
+  ],
+  "installed": false
+}

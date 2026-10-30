@@ -10,12 +10,17 @@ public:
     uint32_t grace=120000, on_ms[2]={}, transitions[2]={};
     AuditEvent events[32]={}; uint32_t event_count=0;
     PolicyConfig policy() const {
-        PolicyConfig p; p.away=away; p.light_auto=automatic[0]; p.fan_auto=automatic[1]; p.grace_ms=grace; return p;
+        PolicyConfig p; p.away=away; p.light_auto=automatic[0]; p.fan_auto=automatic[1]; p.grace_ms=grace;
+        for(int i=0;i<2;++i) { const auto *d=safety_kernel_get_device(i); if(d && d->manual_override) p.manual_flags|=1<<i; }
+        return p;
     }
     void restore_policy(const PolicyConfig &p) {
         away=p.away; automatic[0]=p.light_auto; automatic[1]=p.fan_auto; grace=p.grace_ms;
+        for(int i=0;i<2;++i) if(p.manual_flags&(1<<i)) act(i,ACTION_OFF,true,0);
     }
-    ControlStatus execute(const ControlCommand &c,uint32_t now) {
+    ControlStatus execute(const ControlCommand &c,uint32_t now,bool occupancy_available=true) {
+        if(!occupancy_available && (c.op==ControlOp::Resume || c.op==ControlOp::Policy ||
+            (c.op==ControlOp::Scene && c.action==0))) return record(c,now,ControlStatus::Denied);
         if(c.op==ControlOp::Device) {
             if(c.device>1 || c.action>2 || c.value) return record(c,now,ControlStatus::Invalid);
             return record(c,now,act(c.device,(action_type_t)c.action,true,now)?ControlStatus::Applied:ControlStatus::Denied);
@@ -31,7 +36,7 @@ public:
             if(a && b) {
                 away=c.action==1;
                 for(int i=0;i<2;++i) { timer_[i]=false; pending_[i]=false; }
-                if(c.action==0) for(int i=0;i<2;++i) safety_kernel_release_manual("bedroom",name(i));
+                if(c.action==0) for(int i=0;i<2;++i) { automatic[i]=true; safety_kernel_release_manual("bedroom",name(i)); pending_[i]=occupied(); }
             }
             return record(c,now,a&&b?ControlStatus::Applied:ControlStatus::Denied);
         }
@@ -48,12 +53,15 @@ public:
             return record(c,now,ControlStatus::Applied);
         }
         if(c.op==ControlOp::Resume && c.device<2 && !c.action && !c.value) {
+            if(away) return record(c,now,ControlStatus::Denied);
+            automatic[c.device]=true; pending_[c.device]=occupied();
             safety_kernel_release_manual("bedroom",name(c.device));
             return record(c,now,ControlStatus::Applied);
         }
         return record(c,now,ControlStatus::Invalid);
     }
-    void tick(uint32_t now,bool motion_rise,Occupancy occupancy) {
+    void tick(uint32_t now,bool motion_rise,Occupancy occupancy,bool occupancy_available=true) {
+        occupancy_=occupancy;
         uint32_t elapsed=now-last_tick_; last_tick_=now;
         for(int i=0;i<2;++i) {
             const managed_device_t *d=safety_kernel_get_device(i);
@@ -63,6 +71,7 @@ public:
             if(timer_[i] && (uint32_t)(now-timer_start_[i])>=timer_duration_[i]) {
                 if(act(i,ACTION_OFF,true,now)) { timer_[i]=false; pending_[i]=false; }
             }
+            if(!occupancy_available) continue;
             if(motion_rise && automatic[i] && !away) pending_[i]=true;
             if(!automatic[i] || away) continue;
             if(occupancy==Occupancy::Vacant) {
@@ -82,6 +91,8 @@ public:
         for(int i=0;i<2;++i) { const auto *d=safety_kernel_get_device(i); if(d && d->manual_override) s.manual_flags|=1<<i; }
     }
 private:
+    Occupancy occupancy_=Occupancy::Unknown;
+    bool occupied() const { return occupancy_==Occupancy::Occupied || occupancy_==Occupancy::LikelyOccupied; }
     bool timer_[2]={},pending_[2]={},previous_[2]={};
     uint32_t timer_start_[2]={},timer_duration_[2]={},last_tick_=0;
     static const char *name(int i) { return i?"fan":"light"; }

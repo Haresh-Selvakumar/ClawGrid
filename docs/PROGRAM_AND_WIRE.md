@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # Program both ESPs and connect the bench
 
 Use the existing two ESP32-S3 N16R8 boards with these distinct roles:
@@ -21,11 +25,11 @@ is required by the existing laptop-browser audio path.
 |---|---|
 | VCC / + | A's labeled **5 V** rail while A is USB-powered |
 | GND / - | A **GND** |
-| OUT | A **GPIO6**, after verifying OUT is 3.3 V logic |
+| OUT | A **GPIO8**, after verifying OUT is 3.3 V logic |
 
 Use the labels on the sensor PCB; do not infer left/right order from a photo of
 another revision. The HW-416B/HC-SR501 family normally uses a 5 V supply and a
-3.3 V output. Check the actual unit. Never apply 5 V to GPIO6.
+3.3 V output. Check the actual unit. Never apply 5 V to GPIO8.
 Allow 60 s warm-up, then a 200 ms LOW baseline before a later stable HIGH is
 accepted as motion. Start with a short sensor delay so LOW can be observed.
 

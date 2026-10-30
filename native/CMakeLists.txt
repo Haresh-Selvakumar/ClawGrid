@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.16)
 # reproducible without an ignored hand-edited sdkconfig file.
 set(SDKCONFIG_DEFAULTS "${CMAKE_CURRENT_LIST_DIR}/sdkconfig.defaults")
 get_filename_component(CLAWGRID_SDKCONFIG_NAME "${SDKCONFIG}" NAME)
-if(CLAWGRID_SDKCONFIG_NAME MATCHES "^sdkconfig[.]native_voice_uart(_diagnostic|_bench)?$")
+if(CLAWGRID_SDKCONFIG_NAME MATCHES "^sdkconfig[.]native_voice_uart(_diagnostic|_bench|_led_bench|_led_high_bench)?$")
     list(APPEND SDKCONFIG_DEFAULTS "${CMAKE_CURRENT_LIST_DIR}/sdkconfig.uart.defaults")
 endif()
 set(COMPONENTS main __pio_env)

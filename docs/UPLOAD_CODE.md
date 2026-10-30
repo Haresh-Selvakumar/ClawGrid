@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # Code and manual upload
 
 Project root: `C:\Users\hares\OneDrive\Desktop\ESD-imp\ClawGrid-physical-integration-prep`
@@ -58,7 +62,7 @@ PC microphone -> offline PC recognizer -> USB B -> ESP-NOW A -> SafetyKernel.
 **The normal A image inhibits physical relay outputs.** Real relay switching
 requires verified input voltage/interface, polarity and startup behavior before
 using an output-enabled bench build. Wiring: [PROGRAM_AND_WIRE.md](PROGRAM_AND_WIRE.md).
-Use low-voltage DC loads only. GPIO4 is light, GPIO5 fan, GPIO6 PIR OUT.
+Use low-voltage DC loads only. GPIO4 is light, GPIO5 fan, GPIO8 PIR OUT.
 SRD-05VDC-SL-C alone does not establish 3.3 V input compatibility.
 
 Onboard radio/command indicator is now implemented: [LED pattern and upload](TRAFFIC_LED.md).

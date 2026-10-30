@@ -88,7 +88,7 @@ p(b,'The archive review found seeded room readings and local simulation in the o
 b=page('Real data mapping and freshness')
 p(b,'The live views separate controller state, measured diagnostics and unavailable signals. HARDWARE_MEASURED labels board observations, HOST_MEASURED labels PC audit activity, and SIMULATED identifies virtual input. A simulated-room command can be processed by real hardware while its room inputs remain synthetic. This distinction is preserved in the retained test evidence. [S1, S7]')
 table(b,['Field or view','Origin and interpretation'],[
- ['Bedroom occupancy and motion','A PIR on GPIO6 and its occupancy policy; one physical zone'],
+ ['Bedroom occupancy and motion','A PIR on GPIO8 and its occupancy policy; one physical zone'],
  ['Light and fan state','A\'s commanded state; no independent load/contact feedback'],
  ['A boot uptime and radio counters','Authenticated reports returned through B /api/state'],
  ['B internal heap and PSRAM','B /api/memory; bytes and diagnostic timestamp'],
@@ -114,7 +114,7 @@ p(b,'The mapping below records the intended low-voltage bench connections in the
 table(b,['Connection','Recorded mapping or requirement'],[
  ['A USB power','Powers the remote controller; COM8 used when programming'],
  ['B USB data and power','PC bridge on COM7; both boards must remain powered'],
- ['PIR OUT','A GPIO6 after confirming the actual output is 3.3 V logic'],
+ ['PIR OUT','A GPIO8 after confirming the actual output is 3.3 V logic'],
  ['PIR VCC and GND','Labeled 5 V rail and GND per the project guide; verify the unit labels'],
  ['Light relay input','A GPIO4 through a verified compatible interface'],
  ['Fan relay input','A GPIO5 through a verified compatible interface'],

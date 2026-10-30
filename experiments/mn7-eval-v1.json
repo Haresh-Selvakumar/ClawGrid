@@ -1,0 +1,405 @@
+{
+  "experiment": "mn7-eval-v1",
+  "state": "FROZEN_BEFORE_TARGET_INFERENCE",
+  "model": "mn7_en",
+  "esp_sr_commit": "07b0a4d0f6b5de755874d5405150ee0a8eec9865",
+  "phrases": {
+    "1": "LIGHT ENABLE",
+    "2": "LIGHT DISABLE"
+  },
+  "mapping": {
+    "1": "bedroom/light/ON",
+    "2": "bedroom/light/OFF"
+  },
+  "registered_graphemes": {
+    "1": "light enable",
+    "2": "light disable"
+  },
+  "registration": "Official MN7 esp_mn_commands_add(graphemes), internal FLITE G2P; verify nonempty phrase->phonemes and update result. No MN6 registration or private ABI.",
+  "probability_threshold": 0.7,
+  "required_decoder_log_threshold": -0.35667494393873245,
+  "threshold_gate": "Constructor-supported det_threshold in native model JSON is ln(0.7); public setter is not called; final returned-probability gate remains0.7. Separate metadata-only artifact, no runtime ABI access.",
+  "frontend": {
+    "implementation": "official ESP-SR AFE",
+    "sample_rate": 16000,
+    "channels": 1,
+    "sample_format": "signed PCM16LE",
+    "aec": false,
+    "wakenet": false,
+    "se": true,
+    "vad": true,
+    "vad_mode": 3,
+    "noise_mode": "SSP",
+    "agc_mode": "AFE_MN_PEAK_AGC_MODE_2",
+    "linear_gain": 1,
+    "allocation": "MORE_PSRAM",
+    "afe_core": 1,
+    "afe_priority": 2,
+    "speech_priority": 2,
+    "model_window_ms": 6000,
+    "feed_calls_maximum": 601,
+    "clip_samples_maximum": 64000,
+    "job_deadline_ms": 15000,
+    "reset_between_jobs": true
+  },
+  "preflight": [
+    {
+      "name": "enable",
+      "path": "benchmarks/review/voice-short-v1-20261025/LIGHT-ENABLE.wav",
+      "expected_id": 1,
+      "samples": 25520,
+      "crc32": 3001788789,
+      "sha256": "4d8b1b809e9cdc0690c35321746cd2b28dbc926541be6eda4a19cfa8df2e584b",
+      "audio_source": "SIMULATED"
+    },
+    {
+      "name": "disable",
+      "path": "benchmarks/review/voice-short-v1-20261025/LIGHT-DISABLE.wav",
+      "expected_id": 2,
+      "samples": 27200,
+      "crc32": 3370348365,
+      "sha256": "462f3302696f7833e01dd96b37dff01fd229067310162837d8d0a03cce5b3bcb",
+      "audio_source": "SIMULATED"
+    },
+    {
+      "name": "silence",
+      "path": "benchmarks/review/speech-fst-20261024/silence-2s.wav",
+      "expected_id": 0,
+      "samples": 32000,
+      "crc32": 2109903275,
+      "sha256": "4f7988030a00d082fe445e00a2ac5dab502300ff1b80e8592dd569867b60ef74",
+      "audio_source": "SIMULATED"
+    },
+    {
+      "name": "noncommand",
+      "path": "benchmarks/review/speech-fst-20261024/zira-non-command.wav",
+      "expected_id": 0,
+      "samples": 33760,
+      "crc32": 3492560341,
+      "sha256": "d61bddb3b96a677b3b08a1279c9888bdc56b705d4e2a635cc627e2b37c5fc45d",
+      "audio_source": "SIMULATED"
+    }
+  ],
+  "official_compatibility_reference": {
+    "path": "benchmarks/review/speech-pipeline-20261024/tell_me_a_joke.wav",
+    "command": "tell me a joke",
+    "diagnostic_id": 17,
+    "required": true,
+    "authorized": false
+  },
+  "preflight_maximum_jobs": 5,
+  "preflight_failure": "Stop on first failed prerequisite/positive miss/wrong or negative acceptance/engine or safety failure; restore exact baseline if any write occurred. No tuning or repeated clips.",
+  "phone_trials": [
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 1
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 2
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 3
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 4
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 5
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 6
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 7
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 8
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 9
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 10
+    },
+    {
+      "session": 1,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 11
+    },
+    {
+      "session": 1,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 12
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture ordinary background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 13
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture ordinary background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 14
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture ordinary background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 15
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "LIGHT",
+      "expected_id": 0,
+      "index": 16
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "ENABLE",
+      "expected_id": 0,
+      "index": 17
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "DISABLE",
+      "expected_id": 0,
+      "index": 18
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "LIGHT IS BLUE",
+      "expected_id": 0,
+      "index": 19
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "PLEASE OPEN THE WINDOW",
+      "expected_id": 0,
+      "index": 20
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 21
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 22
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 23
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 24
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 25
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 26
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 27
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 28
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT DISABLE",
+      "expected_id": 2,
+      "index": 29
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ENABLE",
+      "expected_id": 1,
+      "index": 30
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 31
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 32
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 33
+    },
+    {
+      "session": 2,
+      "kind": "background",
+      "prompt": "Capture ordinary background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 34
+    },
+    {
+      "session": 2,
+      "kind": "background",
+      "prompt": "Capture ordinary background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 35
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "WHAT TIME IS IT",
+      "expected_id": 0,
+      "index": 36
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "I AM GOING OUTSIDE",
+      "expected_id": 0,
+      "index": 37
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "THE WEATHER IS WARM",
+      "expected_id": 0,
+      "index": 38
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "TURN OFF BEDROOM LIGHT",
+      "expected_id": 0,
+      "index": 39
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "LIGHT ENVELOPE",
+      "expected_id": 0,
+      "index": 40
+    }
+  ],
+  "phone_pass_criteria": {
+    "positives_per_phrase": 10,
+    "minimum_correct_per_phrase": 9,
+    "maximum_wrong_accepts": 0,
+    "maximum_negative_accepts": 0
+  },
+  "phone_stop_conditions": [
+    "wrong accepted command",
+    "any negative accepted",
+    "second miss for either phrase",
+    "PCM/transport/engine/reboot/output/watchdog error (inconclusive)",
+    "40 screening clips maximum; no retries or tuning"
+  ],
+  "post_pass_maximum_clips": 5,
+  "health_criteria": {
+    "outputs_enabled": false,
+    "light": false,
+    "fan": false,
+    "controller_reboots": 0,
+    "new_control_or_link_deadline_misses": 0,
+    "watchdog_required": true,
+    "telemetry_age_maximum_ms": 2999,
+    "pcm_mismatches": 0,
+    "min_free_internal_bytes": 32768,
+    "min_largest_internal_block_bytes": 16384,
+    "min_free_psram_bytes": 262144,
+    "min_speech_stack_free_bytes": 2048
+  },
+  "no_cloud_or_host_recognition": true,
+  "model_configuration_receipt_sha256": "c5973fe6d3088d3079940ad8948799aef9b797d59e53db4db365f7cf5efdd026",
+  "preparation_revision": "Native constructor JSON config path independently audited before any target inference; no recording-driven change."
+}

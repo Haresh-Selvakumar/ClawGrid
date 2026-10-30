@@ -520,7 +520,7 @@ private fun PolicyConfigurationCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (hardwareMode) "Only gateway URL/token apply here. Board policy unchanged: 5-minute manual hold; AUTO/resume and per-device automation require further integration. Temperature monitoring only." else "Simulation settings only; environmental thresholds do not change board policy.",
+                        text = if (hardwareMode) "Connection settings only. Physical PIR and occupancy AUTO are unavailable in this milestone. Manual light/fan requests require confirmation, matching ACK and fresh readback; saved manual modes boot OFF. DHT11 is monitoring only." else "Simulation settings only; environmental thresholds do not change board policy.",
                         style = MaterialTheme.typography.bodySmall,
                         color = ClawTextMuted
                     )

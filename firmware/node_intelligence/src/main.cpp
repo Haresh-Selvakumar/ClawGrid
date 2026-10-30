@@ -49,7 +49,7 @@ struct Transaction {
 static Transaction s_transaction;
 // HTTP handlers execute on the one SDK HTTP task; proposal ownership stays there.
 static ProposalStore s_proposal;
-static char s_json[1536],s_body[128]; // HTTP task only
+static char s_json[3072],s_body[128]; // HTTP task only; bounded speech diagnostics
 static char s_serial[160]; static size_t s_serial_used=0; static bool s_serial_bad=false;
 static void receive(const uint8_t *mac,const uint8_t *data,int n) { s_rx.push(mac,data,n); }
 static esp_err_t json(httpd_req_t *req,int n) {
@@ -81,6 +81,9 @@ static bool parse_fields(const char *text,ControlCommand &c) {
     return parse_control_text(text,c);
 }
 static bool queue_command(ControlCommand c,uint32_t &id) {
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    return false; // No actuator/serial control dispatch in a recognition-only image.
+#endif
     uint32_t now=millis(); bool accepted=false;
     bool healthy=s_health.healthy(kLinkReady);
     portENTER_CRITICAL(&s_mux);
@@ -113,6 +116,9 @@ static esp_err_t simulation_state_api(httpd_req_t *req) {
     return json(req,snprintf(s_json,sizeof(s_json),"{\"input_source\":\"SIMULATED\",\"processing_source\":\"HARDWARE_MEASURED\",\"known\":%s,\"boot\":%u,\"sequence\":%u,\"age_ms\":%u,\"outputs\":%u,\"sensor_known\":%u,\"occupied\":%u,\"processing_us\":%u,\"accepted\":%u,\"rejected\":%u,\"physical_outputs_enabled\":%s}",known?"true":"false",s.boot,s.sequence,age,s.outputs,s.known,s.occupied,s.processing_us,s.accepted,s.rejected,s.physical_outputs_enabled?"true":"false"));
 }
 static esp_err_t simulation_input_api(httpd_req_t *req) {
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    httpd_resp_set_status(req,"409 Conflict"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Recognition-only preflight\"}"));
+#endif
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
     if(!read_body(req)) return bad_body(req);
     unsigned values[12]={}; int count=0; const char *p=s_body;
@@ -158,14 +164,25 @@ static esp_err_t rtos_api(httpd_req_t *req) {
     esp_netif_ip_info_t ip={}; esp_netif_t *ap=esp_netif_get_handle_from_ifkey("WIFI_AP_DEF");
     bool ip_ok=ap && esp_netif_get_ip_info(ap,&ip)==ESP_OK;
 
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":%u,\"max_exec_us\":%u,\"max_late_us\":%u,\"deadline_misses\":%u,\"stack_free_bytes\":%u,\"watchdog\":%s,\"task_count\":%u,\"wifi_channel_known\":%s,\"wifi_channel\":%u,\"ap_ip_valid\":%s,\"ap_ip\":\"%u.%u.%u.%u\",\"ap_clients_known\":%s,\"ap_clients\":%u}",s_link_timing.jobs.load(),s_link_timing.max_exec_us.load(),s_link_timing.max_late_us.load(),s_link_timing.deadline_misses.load(),s_link_timing.handle?(unsigned)uxTaskGetStackHighWaterMark(s_link_timing.handle):0,s_link_timing.watchdog.load()?"true":"false",(unsigned)uxTaskGetNumberOfTasks(),channel_ok?"true":"false",channel,ip_ok?"true":"false",IP2STR(&ip.ip),clients_ok?"true":"false",(unsigned)clients.num));
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"source\":\"HARDWARE_MEASURED\",\"task\":\"LinkTask\",\"core\":0,\"priority\":3,\"period_ms\":5,\"jobs\":%u,\"max_exec_us\":%u,\"max_late_us\":%u,\"deadline_misses\":%u,\"stack_free_bytes\":%u,\"watchdog\":%s,\"task_count\":%u,\"reset_reason\":%d,\"wifi_channel_known\":%s,\"wifi_channel\":%u,\"ap_ip_valid\":%s,\"ap_ip\":\"%u.%u.%u.%u\",\"ap_clients_known\":%s,\"ap_clients\":%u}",s_link_timing.jobs.load(),s_link_timing.max_exec_us.load(),s_link_timing.max_late_us.load(),s_link_timing.deadline_misses.load(),s_link_timing.handle?(unsigned)uxTaskGetStackHighWaterMark(s_link_timing.handle):0,s_link_timing.watchdog.load()?"true":"false",(unsigned)uxTaskGetNumberOfTasks(),(int)esp_reset_reason(),channel_ok?"true":"false",channel,ip_ok?"true":"false",IP2STR(&ip.ip),clients_ok?"true":"false",(unsigned)clients.num));
 }
 static esp_err_t state_api(httpd_req_t *req) {
     portENTER_CRITICAL(&s_mux); RoomReport r=s_report; bool have=s_have;
     uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed,nonprogress=s_nonprogress;
     portEXIT_CRITICAL(&s_mux); bool known=have&&age<3000;
     if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true,\"age_ms\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"physical_state\":\"not measured\"}",have?age:0,r.boot_id,r.uptime_ms,nonprogress));
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s}",occupancy_name(r.occupancy),r.motion?"true":"false",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false"));
+    const uint64_t sensor_age=(uint64_t)r.temperature_age_ms+age;
+    const bool sensor_valid=temperature_valid(r) && sensor_age<10000;
+    const auto sensor_status=r.temperature_status==TemperatureStatus::Ok && !sensor_valid?TemperatureStatus::Stale:r.temperature_status;
+    char sensor_json[512];
+    if(sensor_valid) snprintf(sensor_json,sizeof(sensor_json),",\"telemetry_schema\":4,\"temperature_deci_c\":%d,\"humidity_deci_percent\":%u,\"temperature_age_ms\":%u,\"temperature_status\":\"OK\"",r.temperature_deci_c,r.humidity_deci,(unsigned)sensor_age);
+    else snprintf(sensor_json,sizeof(sensor_json),",\"telemetry_schema\":4,\"temperature_deci_c\":null,\"humidity_deci_percent\":null,\"temperature_age_ms\":null,\"temperature_status\":\"%s\"",temperature_status_name(sensor_status));
+    const char *output_profile=r.led_only_bench?(r.relay_active_low?"LED_INDICATORS_10K_ACTIVE_LOW":"LED_INDICATORS_10K_ACTIVE_HIGH"):r.physical_outputs_enabled?"GENERIC_ENABLED":"INHIBITED";
+    const size_t sensor_len=strlen(sensor_json);
+    snprintf(sensor_json+sensor_len,sizeof(sensor_json)-sensor_len,",\"control_policy_version\":%u,\"manual_hold_mode\":\"%s\",\"output_profile\":\"%s\"",r.control_policy_version,r.control_policy_version==2?"until_auto":"five_minutes",output_profile);
+    const size_t availability_len=strlen(sensor_json);
+    snprintf(sensor_json+availability_len,sizeof(sensor_json)-availability_len,",\"pir_available\":%s,\"automation_available\":%s",r.pir_available?"true":"false",r.pir_available?"true":"false");
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s%s}",r.pir_available?occupancy_name(r.occupancy):"UNAVAILABLE",r.pir_available?(r.motion?"true":"false"):"null",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false",sensor_json));
 }
 static esp_err_t transaction_api(httpd_req_t *req) {
     if(!authorized(req)) return unauthorized(req);
@@ -193,26 +210,44 @@ static esp_err_t proposal_failure(httpd_req_t *req,ProposalResult result) {
     httpd_resp_set_status(req,result==ProposalResult::Invalid?"400 Bad Request":"409 Conflict");
     return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"%s\",\"authorized\":false}",proposal_error(result)));
 }
+static bool speech_matches(const SpeechSnapshot &s,uint32_t job,const CommandTarget &target,uint32_t boot,bool fresh) {
+    CommandTarget expected;
+    if(s.phase!=4 || s.job!=job || s.error || s.engine_errors) return false;
+    if(kShortVoice) {
+        if(!short_voice_target(s.binding,boot,fresh,millis(),s.command_id,s.confidence,speech_is_reference(s.input),expected)) return false;
+    } else if(!speech_target(s.command_id,target.mode,expected)) return false;
+    return same_target(expected,target);
+}
 static esp_err_t proposal_api(httpd_req_t *req) {
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
+#endif
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
     if(!read_body(req)) return bad_body(req);
-    char source[24]; CommandTarget target; uint32_t job=0,boot=0;
-    if(!proposal_fields(s_body,source,target,job) || (strcmp(source,"manual") && strcmp(source,"speech"))) {
+    char source[24]={}; CommandTarget target; uint32_t job=0,boot=0,captured_boot=0;
+    bool from_phone=phone_proposal_fields(s_body,target,job,captured_boot);
+    if(!from_phone && (!proposal_fields(s_body,source,target,job) || (strcmp(source,"manual") && strcmp(source,"speech")))) {
         s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
+    }
+    bool fresh=proposal_controller(boot);
+    if(from_phone && captured_boot!=boot) {
+        s_proposal.consume(); return proposal_failure(req,ProposalResult::Mismatch);
     }
     bool from_speech=!strcmp(source,"speech");
     if(from_speech) {
-        SpeechSnapshot s=speech_snapshot(); CommandTarget expected;
-        if(s.phase!=4 || s.job!=job || !speech_target(s.command_id,target.mode,expected) || !same_target(expected,target)) {
+        SpeechSnapshot s=speech_snapshot();
+        if(!speech_matches(s,job,target,boot,fresh)) {
             s_proposal.consume(); return proposal_failure(req,ProposalResult::Mismatch);
         }
-    } else if(job) { s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid); }
-    bool fresh=proposal_controller(boot);
+    } else if(job && !from_phone) { s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid); }
     ProposalResult result=s_proposal.prepare(target,boot,fresh,millis(),from_speech,job);
     if(result!=ProposalResult::Ok) return proposal_failure(req,result);
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"proposal_id\":%u,\"target\":\"%s\",\"room\":\"%s\",\"device\":\"%s\",\"action\":\"%s\",\"expires_in_ms\":15000,\"authorized\":false}",s_proposal.id,target_mode(target.mode),target_room(target.room),target_device(target.device),target_action(target.action)));
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"proposal_id\":%u,\"target\":\"%s\",\"room\":\"%s\",\"device\":\"%s\",\"action\":\"%s\",\"expires_in_ms\":15000,\"authorized\":false,\"origin\":\"%s\",\"controller_boot\":%u,\"capture_id\":%u}",s_proposal.id,target_mode(target.mode),target_room(target.room),target_device(target.device),target_action(target.action),from_phone?"phone":source,boot,job));
 }
 static esp_err_t text_api(httpd_req_t *req) {
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
+#endif
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
     if(!read_body(req)) return bad_body(req);
     SerialTextCommand parsed; uint32_t boot=0;
@@ -226,6 +261,9 @@ static esp_err_t text_api(httpd_req_t *req) {
     return json(req,snprintf(s_json,sizeof(s_json),"{\"proposal_id\":%u,\"target\":\"%s\",\"room\":\"%s\",\"device\":\"%s\",\"action\":\"%s\",\"requested_room\":\"%s\",\"bench_alias\":%s,\"acoustic_fallback\":%s,\"expires_in_ms\":15000,\"authorized\":false}",s_proposal.id,target_mode(t.mode),target_room(t.room),target_device(t.device),target_action(t.action),parsed.requested_hall?"hall":"bedroom",parsed.bench_alias?"true":"false",parsed.acoustic_fallback?"true":"false"));
 }
 static esp_err_t confirm_api(httpd_req_t *req) {
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
+#endif
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
     if(!read_body(req)) return bad_body(req);
     char first[24]; CommandTarget target; uint32_t requested=0,boot=0,id=0; ControlCommand c;
@@ -234,8 +272,8 @@ static esp_err_t confirm_api(httpd_req_t *req) {
     ProposalResult result=s_proposal.confirm(requested,target,boot,fresh,millis(),c);
     if(result!=ProposalResult::Ok) return proposal_failure(req,result);
     if(s_proposal.speech) {
-        SpeechSnapshot s=speech_snapshot(); CommandTarget expected;
-        if(s.phase!=4 || s.job!=s_proposal.job || !speech_target(s.command_id,target.mode,expected) || !same_target(expected,target))
+        SpeechSnapshot s=speech_snapshot();
+        if(!speech_matches(s,s_proposal.job,target,boot,fresh))
             return proposal_failure(req,ProposalResult::Mismatch);
     }
     if(!queue_command(c,id)) return proposal_failure(req,ProposalResult::Unavailable);
@@ -255,15 +293,53 @@ static esp_err_t speech_state_api(httpd_req_t *req) {
 #else
     const char *supported="false";
 #endif
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"processing_source\":\"HARDWARE_MEASURED\",\"supported\":%s,\"engine\":\"ESP-SR 1.7.0 MultiNet6 English\",\"phase\":%u,\"job\":%u,\"command_id\":%u,\"confidence\":%.5f,\"samples\":%u,\"inference_us\":%u,\"max_frame_us\":%u,\"frames\":%u,\"stack_free_bytes\":%u,\"pcm_crc32\":%u,\"diagnostic_text\":\"%s\",\"error_code\":%u,\"last_state\":%u,\"candidate_id\":%u,\"candidate_score\":%.5f,\"peak\":%u,\"clipped_samples\":%u,\"nonzero_samples\":%u,\"chunk_samples\":%u,\"padded_samples\":%u,\"detecting_frames\":%u,\"engine_errors\":%u,\"authorized\":false}",supported,s.phase,s.job,s.command_id,s.confidence,s.samples,s.inference_us,s.max_frame_us,s.frames,s.stack_free,s.pcm_crc32,s.diagnostic_text,s.error,s.last_state,s.candidate_id,s.candidate_score,s.peak,s.clipped,s.nonzero,s.chunk_samples,s.padded_samples,s.detecting_frames,s.engine_errors));
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"processing_source\":\"HARDWARE_MEASURED\",\"supported\":%s,\"engine\":\"%s\",\"phase\":%u,\"job\":%u,\"command_id\":%u,\"confidence\":%.5f,\"samples\":%u,\"inference_us\":%u,\"max_frame_us\":%u,\"frames\":%u,\"stack_free_bytes\":%u,\"pcm_crc32\":%u,\"diagnostic_text\":\"%s\",\"error_code\":%u,\"last_state\":%u,\"candidate_id\":%u,\"candidate_score\":%.5f,\"peak\":%u,\"clipped_samples\":%u,\"nonzero_samples\":%u,\"chunk_samples\":%u,\"padded_samples\":%u,\"detecting_frames\":%u,\"engine_errors\":%u,\"model_name\":\"%s\",\"sample_rate_hz\":16000,\"channels\":1,\"pcm_format\":\"PCM_S16LE\",\"model_window_ms\":%u,\"planned_frames\":%u,\"fed_samples\":%u,\"command_count\":%u,\"rms\":%u,\"dc_mean\":%d,\"diagnostic_only\":%s,\"reference_detected\":%s,\"legacy_feed\":%s,\"window_exhausted\":%s,\"raw_result_count\":%d,\"raw_result_state\":%u,\"afe_feed_frames\":%u,\"afe_fetch_frames\":%u,\"afe_samples\":%u,\"afe_crc32\":%u,\"afe_peak\":%u,\"afe_rms\":%u,\"mn_internal_free\":%u,\"mn_internal_min\":%u,\"mn_internal_largest\":%u,\"mn_psram_free\":%u,\"grammar_id\":\"%s\",\"bound_room\":\"%s\",\"bound_boot\":%u,\"capture_id\":%u,\"screen_only\":%s,\"authorized\":false}",supported,kVoiceEngine,s.phase,s.job,s.command_id,s.confidence,s.samples,s.inference_us,s.max_frame_us,s.frames,s.stack_free,s.pcm_crc32,s.diagnostic_text,s.error,s.last_state,s.candidate_id,s.candidate_score,s.peak,s.clipped,s.nonzero,s.chunk_samples,s.padded_samples,s.detecting_frames,s.engine_errors,s.model_name,s.model_window_ms,s.planned_frames,s.frames*s.chunk_samples,s.command_count,s.rms,s.dc_mean,speech_is_reference(s.input)?"true":"false",s.reference_detected?"true":"false",s.input==SpeechInput::ReferenceLegacy?"true":"false",s.window_exhausted?"true":"false",s.raw_result_count,s.raw_result_state,s.afe_feed_frames,s.afe_fetch_frames,s.afe_samples,s.afe_crc32,s.afe_peak,s.afe_rms,s.internal_free,s.internal_min,s.internal_largest,s.psram_free,kVoiceGrammar,s.binding.bedroom?"bedroom":"",s.binding.boot,s.binding.capture,s.binding.screen?"true":"false"));
 }
-static esp_err_t speech_audio_api(httpd_req_t *req) {
+static esp_err_t receive_speech_audio(httpd_req_t *req,SpeechInput input) {
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
+    if(speech_is_reference(input)) {
+        portENTER_CRITICAL(&s_mux);
+        bool safe=s_ok && s_radio && s_have && (uint32_t)(millis()-s_received)<3000 && !s_report.physical_outputs_enabled;
+        portEXIT_CRITICAL(&s_mux);
+        if(!safe) { httpd_resp_set_status(req,"409 Conflict"); httpd_resp_set_hdr(req,"Connection","close");
+            return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Reference test requires fresh inhibited controller\"}")); }
+    }
     if(!pcm_valid_size(req->content_len)) {
         httpd_resp_set_hdr(req,"Connection","close"); httpd_resp_set_status(req,"400 Bad Request");
         json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Use 16000 Hz mono signed PCM16LE, 3200 to 128000 bytes\"}")); return ESP_FAIL;
     }
-    uint32_t job=0; uint8_t *buffer=speech_reserve_clip(req->content_len,job);
+    if(speech_is_reference(input) && input!=SpeechInput::ShortPreflight && input!=SpeechInput::Mn7Official && req->content_len!=speech_reference_bytes(input)) {
+        httpd_resp_set_hdr(req,"Connection","close"); httpd_resp_set_status(req,"400 Bad Request");
+        return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Use the exact pinned official reference PCM\"}"));
+    }
+    SpeechBinding binding;
+    #if defined(CLAWGRID_LIGHT_PREFLIGHT)
+    if(input!=SpeechInput::ShortPreflight) return proposal_failure(req,ProposalResult::Invalid);
+    bool bind_reference=true;
+#else
+    bool bind_reference=false;
+#endif
+    if(kShortVoice && (input==SpeechInput::Application || bind_reference)) {
+        char room[24]={},boot_text[16]={},capture_text[16]={},intent[16]={},grammar[24]={};
+        uint32_t boot=0; bool fresh=proposal_controller(boot);
+        bool headers=httpd_req_get_hdr_value_str(req,"X-ClawGrid-Room",room,sizeof(room))==ESP_OK &&
+            httpd_req_get_hdr_value_str(req,"X-ClawGrid-Boot",boot_text,sizeof(boot_text))==ESP_OK &&
+            httpd_req_get_hdr_value_str(req,"X-ClawGrid-Capture",capture_text,sizeof(capture_text))==ESP_OK &&
+            httpd_req_get_hdr_value_str(req,"X-ClawGrid-Intent",intent,sizeof(intent))==ESP_OK &&
+            httpd_req_get_hdr_value_str(req,"X-ClawGrid-Grammar",grammar,sizeof(grammar))==ESP_OK;
+        binding.bedroom=!strcmp(room,"bedroom"); binding.screen=!strcmp(intent,"screen"); binding.created=millis();
+        if(bind_reference && !binding.screen) return proposal_failure(req,ProposalResult::Invalid);
+        portENTER_CRITICAL(&s_mux); bool inhibited=!s_report.physical_outputs_enabled; portEXIT_CRITICAL(&s_mux);
+        if(!headers || strcmp(grammar,kVoiceGrammar) || (!binding.screen && strcmp(intent,"control")) ||
+            !binding.bedroom || !parse_number(boot_text,binding.boot) || !parse_number(capture_text,binding.capture) ||
+            !binding.capture || !fresh || binding.boot!=boot || !inhibited) {
+            s_proposal.consume(); httpd_resp_set_status(req,"409 Conflict"); httpd_resp_set_hdr(req,"Connection","close");
+            return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Explicit Bedroom, current boot, capture ID and inhibited short-v1 context required\",\"authorized\":false}"));
+        }
+    }
+    // A new clip invalidates any unconfirmed speech proposal; no old ON replay.
+    s_proposal.consume();
+    uint32_t job=0; uint8_t *buffer=speech_reserve_clip(req->content_len,job,input,binding);
     if(!buffer) { httpd_resp_set_status(req,"409 Conflict"); httpd_resp_set_hdr(req,"Connection","close");
         json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Speech model unavailable or busy\"}")); return ESP_FAIL;
     }
@@ -274,8 +350,58 @@ static esp_err_t speech_audio_api(httpd_req_t *req) {
         if(n<=0) { speech_finish_clip(false); return ESP_FAIL; }
         received+=n;
     }
-    speech_finish_clip(true); httpd_resp_set_status(req,"202 Accepted");
+    if(!speech_finish_clip(true)) {
+        httpd_resp_set_status(req,"400 Bad Request");
+        return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Reference PCM checksum mismatch; not inferred\"}"));
+    }
+    httpd_resp_set_status(req,"202 Accepted");
     return json(req,snprintf(s_json,sizeof(s_json),"{\"queued\":true,\"job\":%u,\"authorized\":false}",job));
+}
+static esp_err_t speech_audio_api(httpd_req_t *req) { return receive_speech_audio(req,SpeechInput::Application); }
+static esp_err_t speech_reference_api(httpd_req_t *req) {
+    char query[24]={}; SpeechInput input=SpeechInput::ReferenceWindow;
+    if(kShortVoice) {
+        if(httpd_req_get_url_query_str(req,query,sizeof(query))!=ESP_OK) return proposal_failure(req,ProposalResult::Invalid);
+#if defined(CLAWGRID_LIGHT_PREFLIGHT)
+        const char *expected_feed="feed=light-v1";
+#elif defined(CLAWGRID_MN7_EVAL)
+        if(!strcmp(query,"feed=mn7-official")) return receive_speech_audio(req,SpeechInput::Mn7Official);
+        const char *expected_feed="feed=mn7-v1";
+#else
+        const char *expected_feed="feed=short-v1";
+#endif
+        if(strcmp(query,expected_feed)) {
+            httpd_resp_set_status(req,"400 Bad Request"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Only frozen short-v1 preflight is enabled in this experiment\"}"));
+        }
+        return receive_speech_audio(req,SpeechInput::ShortPreflight);
+    }
+    if(httpd_req_get_url_query_len(req)) {
+        if(httpd_req_get_url_query_str(req,query,sizeof(query))!=ESP_OK) return bad_body(req);
+        if(strcmp(query,"feed=legacy")==0) input=SpeechInput::ReferenceLegacy;
+        else if(strcmp(query,"feed=reset-first")==0) input=SpeechInput::ReferenceResetFirst;
+        else if(strcmp(query,"feed=fresh-window")==0) input=SpeechInput::ReferenceFreshWindow;
+        else if(strcmp(query,"feed=official")==0) input=SpeechInput::ReferenceOfficial;
+        else if(strcmp(query,"feed=pinned")==0) input=SpeechInput::ReferencePinned;
+        else if(strcmp(query,"feed=afe")==0) input=SpeechInput::ReferenceAfe;
+        else if(strcmp(query,"feed=phone-afe")==0) input=SpeechInput::ReferencePhoneAfe;
+        else if(strcmp(query,"feed=phone-bedroom")==0) input=SpeechInput::ReferencePhoneBedroom;
+        else if(strcmp(query,"feed=phone-trace")==0) input=SpeechInput::ReferencePhoneTrace;
+        else if(strcmp(query,"feed=zira-trace")==0) input=SpeechInput::ReferenceZiraTrace;
+        else if(strcmp(query,"feed=silence-trace")==0) input=SpeechInput::ReferenceSilenceTrace;
+        else if(strcmp(query,"feed=noncommand-trace")==0) input=SpeechInput::ReferenceNonCommandTrace;
+        else if(strcmp(query,"feed=phone-split")==0) input=SpeechInput::ReferencePhoneSplit;
+        else if(strcmp(query,"feed=zira-split")==0) input=SpeechInput::ReferenceZiraSplit;
+        else if(strcmp(query,"feed=silence-split")==0) input=SpeechInput::ReferenceSilenceSplit;
+        else if(strcmp(query,"feed=noncommand-split")==0) input=SpeechInput::ReferenceNonCommandSplit;
+        else if(strcmp(query,"feed=trace")==0) input=SpeechInput::ReferenceTrace;
+        else if(strcmp(query,"feed=direct")==0) input=SpeechInput::ReferenceDirect;
+        else if(strcmp(query,"feed=sdk-heap")==0) input=SpeechInput::ReferenceSdkHeap;
+        else if(strcmp(query,"feed=psram")==0) input=SpeechInput::ReferencePsram;
+        else if(strcmp(query,"feed=gain15")==0) input=SpeechInput::ReferenceGain15;
+        else if(strcmp(query,"feed=synthetic")==0) input=SpeechInput::ReferenceSynthetic;
+        else if(strcmp(query,"feed=window")!=0) return bad_body(req);
+    }
+    return receive_speech_audio(req,input);
 }
 static esp_err_t evidence_api(httpd_req_t *req) {
     if(!authorized(req)) return unauthorized(req);
@@ -289,11 +415,11 @@ static esp_err_t client_api(httpd_req_t *req) {
 }
 static bool start_http() {
     httpd_config_t c=HTTPD_DEFAULT_CONFIG(); c.stack_size=6144; c.core_id=1; c.max_open_sockets=2;
-    c.max_uri_handlers=17; c.lru_purge_enable=true; c.recv_wait_timeout=1; c.send_wait_timeout=1;
+    c.max_uri_handlers=18; c.lru_purge_enable=true; c.recv_wait_timeout=1; c.send_wait_timeout=1;
     if(httpd_start(&s_http,&c)!=ESP_OK) return false;
-    const char *paths[]={"/","/api/state","/api/memory","/api/transaction","/api/control","/api/voice","/api/rtos","/simulation","/api/simulation","/api/simulation/input","/api/speech","/api/speech/audio","/api/evidence","/api/proposal","/api/confirm","/api/client","/api/text"};
-    esp_err_t (*handlers[])(httpd_req_t*)={root,state_api,memory_api,transaction_api,control_api,voice_api,rtos_api,simulation_page,simulation_state_api,simulation_input_api,speech_state_api,speech_audio_api,evidence_api,proposal_api,confirm_api,client_api,text_api};
-    for(int i=0;i<17;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14||i==16)?HTTP_POST:HTTP_GET; r.handler=handlers[i];
+    const char *paths[]={"/","/api/state","/api/memory","/api/transaction","/api/control","/api/voice","/api/rtos","/simulation","/api/simulation","/api/simulation/input","/api/speech","/api/speech/audio","/api/evidence","/api/proposal","/api/confirm","/api/client","/api/text","/api/speech/reference"};
+    esp_err_t (*handlers[])(httpd_req_t*)={root,state_api,memory_api,transaction_api,control_api,voice_api,rtos_api,simulation_page,simulation_state_api,simulation_input_api,speech_state_api,speech_audio_api,evidence_api,proposal_api,confirm_api,client_api,text_api,speech_reference_api};
+    for(int i=0;i<18;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14||i==16||i==17)?HTTP_POST:HTTP_GET; r.handler=handlers[i];
         if(httpd_register_uri_handler(s_http,&r)!=ESP_OK) { httpd_stop(s_http); s_http=nullptr; return false; }
     }
     return true;
@@ -410,7 +536,7 @@ static void serial_tick() {
 void setup() {
     s_proposal.seed(esp_random()&0x7fffffffu);
     Serial.begin(115200); traffic_led_begin(); s_rx.begin(); s_log.begin(); neural_agent_init(); s_ok=runtime_selftest()&&neural_agent_selftest()&&security_selftest()&&s_health.begin();
-    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"B\",\"schema\":3,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
+    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"B\",\"schema\":5,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
     Serial.printf("{\"kind\":\"console_transport\",\"transport\":\"%s\"}\n",native_serial_transport());
     WiFi.mode(WIFI_AP_STA); WiFi.setSleep(false);
     bool ap=WiFi.softAP(kApSsid,kApPassword,CLAWGRID_WIFI_CHANNEL,false,2);

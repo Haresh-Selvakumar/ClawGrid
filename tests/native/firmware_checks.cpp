@@ -5,6 +5,8 @@
 #include "evidence_selftest.h"
 #include "software_selftest.h"
 #include "integration_selftest.h"
+#include "dht11_selftest.h"
+#include "manual_auto_selftest.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -60,6 +62,16 @@ int main(int argc,char **argv) {
     else if(!strcmp(argv[1],"timer_dwell")) passed=timer_dwell_test();
     else if(!strcmp(argv[1],"recovery_transients")) passed=recovery_transients_test();
     else if(!strcmp(argv[1],"maximum_run")) passed=maximum_run_test();
+    else if(!strcmp(argv[1],"dht_decode")) passed=dht_decode_test();
+    else if(!strcmp(argv[1],"dht_invalid")) passed=dht_invalid_test();
+    else if(!strcmp(argv[1],"dht_wire")) passed=dht_wire_test();
+    else if(!strcmp(argv[1],"dht_age")) passed=dht_age_test();
+    else if(!strcmp(argv[1],"manual_until_auto")) passed=manual_until_auto_test();
+    else if(!strcmp(argv[1],"per_device_auto")) passed=per_device_auto_test();
+    else if(!strcmp(argv[1],"manual_record")) passed=manual_record_test();
+    else if(!strcmp(argv[1],"led_profile_wire")) passed=led_profile_wire_test();
+    else if(!strcmp(argv[1],"virtual_hold_isolation")) passed=virtual_hold_isolation_test();
+    else if(!strcmp(argv[1],"no_pir_scope")) passed=no_pir_scope_test();
     else if(!strncmp(argv[1],"evidence_",9)) passed=evidence_case((unsigned)atoi(argv[1]+9));
     printf("{\"source\":\"HOST_MEASURED\",\"case\":\"%s\",\"passed\":%s}\n",argv[1],passed?"true":"false");
     return passed?0:1;

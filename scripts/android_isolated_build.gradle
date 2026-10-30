@@ -1,0 +1,10 @@
+// Preserve protected/previous build artifacts while producing a fresh local build.
+// Run from ecosystem/android with: --init-script ../../scripts/android_isolated_build.gradle
+def buildFolder = gradle.startParameter.projectProperties.get("clawgridBuildDirectory") ?: "speech-diag-build-20261024"
+if (!(buildFolder ==~ /[A-Za-z0-9_-]+/)) throw new GradleException("Invalid isolated build directory name")
+gradle.projectsLoaded {
+    rootProject.allprojects { project ->
+        project.layout.buildDirectory.set(new File(rootProject.projectDir,
+            "../../.android-tools/${buildFolder}/${project.name}"))
+    }
+}

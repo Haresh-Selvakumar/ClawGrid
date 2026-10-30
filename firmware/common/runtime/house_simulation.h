@@ -43,8 +43,10 @@ inline bool decode_sim_state(const uint8_t *p,size_t n,SimState &s) {
 class HouseSimulation {
 public:
     bool begin() {
-        for(int i=0;i<8;++i)
-            if(safety_kernel_register_device(room(i/2),i%2?"fan":"light",i%2?DEVICE_TYPE_FAN:DEVICE_TYPE_LIGHT,-1,false)!=i+2) return false;
+        for(int i=0;i<8;++i) {
+            if(safety_kernel_register_device(room(i/2),i%2?"fan":"light",i%2?DEVICE_TYPE_FAN:DEVICE_TYPE_LIGHT,-1,false)!=i+2 ||
+               !safety_kernel_configure_virtual_hold(i+2)) return false;
+        }
         return true;
     }
     bool input(const SimInput &v,uint32_t boot,uint32_t now) {

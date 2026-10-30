@@ -1,0 +1,389 @@
+{
+  "experiment": "light-on-off-proposal-v1",
+  "state": "PROPOSED_NOT_IMPLEMENTED_NOT_RUN",
+  "phrases": {
+    "1": "LIGHT ON",
+    "2": "LIGHT OFF"
+  },
+  "mapping": {
+    "1": "bedroom/light/ON",
+    "2": "bedroom/light/OFF"
+  },
+  "room_context": "Explicit Bedroom selection; bind room/controller boot/capture nonce at PTT start. Change/stale/disconnect/reboot/expiry cancels. No default or inferred room.",
+  "backend": "Existing restored pinned MN6/model partition; no model migration or training",
+  "frontend": {
+    "phone_source": "AudioRecord MIC",
+    "preferred_rate_hz": 16000,
+    "fallback_rates_hz": [
+      48000,
+      44100
+    ],
+    "transport": "mono signed PCM16LE at16000Hz",
+    "maximum_samples": 64000,
+    "esp_afe": false,
+    "frame_samples": 512,
+    "window_ms": 6000,
+    "maximum_frames": 601,
+    "zero_tail": true,
+    "threshold_unit_adapter": "unchanged probability0.7 -> ln(0.7)"
+  },
+  "probability_threshold": 0.7,
+  "preflight": {
+    "maximum_jobs": 4,
+    "positive_references": [
+      {
+        "phrase": "LIGHT ON",
+        "expected_id": 1
+      },
+      {
+        "phrase": "LIGHT OFF",
+        "expected_id": 2
+      }
+    ],
+    "reuse_negative_fixtures": [
+      {
+        "name": "silence",
+        "path": "benchmarks/review/speech-fst-20261024/silence-2s.wav",
+        "expected_id": 0,
+        "samples": 32000,
+        "crc32": 2109903275,
+        "sha256": "4f7988030a00d082fe445e00a2ac5dab502300ff1b80e8592dd569867b60ef74",
+        "audio_source": "SIMULATED"
+      },
+      {
+        "name": "noncommand",
+        "path": "benchmarks/review/speech-fst-20261024/zira-non-command.wav",
+        "expected_id": 0,
+        "samples": 33760,
+        "crc32": 3492560341,
+        "sha256": "d61bddb3b96a677b3b08a1279c9888bdc56b705d4e2a635cc627e2b37c5fc45d",
+        "audio_source": "SIMULATED"
+      }
+    ],
+    "pass_criteria": "Both exact positive IDs accepted at>=0.7; zero negative accepts; exact PCM delivery; inhibited outputs and fresh progressing control/link health",
+    "stop": "First missing/wrong positive, negative acceptance, transport/engine/health/reboot/output error. No retry or alternate phrase"
+  },
+  "phone_trials": [
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 1
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 2
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 3
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 4
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 5
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 6
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 7
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 8
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 9
+    },
+    {
+      "session": 1,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 10
+    },
+    {
+      "session": 1,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 11
+    },
+    {
+      "session": 1,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 12
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 13
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 14
+    },
+    {
+      "session": 1,
+      "kind": "background",
+      "prompt": "Capture background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 15
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "LIGHT",
+      "expected_id": 0,
+      "index": 16
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "ON",
+      "expected_id": 0,
+      "index": 17
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "OFF",
+      "expected_id": 0,
+      "index": 18
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "THE LIGHT ON THE DESK",
+      "expected_id": 0,
+      "index": 19
+    },
+    {
+      "session": 1,
+      "kind": "noncommand",
+      "prompt": "LIGHT OF DAY",
+      "expected_id": 0,
+      "index": 20
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 21
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 22
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 23
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 24
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 25
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 26
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 27
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 28
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT OFF",
+      "expected_id": 2,
+      "index": 29
+    },
+    {
+      "session": 2,
+      "kind": "positive",
+      "prompt": "LIGHT ON",
+      "expected_id": 1,
+      "index": 30
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 31
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 32
+    },
+    {
+      "session": 2,
+      "kind": "silence",
+      "prompt": "Stay silent for four seconds",
+      "expected_id": 0,
+      "index": 33
+    },
+    {
+      "session": 2,
+      "kind": "background",
+      "prompt": "Capture background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 34
+    },
+    {
+      "session": 2,
+      "kind": "background",
+      "prompt": "Capture background sound; do not speak a command",
+      "expected_id": 0,
+      "index": 35
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "DO NOT TURN THE LIGHT ON",
+      "expected_id": 0,
+      "index": 36
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "DO NOT TURN THE LIGHT OFF",
+      "expected_id": 0,
+      "index": 37
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "PLEASE OPEN THE WINDOW",
+      "expected_id": 0,
+      "index": 38
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "WHAT TIME IS IT",
+      "expected_id": 0,
+      "index": 39
+    },
+    {
+      "session": 2,
+      "kind": "noncommand",
+      "prompt": "THE WEATHER IS WARM",
+      "expected_id": 0,
+      "index": 40
+    }
+  ],
+  "phone_acceptance": {
+    "correct_each_phrase_minimum": 9,
+    "total_each_phrase": 10,
+    "wrong_accepts_maximum": 0,
+    "negative_accepts_maximum": 0,
+    "positive_count": 20,
+    "negative_count": 20,
+    "scope": "Intended user, two predeclared sessions; limited prototype feasibility, not accuracy estimate"
+  },
+  "phone_stop_conditions": [
+    "wrong accepted command",
+    "any negative accepted",
+    "second miss for either phrase",
+    "PCM/transport/engine/reboot/output/watchdog error (inconclusive)",
+    "40 screening clips maximum; no retries or tuning"
+  ],
+  "post_pass": {
+    "maximum_voice_clips": 5,
+    "commands": [
+      "OFF",
+      "ON",
+      "OFF"
+    ],
+    "explicit_confirmation_each": true,
+    "matching_ack_and_fresh_readback_each": true,
+    "minimum_dwell_ms": 3000,
+    "negative_ui_checks": [
+      "silence",
+      "DO NOT TURN THE LIGHT ON"
+    ],
+    "negative_expected": "No actionable proposal",
+    "physical_outputs": "INHIBITED; loads disconnected"
+  },
+  "maximum_total_audio_jobs": 49,
+  "source_ledgers": "Private bounded automatic PCM/job/boot/nonce/result/score and request/ACK/readback records; no user copying IDs",
+  "teardown": "Restore saved baseline app after any failure. If logical ON remains, one explicitly confirmed manual OFF through SafetyKernel; never a repeated voice/old ON.",
+  "implementation_prerequisites": [
+    "Explicit-room and bounded screening Android UI/ledger are not implemented",
+    "Reversible app-only grammar change needed; preserve exact current firmware and models",
+    "No board/APK changes or recordings during this review"
+  ]
+}

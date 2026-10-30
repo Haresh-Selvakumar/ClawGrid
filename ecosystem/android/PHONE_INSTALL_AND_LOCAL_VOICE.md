@@ -1,3 +1,66 @@
+**Final 28 October update:** [voice-controlled LED demonstration](../../docs/VOICE_LED_DEMONSTRATION_20261028.md), APKj. Same bundledVoskmodel, strictfinalwordparsing/confirmation, PIRremoved. Earlier dated content below is history.
+
+**Current 28 October 2026:** see [the integrated LED checkpoint](../../docs/INTEGRATED_LED_CHECKPOINT_20261028.md). Installed h retains the bundled offline model and strict light phrases, adds exact fan phrases with per-device manual proof, and still requires observed microphone acceptance. PIR electrical compatibility is unresolved. Earlier dated details below are historical.
+
+# Update25October: no phone update or new recording needed
+
+Decoder tracing now confirms the retained phone clip completes the correct OFF path but scores0.2945, below unchanged0.7. A spelling experiment worsened scores and was rejected. Normal reference/control and negatives pass; actual phone recognition remains blocked. No APK was built/installed today;1.0-speech-capture-20261024b remains the last verified phone build. Keep outputs inhibited and do not repeat recordings without a tested correction. See [current alignment evidence](../../docs/VOICE_DECODER_ALIGNMENT_20261025.md) and the existing master for current firmware identity and next step.
+
+---
+
+# Latest observed result: phone clip retained; recognition still fails
+
+Installed phone APK1.0-speech-capture-20261024b/SHA5c932d62... is independently verified. Manual OFF2 has matching ACK/fresh inhibited readback; actual phone8 has complete matching PCM and clear user-reviewed audio but no accepted ESP command. Saved-clip raw/AFE/two-command comparisons also fail; synthetic OFF control still passes0.86229. No more phone recording is justified yet. Latest B imageb2ae88b9.../A boot14/OFF/inhibited, AP192.168.4.1/channel1; no physical switching or voice-confirmation pass. See [actual checks, evidence and next step](../../docs/PHONE_CLIP_DIAGNOSIS_20261024.md). Older sections below are historical.
+
+
+## Current installation commands (already completed on this phone)
+
+Latest APK: `C:\Users\hares\OneDrive\Desktop\ESD-imp\ClawGrid-physical-integration-prep\deliverables\ClawGrid-Speech-Capture-debug-20261024b.apk`; expected version1.0-speech-capture-20261024b/SHA2565c932d6299a3e8bb76f4098fc685b8273f553894a91fadcf561794db00d174b4. Install an update, never uninstall or clear data just to update:
+
+```powershell
+& 'C:\Users\hares\AppData\Local\Android\Sdk\platform-tools\adb.exe' devices -l
+& 'C:\Users\hares\AppData\Local\Android\Sdk\platform-tools\adb.exe' install -r 'C:\Users\hares\OneDrive\Desktop\ESD-imp\ClawGrid-physical-integration-prep\deliverables\ClawGrid-Speech-Capture-debug-20261024b.apk'
+```
+
+For Android Studio, open the existing ecosystem/android project, use the installed Android Studio JBR/JDK21 and SDK36/Build Tools36.1.0, enable USB debugging on the physical phone, authorize this computer, select the phone and Run app. Preserve the existing debug identity and release signing configuration. For sideloading, transfer the APK above, allow installation from the chosen local file manager when prompted and choose Update. No cloud storage is required. Existing detailed USB/sideload instructions below remain applicable; older APK identities are history.
+
+For the verified isolated CLI build, use the project caches and a fresh named build directory to avoid the observed Windows packaging lock. From ecosystem/android, with JAVA_HOME pointing to Android Studio jbr, GRADLE_USER_HOME to .android-tools/gradle-cache and ANDROID_USER_HOME to .android-tools/android-user (absolute project-root paths):
+
+```powershell
+.\gradlew.bat --offline --init-script ../../scripts/android_isolated_build.gradle -PclawgridBuildDirectory=speech-capture-build-20261024b :app:assembleDebug --console=plain
+```
+
+After any app process restart, privately re-enter api_token and Apply Gateway Connection using `http://192.168.4.1` on ClawGrid-Assistant Wi-Fi/Use without Internet. ap_password is only the Wi-Fi password. Never paste credentials into chat. Supabase is optional. Outputs must remain inhibited. **Do not repeat phone recordings now:** this build's retained clear phone clip still fails ESP decoding; wait for a tested correction documented in the current master.
+
+
+---
+
+# Latest installed phone diagnostic: 1.0-speech-capture-20261024b
+
+ADB install/update succeeded and installed APK SHA5c932d62... matches laptop delivery. Speak now follows first microphone samples; debug-only last clip retention is private and bounded.49 focused host tests pass; fresh isolated debug build16s succeeded. Device recognition on this new build is pending; phone job6 on previous69d95b55... APK failed with complete matching PCM. Outputs remain inhibited and lightOFF. See [current phone results and next step](../../docs/VOICE_THRESHOLD_FIX_AND_PHONE_TEST_20261024.md). Older sections below are history.
+
+---
+
+# Current update: reference recognition repaired — 24 October 2026 IST
+
+Gateway B now accepts the pinned public reference through both comparison paths (probability0.90041) and normal synthetic Bedroom/light/OFF (0.86229). The identified pinned MN6 probability/log-unit mismatch is repaired without relaxing the0.7 policy. See [repair and actual target evidence](../../docs/VOICE_THRESHOLD_FIX_AND_PHONE_TEST_20261024.md). Current B SHAf7b31d41..., A boot14/OFF/OFF/inhibited; refresh before live testing. Silence/non-command host checks returned command0. New phone recognition/confirmation and phone negative tests are pending. Diagnostic APK version1.0-speech-diag-20261024/SHA69d95b55... is laptop-built; installation remains unverified while user updates by sideload. Outputs stay inhibited, loads disconnected, local HTTP192.168.4.1/channel1; Supabase/Internet optional. Older status sections below are preserved history.
+
+---
+
+# Latest bench result - 24 October 2026 IST
+
+USB cable replacement restored both matched board identities. B now runs normal inhibited image41dfec0a...; A boot13/OFF/OFF/inhibited, AP192.168.4.1/channel1 healthy. Exact public-reference PCM still has no accepted ESP detection after601-call and correctly framed pinned AFE160-to512 experiments. AFE is isolated to public diagnostics; normal phone preprocessing remains unchanged. No new phone repetition is requested and no successful voice confirmation/physical switching is claimed. The new diagnostic APK version1.0-speech-diag-20261024/SHA69d95b55... is laptop-built; installation/on-phone behavior remain unverified. Current master/diagnosis/handoff supersede older pending USB/boot9/12 notes below.
+
+---
+
+# Current diagnostic build — 24 October 2026 IST
+
+Recognition remains unresolved; no more phone repetitions are requested. See [current diagnosis](../../docs/SPEECH_PIPELINE_DIAGNOSIS_20261024.md) and [master](../../CLAWGRID_MASTER_INTEGRATION.md). New host-built APK is `deliverables/ClawGrid-Speech-Diagnostics-debug-20261024.apk`, version **1.0-speech-diag-20261024**, SHA256 `69d95b5552f1ece7c0d11f41710cd3ffe202d92e95dc97b778877cb4716efa8e`. It adds visible build/capture/delivery diagnostics and failed-job PCM comparison. It has not been installed or phone-tested. Last confirmed real phone trials used d12778de...; yesterday's A44 build is separate/unconfirmed on phone. Preserve existing debug/release signing; use the USB/sideload instructions below when an update is needed. No cloud speech or Internet dependency was added.
+
+Today's A boot12 supersedes yesterday's boot9 and invalidates historical current-boot gates. Latest completed target campaigns remained OFF/OFF/inhibited; B is currently awaiting USB loader recovery, so do not assert current gateway health from historical observations. Final601-frame/pinned-reference source is host-built but not deployed. Existing1s-tail statements below are historical and superseded by the current diagnosis. Do not enable outputs or weaken0.7 threshold to unlock voice; sensors/loads remain disconnected. Recognition and later explicit confirmation are separate tests.
+
+---
+
 # Current phone test result and updated APK — 23 October 2026 IST
 
 The already installed native Android APK completed inhibited manual light ON/OFF with matching ACK and fresh readback. Its manual gate unlocked real phone audio capture/upload to ESP. **Both recognition-only phone trials failed with no confident detection and no proposal.** Job1 contained33,280 samples; job2 contained the full64,000 samples. Both completed ESP processing with no reported engine error and no accepted command. Voice confirmation/actuation has not been tested. Do not repeat speech or manual commands merely to obtain IDs. Current independent readback is light/fan OFF, last_command12, outputs inhibited. Loads remain disconnected; physical switching is untested. Supabase connectivity is optional and does not block this local path. Full observations/limitations are in [the master](../../CLAWGRID_MASTER_INTEGRATION.md).

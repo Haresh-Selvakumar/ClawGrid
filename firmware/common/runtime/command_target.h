@@ -8,7 +8,7 @@
 enum class TargetMode : uint8_t { PhysicalBedroom, VirtualRooms };
 enum class TargetRoom : uint8_t { Bedroom, LivingRoom, Kitchen, Study };
 enum class TargetDevice : uint8_t { Light, Fan };
-enum class TargetAction : uint8_t { Off=ACTION_OFF, On=ACTION_ON, Toggle=ACTION_TOGGLE };
+enum class TargetAction : uint8_t { Off=ACTION_OFF, On=ACTION_ON, Toggle=ACTION_TOGGLE, Auto=3 };
 struct CommandTarget {
     TargetMode mode=TargetMode::VirtualRooms;
     TargetRoom room=TargetRoom::Bedroom;
@@ -18,9 +18,10 @@ struct CommandTarget {
 inline const char *target_mode(TargetMode m) { return m==TargetMode::PhysicalBedroom?"physical_bedroom":"virtual_rooms"; }
 inline const char *target_room(TargetRoom r) { const char *v[]={"bedroom","living_room","kitchen","study"}; return (unsigned)r<4?v[(unsigned)r]:"invalid"; }
 inline const char *target_device(TargetDevice d) { return d==TargetDevice::Light?"light":"fan"; }
-inline const char *target_action(TargetAction a) { const char *v[]={"OFF","ON","TOGGLE"}; return (unsigned)a<3?v[(unsigned)a]:"invalid"; }
+inline const char *target_action(TargetAction a) { const char *v[]={"OFF","ON","TOGGLE","AUTO"}; return (unsigned)a<4?v[(unsigned)a]:"invalid"; }
 inline bool target_valid(const CommandTarget &t) {
-    return (unsigned)t.mode<2 && (unsigned)t.room<4 && (unsigned)t.device<2 && (unsigned)t.action<3 &&
+    return (unsigned)t.mode<2 && (unsigned)t.room<4 && (unsigned)t.device<2 && (unsigned)t.action<4 &&
+        (t.mode!=TargetMode::VirtualRooms || t.action!=TargetAction::Auto) &&
         (t.mode!=TargetMode::PhysicalBedroom || t.room==TargetRoom::Bedroom);
 }
 inline bool same_target(const CommandTarget &a,const CommandTarget &b) {
@@ -37,7 +38,8 @@ inline bool parse_target(const char *mode,const char *room,const char *device,co
     else if(!strcmp(device,"fan")) t.device=TargetDevice::Fan; else return false;
     if(!strcmp(action,"ON")) t.action=TargetAction::On;
     else if(!strcmp(action,"OFF")) t.action=TargetAction::Off;
-    else if(!strcmp(action,"TOGGLE")) t.action=TargetAction::Toggle; else return false;
+    else if(!strcmp(action,"TOGGLE")) t.action=TargetAction::Toggle;
+    else if(!strcmp(action,"AUTO")) t.action=TargetAction::Auto; else return false;
     if(!target_valid(t)) return false;
     out=t; return true;
 }
@@ -45,7 +47,9 @@ inline bool target_command(const CommandTarget &t,ControlCommand &c) {
     if(!target_valid(t)) return false;
     c={}; c.op=t.mode==TargetMode::PhysicalBedroom?ControlOp::Device:ControlOp::Simulation;
     c.device=(uint8_t)t.device+(t.mode==TargetMode::VirtualRooms?2*(uint8_t)t.room:0);
-    c.action=(uint8_t)t.action; return true;
+    if(t.action==TargetAction::Auto) { c.op=ControlOp::Resume; c.action=0; }
+    else c.action=(uint8_t)t.action;
+    return true;
 }
 inline bool speech_target(uint8_t command,TargetMode mode,CommandTarget &t) {
     if(command<1 || command>16) return false;
@@ -68,6 +72,16 @@ inline bool proposal_fields(const char *body,char (&first)[24],CommandTarget &t,
     return confirm?parse_number(first,job):parse_number(number,job);
 }
 enum class ProposalResult : uint8_t { Ok, Invalid, Unavailable, Mismatch, Expired, Consumed };
+// On-phone ASR sends only this structured intent, never a transcript or GPIO instruction.
+// The selected physical room and captured boot are mandatory; old/manual clients stay unchanged.
+inline bool phone_proposal_fields(const char *body,CommandTarget &t,uint32_t &capture,uint32_t &boot) {
+    char source[24],mode[24],room[24],device[16],action[16],nonce[16],binding[16],extra;
+    if(sscanf(body,"%23s %23s %23s %15s %15s %15s %15s %c",source,mode,room,device,action,nonce,binding,&extra)!=7 ||
+       strcmp(source,"phone") || !parse_target(mode,room,device,action,t) ||
+       t.mode!=TargetMode::PhysicalBedroom || t.room!=TargetRoom::Bedroom || (t.device!=TargetDevice::Light && t.device!=TargetDevice::Fan) ||
+       (t.action!=TargetAction::On && t.action!=TargetAction::Off)) return false;
+    return parse_number(nonce,capture) && capture && parse_number(binding,boot) && boot;
+}
 inline const char *proposal_error(ProposalResult r) {
     switch(r) {
         case ProposalResult::Unavailable:return "Controller unavailable or stale";

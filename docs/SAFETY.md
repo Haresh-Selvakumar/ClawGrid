@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # Safety boundary and limitations
 
 Updated 21 October 2026. This is a low-voltage DC prototype. No mains switching is permitted. Default native builds inhibit physical outputs and register all virtual devices with pin -1. USB-only board bring-up has been performed; PIR, relays, loads and electrical switching remain unvalidated.
@@ -28,7 +32,7 @@ The offline interface preview performs no automation or inference: APIs explicit
 
 ## Later low voltage bench validation
 
-Default `native_voice` and speech/API builds keep `CLAWGRID_PHYSICAL_OUTPUTS=0`. The separate `native_voice_bench` environment is an explicit opt-in compile target for A; it does not validate or flash hardware. All virtual devices still use GPIO -1. The pin assumptions remain GPIO4 light, GPIO5 fan, GPIO6 PIR, active-low relay inputs. Actual module compatibility and polarity are unverified.
+Default `native_voice` and speech/API builds keep `CLAWGRID_PHYSICAL_OUTPUTS=0`. The separate `native_voice_bench` environment is an explicit opt-in compile target for A; it does not validate or flash hardware. All virtual devices still use GPIO -1. The pin assumptions remain GPIO4 light, GPIO5 fan, GPIO8 PIR, active-low relay inputs. Actual module compatibility and polarity are unverified.
 
 Before using that bench image:
 

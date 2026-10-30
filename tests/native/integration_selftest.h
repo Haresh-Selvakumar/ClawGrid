@@ -87,15 +87,19 @@ inline bool recovery_transients_test() {
     if(original.execute(c,100)!=ControlStatus::Applied) return false;
     c.op=ControlOp::Timer; c.action=0; c.value=10000;
     if(original.execute(c,100)!=ControlStatus::Applied) return false;
-    // Reboot restores configuration, never the previous ON/timer/manual state.
+    // Reboot restores manual mode as held OFF, never previous ON/timer state.
     PolicyConfig saved=original.policy();
     if(!integration_registry()) return false;
     Automation restored; restored.restore_policy(saved);
     restored.tick(1000,false,Occupancy::Unknown);
     RoomReport report; restored.report(report,1000);
-    if(report.auto_flags!=3 || report.manual_flags || report.timer_light_ms ||
+    if(report.auto_flags!=3 || report.manual_flags!=1 || report.timer_light_ms ||
        safety_kernel_get_device(0)->is_on || safety_kernel_get_device(1)->is_on) return false;
     restored.tick(1005,true,Occupancy::Occupied);
+    if(safety_kernel_get_device(0)->is_on || !safety_kernel_get_device(1)->is_on) return false;
+    c={}; c.op=ControlOp::Resume; c.device=0;
+    if(restored.execute(c,1006)!=ControlStatus::Applied) return false;
+    restored.tick(1007,false,Occupancy::Occupied);
     return safety_kernel_get_device(0)->is_on && safety_kernel_get_device(1)->is_on;
 }
 inline bool maximum_run_test() {

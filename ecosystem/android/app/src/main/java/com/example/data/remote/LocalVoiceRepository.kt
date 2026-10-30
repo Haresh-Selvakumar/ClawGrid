@@ -67,6 +67,7 @@ class HttpSpeechApi(private val base: String, private val token: String, wifiSoc
 /** This creates a speech-bound proposal only. Existing confirmation + ACK/readback is still mandatory. */
 class LocalVoiceRepository(
     private val speech: SpeechApi, private val hardware: HardwareRepository,
+    private val diagnostic: (String) -> Unit = {},
     private val pause: suspend () -> Unit = { delay(200) }
 ) {
     private var revision = 0L
@@ -76,6 +77,8 @@ class LocalVoiceRepository(
         require(hardware.voiceReady()) { "Complete manual light ACK + readback on this boot first" }
         val boot = hardware.state.value.sample!!.boot
         val mine = ++revision
+        val crc = java.util.zip.CRC32().apply { update(pcm) }.value
+        diagnostic("Phone PCM: ${pcm.size / 2} samples · CRC32 ${crc.toString(16).padStart(8, '0')} · 16000 Hz mono S16LE")
         fun current() {
             require(mine == revision && hardware.voiceReady() && hardware.state.value.sample?.boot == boot) { "Voice cancelled or controller unavailable/rebooted; record again" }
         }
@@ -93,10 +96,16 @@ class LocalVoiceRepository(
                 require(result.opt("supported") == true && result.getLong("job") == job) { "Speech job replaced or gateway restarted; record again" }
                 require(result.optInt("phase") != 5) { "ESP speech engine failed" }
                 if (result.optInt("phase") != 4) continue
+                val receivedCrc = result.getLong("pcm_crc32")
+                val receivedSamples = result.getInt("samples")
+                val deliveryMatches = receivedCrc == crc && receivedSamples == pcm.size / 2
+                diagnostic("ESP job #$job · PCM ${if (deliveryMatches) "MATCH" else "MISMATCH"}: phone ${pcm.size / 2}/${crc.toString(16).padStart(8, '0')}, ESP $receivedSamples/${receivedCrc.toString(16).padStart(8, '0')} · frames ${result.optInt("frames", -1)} · state ${result.optInt("last_state", -1)} · engine errors ${result.getInt("engine_errors")}")
+                // Delivery must also be checked when recognition fails; never infer
+                // a matching phone checksum merely from an ESP-side CRC.
+                require(deliveryMatches) { "ESP audio does not match uploaded PCM; nothing proposed" }
+                require(result.opt("diagnostic_only") != true) { "Reference diagnosis cannot propose a device command" }
                 val confidence = result.getDouble("confidence")
                 require(result.getInt("error_code") == 0 && result.getInt("engine_errors") == 0 && confidence.isFinite() && confidence in 0.7..1.0) { "No confident ESP recognition; nothing proposed" }
-                val crc = java.util.zip.CRC32().apply { update(pcm) }.value
-                require(result.getLong("pcm_crc32") == crc && result.getInt("samples") == pcm.size / 2) { "Recognized audio does not match uploaded PCM" }
                 val command = result.getInt("command_id")
                 require(command in 1..2) { "Only Bedroom light ON/OFF is integrated; recognized target was not submitted" }
                 current()

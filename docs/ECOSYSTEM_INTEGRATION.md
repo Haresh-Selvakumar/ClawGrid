@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # ESP, website and Android ecosystem — 22 October 2026
 
 The three components are the current ESP/PC project, the supplied web ZIP and the supplied Android ZIP. Originals in Downloads were left intact. Working copies are in `ecosystem/web-baseline` and `ecosystem/android`.
@@ -28,7 +32,7 @@ The PC must stay on, B must remain connected, A must remain powered, and the PC 
 |---|---|---|
 | A expected MAC | Private gateway role configuration | Expected identity, not a second measured MAC field |
 | A boot, uptime, reports, invalid, replayed | B `/api/state`, authenticated A radio report | Actual firmware counters; uptime ms, age ms |
-| Bedroom occupancy, motion | A GPIO6 PIR and A occupancy policy | One physical bedroom zone only |
+| Bedroom occupancy, motion | A GPIO8 PIR and A occupancy policy | One physical bedroom zone only |
 | Bedroom light / fan | A reported controller output state | Commanded state; relay contacts and electrical load are not measured |
 | GPIO outputs enabled | A report build/output marker | Currently false: switching remains inhibited |
 | Mode, automation/manual flags, timers | A `/api/state` report | Preserved in the encrypted snapshot; timer values ms |
@@ -73,7 +77,7 @@ The Android project is `ecosystem/android`; its launcher is `app/src/main/java/c
 
 | Board | Connection |
 |---|---|
-| A (COM8 when programming) | Bedroom PIR OUT to GPIO6, relay-control signals GPIO4 light / GPIO5 fan through a verified compatible interface |
+| A (COM8 when programming) | Bedroom PIR OUT to GPIO8, relay-control signals GPIO4 light / GPIO5 fan through a verified compatible interface |
 | B (COM7) | PC USB data/power; ESP-NOW radio link to A |
 
 The SRD-05VDC-SL-C marking identifies a 5 V relay coil, not the module's input circuit. Do not supply its VCC from ESP 3.3 V or assume direct GPIO compatibility. A's physical outputs remain inhibited pending a verified low-voltage interface and wiring test. See `PROGRAM_AND_WIRE.md` for the existing full wiring instructions. No mains switching is authorized in this prototype.

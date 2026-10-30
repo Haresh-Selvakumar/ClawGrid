@@ -25,8 +25,12 @@ import com.example.data.remote.HardwareState
 import com.example.data.remote.RequestPhase
 import com.example.data.remote.WifiGatewayApis
 import com.example.data.remote.GatewayAddress
-import com.example.data.remote.LocalVoiceRepository
+import com.example.data.remote.OfflinePhoneRecognizer
+import com.example.data.remote.PhoneVoiceSession
+import com.example.data.remote.PhoneVoiceContext
+import com.example.data.remote.PhoneTranscriptPreview
 import com.example.data.remote.PhonePcmRecorder
+import com.example.BuildConfig
 import com.example.domain.SafetyKernelEngine
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -71,10 +75,18 @@ data class ClawGridUiState(
     val unreadAlertsCount: Int = 0,
     val hardwareState: HardwareState = HardwareState(),
     val voiceReady: Boolean = false,
+    val voiceModelReady: Boolean = false,
+    val voiceRoom: String? = null,
     val voiceBusy: Boolean = false,
     val voiceRecording: Boolean = false,
+    val voiceMicReady: Boolean = false,
     val voiceAwaitingRelease: Boolean = false,
     val voiceMessage: String = "First complete manual light ACK + board readback for this boot",
+    val voiceCaptureInfo: String = "",
+    val voiceDiagnostics: String = "",
+    val voiceLastResult: String = "",
+    val voicePreview: PhoneTranscriptPreview? = null,
+    val voiceVocabulary: String = "Vocabulary not checked",
     val activeToast: ToastMessage? = null
 )
 
@@ -85,7 +97,11 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     private val roomDao = db.roomSnapshotDao()
     private var gatewayApis = WifiGatewayApis(application, GatewayAddress.DEFAULT, "")
     private var hardware = HardwareRepository(gatewayApis, android.os.SystemClock::elapsedRealtime)
-    private var voice = LocalVoiceRepository(gatewayApis, hardware)
+    private val phoneRecognizer = OfflinePhoneRecognizer(application)
+    private val voice = PhoneVoiceSession(android.os.SystemClock::elapsedRealtime)
+    private var voiceContext: PhoneVoiceContext? = null
+    private var previewBoot: Long? = null
+    private var previewExpires = 0L
     private var recorder: PhonePcmRecorder? = null
     private var voiceJob: kotlinx.coroutines.Job? = null
     private var voiceRelease: kotlinx.coroutines.CompletableDeferred<Unit>? = null
@@ -103,6 +119,20 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     private var tickCounter = 0L
 
     init {
+        viewModelScope.launch {
+            _uiState.update { it.copy(voiceMessage = "Preparing bundled offline English model on phone…") }
+            try {
+                val vocabulary = phoneRecognizer.prepare()
+                _uiState.update { it.copy(voiceModelReady = true, voiceVocabulary = "Model vocabulary checked: " + vocabulary.entries.joinToString { (word, id) -> "$word=$id" }, voiceMessage = "Offline phone model ready. Select Bedroom and verify manual OFF ACK/readback for this boot.") }
+            } catch (e: kotlinx.coroutines.CancellationException) { throw e
+            } catch (_: Exception) {
+                _uiState.update { it.copy(voiceMessage = "Offline model could not load. Manual controls remain available; no cloud fallback.") }
+            } catch (_: LinkageError) {
+                _uiState.update { it.copy(voiceMessage = "Offline native engine unsupported on this phone. Manual controls remain available.") }
+            } catch (_: OutOfMemoryError) {
+                _uiState.update { it.copy(voiceMessage = "Insufficient phone memory for offline model. Use manual controls.") }
+            }
+        }
         bindHardware()
         startDeterministicTickLoop()
         viewModelScope.launch {
@@ -125,12 +155,17 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     private fun renderHardware(hw: HardwareState) {
         val fresh = hw.connected && hw.sample?.fresh(android.os.SystemClock.elapsedRealtime()) == true
         val sample = hw.sample
+        voiceContext?.let { if (!voice.current(it, _uiState.value.voiceRoom, hardware)) cancelPhoneVoice() }
+        if (_uiState.value.voicePreview != null && (!fresh || sample?.boot != previewBoot || android.os.SystemClock.elapsedRealtime() >= previewExpires)) cancelPhoneVoice()
         _uiState.update { state -> state.copy(
             hardwareState = hw,
-            voiceReady = hardware.voiceReady(),
+            voiceReady = hardware.voiceReady() && state.voiceModelReady && state.voiceRoom == "bedroom" && sample?.voiceOutputModeAllowed() == true,
             rooms = state.rooms.map { room -> room.copy(
+                pirEnabled = false, presenceEnabled = false,
+                zoneLabel = if (room.id == "bedroom") "Physical Bedroom · PIR unavailable" else "Unprovisioned",
                 state = if (fresh && room.id == "bedroom") runCatching { OccupancyState.valueOf(sample!!.occupancy) }.getOrDefault(OccupancyState.UNKNOWN) else OccupancyState.UNKNOWN,
-                tempC = Double.NaN, lux = -1, reportedKnown = fresh && room.id == "bedroom",
+                tempC = if (fresh && room.id == "bedroom") sample?.temperatureAt(android.os.SystemClock.elapsedRealtime()) ?: Double.NaN else Double.NaN,
+                lux = -1, reportedKnown = fresh && room.id == "bedroom",
                 lightOn = fresh && room.id == "bedroom" && sample!!.light,
                 fanOn = fresh && room.id == "bedroom" && sample!!.fan,
                 autoLight = false, autoFan = false, manualLightHoldUntilMs = 0, manualFanHoldUntilMs = 0
@@ -154,41 +189,94 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
 
     fun confirmHardwareLight() { viewModelScope.launch { hardware.confirm() } }
     fun cancelHardwareProposal() { hardware.cancelProposal() }
+    fun dismissVoicePreview() { cancelPhoneVoice() }
+
+    fun selectVoiceRoom(room: String?) {
+        if (room != null && room != "bedroom") return
+        if (hardware.state.value.request?.phase in listOf(RequestPhase.SENDING, RequestPhase.PENDING)) return
+        cancelPhoneVoice()
+        _uiState.update { it.copy(voiceRoom = room, voiceMessage = if (room == "bedroom") "Selected Bedroom. Say LIGHT ON/OFF or FAN ON/OFF; review before confirmation." else "Select a room before recording.") }
+        renderHardware(hardware.state.value)
+    }
 
     fun startPhoneVoice() {
-        if (_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || !hardware.voiceReady() || voiceJob?.isActive == true) return
+        if (_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || !_uiState.value.voiceReady || voiceJob?.isActive == true) return
+        val nonce = (java.security.SecureRandom().nextInt().toLong() and 0xffffffffL).let { if (it == 0L) 1L else it }
+        val context = runCatching { voice.begin(_uiState.value.voiceRoom, hardware, nonce) }.getOrNull() ?: return
+        voiceContext = context
         val capture = PhonePcmRecorder(); recorder = capture
         val released = kotlinx.coroutines.CompletableDeferred<Unit>(); voiceRelease = released
-        _uiState.update { it.copy(voiceRecording = true, voiceBusy = true, voiceMessage = "Recording phone microphone; release to send, maximum four seconds") }
+        _uiState.update { it.copy(voicePreview = null, voiceRecording = true, voiceMicReady = false, voiceBusy = true, voiceCaptureInfo = "", voiceDiagnostics = "", voiceLastResult = "Capture ${context.capture} · boot ${context.boot} · in progress", voiceMessage = "Starting microphone; keep holding and wait for Speak now") }
         voiceJob = viewModelScope.launch {
             var pcm: ByteArray? = null
+            var stage = "CAPTURE"
             try {
-                pcm = capture.record()
+                val captured = capture.record(
+                    onCaptureInfo = { line -> _uiState.update { it.copy(voiceCaptureInfo = line) } },
+                    onReady = { delayMs -> _uiState.update { it.copy(voiceMicReady = true, voiceMessage = "Speak now; first microphone samples received after ${delayMs}ms. Release to send, maximum four seconds") } }
+                )
+                pcm = captured
                 if (!released.isCompleted) {
                     _uiState.update { it.copy(voiceRecording = false, voiceAwaitingRelease = true, voiceMessage = "Four-second capture cap reached; microphone stopped. Release to send or Cancel to discard") }
                     released.await()
                 }
-                _uiState.update { it.copy(voiceRecording = false, voiceAwaitingRelease = false, voiceMessage = "Sending PCM to ESP32 over local Wi-Fi; waiting for on-device recognition") }
-                val message = voice.propose(pcm)
-                _uiState.update { it.copy(voiceMessage = message) }
+                stage = "CONTEXT"
+                check(voice.current(context, _uiState.value.voiceRoom, hardware))
+                _uiState.update { it.copy(voiceRecording = false, voiceAwaitingRelease = false, voiceMessage = "Recognizing entirely on phone; audio stays in memory on this phone") }
+                val started = android.os.SystemClock.elapsedRealtime()
+                stage = "DECODER"
+                val decision = phoneRecognizer.recognize(captured, context.room)
+                _uiState.update { it.copy(voiceLastResult = "Capture ${context.capture} · boot ${context.boot} · ${decision.metadata}") }
+                stage = "CONTEXT_AFTER_DECODING"
+                check(voice.current(context, _uiState.value.voiceRoom, hardware))
+                previewBoot = context.boot
+                previewExpires = android.os.SystemClock.elapsedRealtime() + 60000
+                _uiState.update { it.copy(voicePreview = decision.preview) }
+                val command = decision.command
+                if (command == null) {
+                    _uiState.update { it.copy(voiceMessage = "${decision.message}. Manual controls remain available.") }
+                } else {
+                    stage = "GATEWAY_PROPOSAL"
+                    hardware.preparePhone(command.on, context.boot, context.capture, context.expires, command.device)
+                    val outcome = hardware.state.value.request
+                    _uiState.update { it.copy(voiceLastResult = it.voiceLastResult + " · proposal ${outcome?.phase ?: "NOT_CREATED"}") }
+                    _uiState.update { it.copy(voiceMessage = if (hardware.state.value.request?.source == "phone" && hardware.state.value.request?.phase == RequestPhase.PROPOSED)
+                        "Recognized on phone: ${command.label}. Review the complete target below and explicitly Confirm or Cancel."
+                        else "Recognized ${command.label}, but gateway proposal unavailable. Nothing confirmed; no retry.") }
+                }
+                _uiState.update { it.copy(voiceDiagnostics = "On-phone Vosk · ${captured.size / 2} samples · ${android.os.SystemClock.elapsedRealtime() - started}ms recognition/proposal · no audio upload") }
             } catch (e: kotlinx.coroutines.CancellationException) { throw e
             } catch (e: Exception) {
-                _uiState.update { it.copy(voiceMessage = "Voice stopped: ${e.message ?: "capture/connection failed"}. No automatic retry or confirmation") }
+                _uiState.update { it.copy(voiceMessage = "Voice stopped at $stage. Nothing automatically confirmed; use manual controls.", voiceLastResult = it.voiceLastResult + " · ERROR_$stage") }
+            } catch (_: OutOfMemoryError) {
+                _uiState.update { it.copy(voiceMessage = "Insufficient phone memory for recognition. Nothing proposed; use manual controls.") }
+            } catch (_: LinkageError) {
+                _uiState.update { it.copy(voiceMessage = "Offline engine unavailable. Nothing proposed; use manual controls.") }
             } finally {
                 pcm?.fill(0)
                 if (recorder === capture) {
                     recorder = null; voiceRelease = null
-                    _uiState.update { it.copy(voiceRecording = false, voiceAwaitingRelease = false, voiceBusy = false) }
+                    voiceContext = null
+                    _uiState.update { it.copy(voiceRecording = false, voiceMicReady = false, voiceAwaitingRelease = false, voiceBusy = false) }
                 }
             }
         }
     }
 
     fun stopPhoneVoice() { recorder?.stop(); voiceRelease?.complete(Unit) }
+    override fun onCleared() {
+        cancelPhoneVoice()
+        phoneRecognizer.close()
+        super.onCleared()
+    }
     fun cancelPhoneVoice() {
+        val active = voiceJob?.isActive == true || (hardware.state.value.request?.source == "phone" && hardware.state.value.request?.phase in listOf(RequestPhase.PREPARING, RequestPhase.PROPOSED))
         voice.cancel(); recorder?.cancel(); voiceJob?.cancel()
-        if (hardware.state.value.request?.source == "speech") hardware.cancelProposal()
-        _uiState.update { it.copy(voiceRecording = false, voiceAwaitingRelease = false, voiceBusy = false, voiceMessage = "Voice cancelled; no automatic retry") }
+        voiceContext = null
+        previewBoot = null; previewExpires = 0
+        if (hardware.state.value.request?.source in listOf("speech", "phone")) hardware.cancelProposal()
+        _uiState.update { it.copy(voicePreview = null, voiceRecording = false, voiceMicReady = false, voiceAwaitingRelease = false, voiceBusy = false,
+            voiceMessage = if (active) "Voice context cancelled; no automatic retry. Last recognition outcome is retained below." else it.voiceMessage) }
     }
 
     private fun createInitialUiState(simulation: Boolean = false): ClawGridUiState {
@@ -451,7 +539,7 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         if (previous.mode == TelemetryMode.SIMULATION_4_ROOM) simulationState = previous
         val next = if (mode == TelemetryMode.SIMULATION_4_ROOM) simulationState ?: createInitialUiState(true)
             else createInitialUiState().copy(policy = gatewaySettings)
-        _uiState.value = next.copy(activeTab = previous.activeTab, mode = mode)
+        _uiState.value = next.copy(activeTab = previous.activeTab, mode = mode, voiceModelReady = previous.voiceModelReady)
         if (mode == TelemetryMode.HARDWARE_NODE_A) renderHardware(hardware.state.value)
     }
 
@@ -470,12 +558,15 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         fromTimer: Boolean = false
     ) {
         if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) {
-            if (roomId != "bedroom" || device != "light" || action == ActuatorAction.AUTO || fromTimer) {
-                showToast("Not supported in this milestone", "Hardware slice: Bedroom light manual ON/OFF. AUTO/policy semantics remain unchanged.", "WARN")
+            if (roomId != "bedroom" || device !in listOf("light", "fan") || fromTimer) {
+                showToast("Not supported in this milestone", "Hardware: Bedroom light/fan ON/OFF and capability-verified AUTO. Timers/scenes remain pending.", "WARN")
                 return
             }
             cancelPhoneVoice()
-            viewModelScope.launch { hardware.prepare(action == ActuatorAction.ON) }
+            viewModelScope.launch {
+                if (action == ActuatorAction.AUTO) hardware.prepareAuto(device)
+                else hardware.prepare(action == ActuatorAction.ON, device)
+            }
             return
         }
         val now = System.currentTimeMillis()
@@ -1035,11 +1126,13 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     fun getDiagnosticRows(): List<SensorDiagnosticRow> {
         if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) {
             val hw = _uiState.value.hardwareState
+            val sensorNow = android.os.SystemClock.elapsedRealtime()
+            val temperature = hw.temperaturePresentation(sensorNow)
             return listOf(SensorDiagnosticRow("PIR_BEDROOM", "bedroom", "Bedroom", "Digital PIR",
-                if (hw.connected) hw.sample?.motion?.let { if (it) "HIGH" else "LOW" } ?: "UNKNOWN" else "UNKNOWN",
-                if (hw.connected) "${_uiState.value.hardwareTelemetry.freshnessMs} ms" else "STALE / DISCONNECTED",
-                hw.connected, "Reported logic; wiring not verified", false),
-                SensorDiagnosticRow("TEMP_BEDROOM", "bedroom", "Bedroom", "Temperature", "UNAVAILABLE", "No wire field", false, "Driver/transport pending", false))
+                "UNAVAILABLE", "Removed from milestone", false, "PIR removed; occupancy AUTO unavailable", false),
+                SensorDiagnosticRow("TEMP_BEDROOM", "bedroom", "Bedroom", "DHT11", temperature.valueText,
+                    if (temperature.available) "${hw.sample!!.temperatureAge!! + (sensorNow - hw.sample.received).coerceAtLeast(0)} ms" else "Unavailable",
+                    temperature.available, temperature.detail, false))
         }
         val rows = mutableListOf<SensorDiagnosticRow>()
         _uiState.value.rooms.forEach { r ->
@@ -1128,7 +1221,6 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
             _uiState.update { it.copy(policy = gatewaySettings) }
             gatewayApis = WifiGatewayApis(getApplication(), url, newPolicy.hardwareToken)
             hardware = HardwareRepository(gatewayApis, android.os.SystemClock::elapsedRealtime)
-            voice = LocalVoiceRepository(gatewayApis, hardware)
             bindHardware()
             renderHardware(hardware.state.value)
             showToast("Gateway settings applied", "Token stays in memory. Persistent board policy unchanged.")

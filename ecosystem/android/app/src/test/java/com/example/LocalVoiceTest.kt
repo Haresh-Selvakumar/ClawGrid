@@ -143,4 +143,31 @@ class LocalVoiceTest {
         for (url in listOf("http://localhost", "http://127.0.0.1", "http://10.0.2.2:8770", "https://example.com", "http://192.168.4.1/api", "http://user@192.168.4.1", "http://192.168.4.1?token=x"))
             assertTrue(url, runCatching { GatewayAddress.validate(url) }.isFailure)
     }
+
+    @Test fun failedRecognitionStillChecksAndExposesActualDelivery() = runBlocking {
+        manual(); val messages = mutableListOf<String>()
+        result.put("command_id", 0).put("confidence", 0.0)
+        val voice = LocalVoiceRepository(api, hardware, diagnostic = { messages += it }, pause = {})
+        val failure = runCatching { voice.propose(pcm) }.exceptionOrNull()!!
+        assertTrue(failure.message!!.contains("No confident ESP recognition"))
+        assertTrue(messages.last().contains("ESP job #71 · PCM MATCH"))
+        assertEquals(1, calls.count { it.first == "/api/proposal" })
+    }
+
+    @Test fun badDeliveryIsIdentifiedEvenWithoutARecognition() = runBlocking {
+        manual(); val messages = mutableListOf<String>()
+        result.put("command_id", 0).put("confidence", 0.0).put("pcm_crc32", 1)
+        val voice = LocalVoiceRepository(api, hardware, diagnostic = { messages += it }, pause = {})
+        val failure = runCatching { voice.propose(pcm) }.exceptionOrNull()!!
+        assertTrue(failure.message!!.contains("does not match uploaded PCM"))
+        assertTrue(messages.last().contains("PCM MISMATCH"))
+        assertEquals(1, calls.count { it.first == "/api/proposal" })
+    }
+
+    @Test fun diagnosticReferenceCannotCreateAnActuatorProposal() = runBlocking {
+        manual(); result.put("diagnostic_only", true)
+        val failure = runCatching { voice().propose(pcm) }.exceptionOrNull()!!
+        assertTrue(failure.message!!.contains("Reference diagnosis cannot propose"))
+        assertEquals(1, calls.count { it.first == "/api/proposal" })
+    }
 }

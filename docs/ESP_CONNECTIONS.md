@@ -1,3 +1,7 @@
+**Superseding no-PIR scope:** [final LED demonstration](VOICE_LED_DEMONSTRATION_20261028.md). Active-HIGH lightGPIO4/fanGPIO5, own series resistors/cathodesGND, DHT11GPIO7; PIR acquisition/physicalAUTO disabled. Earlier wiring/status blocks below are historical.
+
+**Current 28 October update:** [GPIO8 active-HIGH LED checkpoint](INTEGRATED_LED_CHECKPOINT_20261028.md) supersedes earlier deployment/status statements below. PIR OUT currently requires an electrical compatibility check; keep it isolated.
+
 # ESP32-S3 connections and first run
 
 Current role assignment: **A (relays/PIR) = COM8, MAC e0:72:a1:f5:bc:b0; B (PC USB bridge) = COM7, MAC e0:72:a1:f6:a9:68**. Port numbers may change after reconnection. Earlier measurements used the previous assignment.
@@ -22,13 +26,13 @@ Confirm the terminal labels and actual output voltage on the unit before hookup.
 
 | Sensor terminal | Connect to |
 |---|---|
-| OUT | A **GPIO6**, provided OUT is verified 3.3 V logic |
+| OUT | A **GPIO8**, provided OUT is verified 3.3 V logic |
 | GND | A **GND** |
 | VCC | **5 V** for the identified HW-416B/HC-SR501 module |
 
 Do not guess the sensor terminal order. A sensor powered from 5 V may or may
 not have a 3.3 V output. Measure/check its OUT specification before connecting
-GPIO6; use a suitable level interface if necessary. Do not connect 5 V to a GPIO.
+GPIO8; use a suitable level interface if necessary. Do not connect 5 V to a GPIO.
 
 The firmware waits **60 seconds**, then requires **200 ms LOW** before arming.
 A later stable HIGH indicates motion. One PIR covers the bedroom only.

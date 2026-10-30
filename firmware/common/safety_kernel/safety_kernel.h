@@ -16,7 +16,7 @@ extern "C" {
 #define MAX_MANAGED_DEVICES      10 /* two physical slots + eight virtual slots */
 #define DEFAULT_MIN_DWELL_MS     3000   /* 3 seconds minimum dwell time */
 #define DEFAULT_MAX_RUN_MS       14400000 /* 4 hours maximum continuous run */
-#define DEFAULT_MANUAL_HOLD_MS   300000 /* 5 minutes manual override hold */
+/* Manual mode has no time expiry; only explicit AUTO releases it. */
 
 typedef enum {
     DEVICE_TYPE_LIGHT = 0,
@@ -42,6 +42,7 @@ typedef struct {
     uint32_t      turned_on_ms;
     bool          manual_override;
     uint32_t      manual_override_ms;
+    uint32_t      simulated_hold_ms; /* Physical slots always0: explicit AUTO only. */
 } managed_device_t;
 
 void safety_kernel_init(void);
@@ -61,6 +62,7 @@ bool safety_kernel_request_action(const char *room,
 
 void safety_kernel_tick_periodic(uint32_t current_time_ms);
 bool safety_kernel_release_manual(const char *room, const char *device_id);
+bool safety_kernel_configure_virtual_hold(int index);
 
 const managed_device_t *safety_kernel_get_device(int index);
 int safety_kernel_get_device_count(void);

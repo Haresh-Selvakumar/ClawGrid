@@ -1,5 +1,6 @@
 """Check the built debug APK without printing any configured credential values."""
 import hashlib
+import argparse
 import json
 import re
 import zipfile
@@ -9,9 +10,9 @@ ROOT = Path(__file__).resolve().parents[1]
 APP = ROOT / 'ecosystem/android'
 
 
-def main():
-    apk = APP / 'app/build/outputs/apk/debug/app-debug.apk'
-    config = (APP / 'app/build/generated/source/buildConfig/debug/com/example/BuildConfig.java').read_text()
+def main(apk=None, build_config=None):
+    apk = Path(apk).resolve() if apk else APP / 'app/build/outputs/apk/debug/app-debug.apk'
+    config = (Path(build_config) if build_config else APP / 'app/build/generated/source/buildConfig/debug/com/example/BuildConfig.java').read_text()
     forbidden = ['SUPABASE_SERVICE_ROLE_KEY', 'customServiceKey', 'postHardwareCommand', '/api/command']
     for path in (APP / 'app/src/main/java').rglob('*.kt'):
         text = path.read_text(encoding='utf-8')
@@ -30,7 +31,7 @@ def main():
     credentials = ROOT / 'local_credentials.json'
     if credentials.exists():
         for key, value in json.loads(credentials.read_text()).items():
-            if isinstance(value, str) and len(value) >= 12 and re.search(r'key|token|pmk|lmk', key, re.I):
+            if isinstance(value, str) and len(value) >= 12 and re.search(r'key|token|password|pmk|lmk', key, re.I):
                 candidates.add(value.encode())
     with zipfile.ZipFile(apk) as archive:
         for name in archive.namelist():
@@ -44,4 +45,8 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--apk')
+    parser.add_argument('--build-config')
+    args = parser.parse_args()
+    main(args.apk, args.build_config)

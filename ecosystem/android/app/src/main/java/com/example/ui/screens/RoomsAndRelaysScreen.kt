@@ -130,7 +130,7 @@ fun RoomsAndRelaysScreen(
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) "Bedroom light manual ON/OFF: proposal → confirmation → ACK + board readback. Firmware hold: 5 minutes. AUTO/fan/scenes/timers pending integration." else "SIMULATED · Manual ON/OFF locks a ${uiState.policy.manualHoldMinutes.toInt()}-minute hold; AUTO restores simulated policy control.",
+                                text = if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) "Bedroom light/fan manual ON/OFF: proposal → confirmation → ACK + board readback. ${if (uiState.hardwareState.sample?.controlPolicyVersion == 2) "Manual until explicit AUTO; saved manual modes boot OFF. AUTO is blocked by AWAY." else "Legacy five-minute hold; AUTO unavailable."} Scenes/timers pending integration." else "SIMULATED · Manual ON/OFF locks a ${uiState.policy.manualHoldMinutes.toInt()}-minute hold; AUTO restores simulated policy control.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = ClawTextMuted
                             )
@@ -337,21 +337,21 @@ private fun RoomRelayControlCard(
                 }
 
                 StatusPillBadge(
-                    text = room.state.label,
+                    text = if (hardwareMode && hardwareState.sample?.pirAvailable == false) "UNAVAILABLE" else room.state.label,
                     tone = badgeTone
                 )
             }
 
             // Sensor & Environment Metadata Line matching screenshot: "PIR_1 (Zone 1) · 25.0°C · 120 lx"
             Text(
-                text = if (hardwareMode) "${room.zoneLabel} · Temperature unavailable · Lux unavailable" else "${room.zoneLabel} · ${"%.1f".format(room.tempC)}°C · ${room.lux} lx",
+                text = if (hardwareMode) "${room.zoneLabel} · ${if (room.tempC.isFinite()) "DHT11 ${"%.1f".format(room.tempC)}°C" else "Temperature unavailable (${if (room.id == "bedroom") hardwareState.sample?.temperatureStatus ?: "UNKNOWN" else "UNPROVISIONED"})"} · Lux unavailable" else "${room.zoneLabel} · ${"%.1f".format(room.tempC)}°C · ${room.lux} lx",
                 style = MaterialTheme.typography.bodySmall,
                 color = ClawTextDim,
                 fontSize = 11.5.sp
             )
 
             if (hardwareMode) Text(
-                text = if (room.id == "bedroom") "${hardwareState.message}\nRequested: ${hardwareState.request?.let { "Light ${if (it.on) "ON" else "OFF"} · ${it.phase} · ${if (it.id > 0) "request #${it.id}" else "request ID not assigned"}" } ?: "none"}\nOutputs: ${hardwareState.sample?.takeIf { hardwareState.connected }?.outputsEnabled?.let { if (it) "enabled" else "inhibited" } ?: "unknown"}. Physical load not measured."
+                text = if (room.id == "bedroom") "${hardwareState.message}\nRequested: ${hardwareState.request?.let { "${it.device} ${it.action} · ${it.phase} · ${if (it.id > 0) "request #${it.id}" else "request ID not assigned"}" } ?: "none"}\nOutputs: ${hardwareState.sample?.takeIf { hardwareState.connected }?.outputsEnabled?.let { if (it) "enabled" else "inhibited" } ?: "unknown"}. Physical load not measured."
                     else "Unprovisioned in this milestone — board state UNKNOWN",
                 color = ClawAmberLight, style = MaterialTheme.typography.bodySmall
             )
@@ -363,9 +363,9 @@ private fun RoomRelayControlCard(
                 metaStatus = if (hardwareMode) "Board-reported light: ${if (room.reportedKnown) { if (room.lightOn) "ON" else "OFF" } else "UNKNOWN"}" else room.lightModeStatus(nowMs, luxThreshold),
                 known = !hardwareMode || room.reportedKnown,
                 enabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true),
-                autoEnabled = !hardwareMode,
+                autoEnabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && hardwareState.sample?.automationAvailable != false),
                 isOn = room.lightOn,
-                isAuto = if (hardwareMode) room.reportedKnown && ((hardwareState.sample?.autoFlags ?: 0) and 1) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 1) == 0 else room.autoLight && nowMs >= room.manualLightHoldUntilMs,
+                isAuto = if (hardwareMode) room.reportedKnown && hardwareState.sample?.mode != "AWAY" && ((hardwareState.sample?.autoFlags ?: 0) and 1) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 1) == 0 else room.autoLight && nowMs >= room.manualLightHoldUntilMs,
                 onSelect = { action -> onActuate(room.id, "light", action) },
                 testTagPrefix = "b${roomIndex}_light"
             )
@@ -374,12 +374,12 @@ private fun RoomRelayControlCard(
             ActuatorControlRow(
                 iconEmoji = "🌀",
                 title = "Ceiling Fan",
-                metaStatus = if (hardwareMode) "Board-reported fan: ${if (room.reportedKnown) { if (room.fanOn) "ON" else "OFF" } else "UNKNOWN"} · control pending" else room.fanModeStatus(nowMs, tempThreshold),
+                metaStatus = if (hardwareMode) "Board-reported fan: ${if (room.reportedKnown) { if (room.fanOn) "ON" else "OFF" } else "UNKNOWN"}" else room.fanModeStatus(nowMs, tempThreshold),
                 known = !hardwareMode || room.reportedKnown,
-                enabled = !hardwareMode,
-                autoEnabled = !hardwareMode,
+                enabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true),
+                autoEnabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && hardwareState.sample?.automationAvailable != false),
                 isOn = room.fanOn,
-                isAuto = if (hardwareMode) room.reportedKnown && ((hardwareState.sample?.autoFlags ?: 0) and 2) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 2) == 0 else room.autoFan && nowMs >= room.manualFanHoldUntilMs,
+                isAuto = if (hardwareMode) room.reportedKnown && hardwareState.sample?.mode != "AWAY" && ((hardwareState.sample?.autoFlags ?: 0) and 2) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 2) == 0 else room.autoFan && nowMs >= room.manualFanHoldUntilMs,
                 onSelect = { action -> onActuate(room.id, "fan", action) },
                 testTagPrefix = "b${roomIndex}_fan"
             )

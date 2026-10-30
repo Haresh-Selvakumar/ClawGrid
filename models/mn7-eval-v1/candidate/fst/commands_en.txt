@@ -1,0 +1,2 @@
+1,light enable
+2,light disable

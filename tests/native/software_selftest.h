@@ -11,8 +11,8 @@ inline bool software_routing_test() {
         CommandTarget t;ControlCommand c;
         if(!speech_target(command,TargetMode::VirtualRooms,t)||!target_command(t,c)||c.op!=ControlOp::Simulation||c.device!=(command-1)/2) return false;
         bool physical=speech_target(command,TargetMode::PhysicalBedroom,t);
-        if(physical!=(command<=4)) return false;
-        if(physical&&(!target_command(t,c)||c.op!=ControlOp::Device||c.device!=(command-1)/2)) return false;
+        if(physical!=(command<=8)) return false;
+        if(physical&&(!target_command(t,c)||c.op!=ControlOp::Device||c.device!=((command-1)/2)%2)) return false;
     }
     CommandTarget t;ControlCommand c;ProposalStore store;
     if(!parse_target("physical_bedroom","bedroom","fan","ON",t)) return false;

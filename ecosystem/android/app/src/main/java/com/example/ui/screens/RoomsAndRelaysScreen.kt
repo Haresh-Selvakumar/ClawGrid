@@ -41,6 +41,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -97,6 +98,25 @@ fun RoomsAndRelaysScreen(
     onNavigateTab: (ClawGridTab) -> Unit,
     onSyncSupabase: () -> Unit
 ) {
+    var sceneReview by remember { mutableStateOf<String?>(null) }
+    val room1AutoReady=uiState.roomHardwareStates["bedroom"]?.let {
+        it.connected && it.sample?.fresh(android.os.SystemClock.elapsedRealtime())==true && it.sample.featuresVersion==3 && it.request?.active!=true
+    }==true && !uiState.voiceBusy
+    val physicalScenesReady=uiState.roomHardwareStates.size==2 && uiState.roomHardwareStates.values.all {
+        it.connected && it.sample?.fresh(android.os.SystemClock.elapsedRealtime())==true && it.request?.active!=true
+    } && !uiState.voiceBusy
+    sceneReview?.let { scene ->
+        androidx.compose.material3.AlertDialog(onDismissRequest={sceneReview=null},
+            title={Text("Authorize $scene for "+if(scene=="HOME") "Room 1" else "Room 1 and Room 2")},
+            text={Text(when(scene) {
+                "HOME" -> "Reset Room 1 to HOME with both outputs OFF, then enable light AUTO followed by fan AUTO using accepted sensor settings. Each step needs ACK and fresh readback; safety dwell applies. A failed step stops the sequence. Room 2 is not changed."
+                "SLEEP" -> "Turn both rooms' lights OFF and fans ON in MANUAL."
+                "AWAY" -> "Turn both rooms' outputs OFF and block AUTO until HOME."
+                else -> "Turn both rooms' lights and fans OFF."
+            }+" Safety dwell applies. Rooms execute sequentially; a failure may leave a partial result. Each room requires ACK and fresh readback.")},
+            confirmButton={TextButton(enabled=if(scene=="HOME") room1AutoReady else physicalScenesReady,onClick={sceneReview=null;onApplyScene(scene)}){Text("Authorize")}},
+            dismissButton={TextButton(onClick={sceneReview=null}){Text("Cancel")}})
+    }
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(14.dp)
@@ -130,7 +150,7 @@ fun RoomsAndRelaysScreen(
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                             Text(
-                                text = if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) "Bedroom light/fan manual ON/OFF: proposal → confirmation → ACK + board readback. ${if (uiState.hardwareState.sample?.controlPolicyVersion == 2) "Manual until explicit AUTO; saved manual modes boot OFF. AUTO is blocked by AWAY." else "Legacy five-minute hold; AUTO unavailable."} Scenes/timers pending integration." else "SIMULATED · Manual ON/OFF locks a ${uiState.policy.manualHoldMinutes.toInt()}-minute hold; AUTO restores simulated policy control.",
+                                text = if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) "Physical light/fan controls require confirmation, controller ACK and fresh readback. Room 1 supports sensor AUTO, editable thresholds, schedules and timing protections. Sleep: both rooms' lights OFF and fans ON. Away: both rooms OFF with AUTO blocked. Resume AUTO targets Room 1 only." else "SIMULATED · Manual ON/OFF locks a ${uiState.policy.manualHoldMinutes.toInt()}-minute hold; AUTO restores simulated policy control.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = ClawTextMuted
                             )
@@ -146,8 +166,8 @@ fun RoomsAndRelaysScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         OutlinedButton(
-                            onClick = { onApplyScene("HOME") },
-                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM,
+                            onClick = { if(uiState.mode == TelemetryMode.SIMULATION_4_ROOM) onApplyScene("HOME") else sceneReview="HOME" },
+                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM || room1AutoReady,
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, ClawBorder),
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -163,12 +183,12 @@ fun RoomsAndRelaysScreen(
                                 modifier = Modifier.size(15.dp)
                             )
                             Spacer(modifier = Modifier.width(6.dp))
-                            Text("Resume All AUTO", style = MaterialTheme.typography.labelLarge)
+                            Text(if(uiState.mode == TelemetryMode.SIMULATION_4_ROOM) "Resume All AUTO" else "Resume Room 1 AUTO", style = MaterialTheme.typography.labelLarge)
                         }
 
                         Button(
-                            onClick = { onApplyScene("ALL_OFF") },
-                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM,
+                            onClick = { if(uiState.mode == TelemetryMode.SIMULATION_4_ROOM) onApplyScene("ALL_OFF") else sceneReview="ALL_OFF" },
+                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM || physicalScenesReady,
                             shape = RoundedCornerShape(8.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = ClawRed,
@@ -186,8 +206,8 @@ fun RoomsAndRelaysScreen(
                         }
 
                         OutlinedButton(
-                            onClick = { onApplyScene("SLEEP") },
-                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM,
+                            onClick = { if(uiState.mode == TelemetryMode.SIMULATION_4_ROOM) onApplyScene("SLEEP") else sceneReview="SLEEP" },
+                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM || physicalScenesReady,
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, ClawBorder),
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -207,8 +227,8 @@ fun RoomsAndRelaysScreen(
                         }
 
                         OutlinedButton(
-                            onClick = { onApplyScene("AWAY") },
-                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM,
+                            onClick = { if(uiState.mode == TelemetryMode.SIMULATION_4_ROOM) onApplyScene("AWAY") else sceneReview="AWAY" },
+                            enabled = uiState.mode == TelemetryMode.SIMULATION_4_ROOM || physicalScenesReady,
                             shape = RoundedCornerShape(8.dp),
                             border = BorderStroke(1.dp, ClawBorder),
                             colors = ButtonDefaults.outlinedButtonColors(
@@ -238,7 +258,8 @@ fun RoomsAndRelaysScreen(
                         luxThreshold = uiState.policy.luxThreshold,
                         tempThreshold = uiState.policy.tempThreshold,
                         hardwareMode = uiState.mode == TelemetryMode.HARDWARE_NODE_A,
-                        hardwareState = uiState.hardwareState,
+                        hardwareState = uiState.roomHardwareStates[room.id] ?: HardwareState(),
+                        provisioned = room.id in uiState.roomHardwareStates,
                         onActuate = onActuate
                     )
                 }
@@ -284,6 +305,7 @@ private fun RoomRelayControlCard(
     tempThreshold: Double,
     hardwareMode: Boolean,
     hardwareState: HardwareState,
+    provisioned: Boolean,
     onActuate: (String, String, ActuatorAction) -> Unit
 ) {
     val roomEmoji = when (room.id) {
@@ -344,15 +366,15 @@ private fun RoomRelayControlCard(
 
             // Sensor & Environment Metadata Line matching screenshot: "PIR_1 (Zone 1) · 25.0°C · 120 lx"
             Text(
-                text = if (hardwareMode) "${room.zoneLabel} · ${if (room.tempC.isFinite()) "DHT11 ${"%.1f".format(room.tempC)}°C" else "Temperature unavailable (${if (room.id == "bedroom") hardwareState.sample?.temperatureStatus ?: "UNKNOWN" else "UNPROVISIONED"})"} · Lux unavailable" else "${room.zoneLabel} · ${"%.1f".format(room.tempC)}°C · ${room.lux} lx",
+                text = if (hardwareMode) "${room.zoneLabel} · ${if (room.tempC.isFinite()) "DHT11 ${"%.1f".format(room.tempC)}°C" else "Temperature unavailable (${if (provisioned) hardwareState.sample?.temperatureStatus ?: "UNKNOWN" else "UNPROVISIONED"})"} · Lux unavailable" else "${room.zoneLabel} · ${"%.1f".format(room.tempC)}°C · ${room.lux} lx",
                 style = MaterialTheme.typography.bodySmall,
                 color = ClawTextDim,
                 fontSize = 11.5.sp
             )
 
             if (hardwareMode) Text(
-                text = if (room.id == "bedroom") "${hardwareState.message}\nRequested: ${hardwareState.request?.let { "${it.device} ${it.action} · ${it.phase} · ${if (it.id > 0) "request #${it.id}" else "request ID not assigned"}" } ?: "none"}\nOutputs: ${hardwareState.sample?.takeIf { hardwareState.connected }?.outputsEnabled?.let { if (it) "enabled" else "inhibited" } ?: "unknown"}. Physical load not measured."
-                    else "Unprovisioned in this milestone — board state UNKNOWN",
+                text = if (provisioned) "${hardwareState.message}\nRequested: ${hardwareState.request?.let { "${it.device} ${it.action} · ${it.phase} · ${if (it.id > 0) "request #${it.id}" else "request ID not assigned"}" } ?: "none"}\nOutputs: ${hardwareState.sample?.takeIf { hardwareState.connected }?.outputsEnabled?.let { if (it) "enabled" else "inhibited" } ?: "unknown"}. Physical load not measured."
+                    else if(room.id=="living_room") com.example.domain.FinalPhysicalScope.room2Label+" — telemetry unavailable; controls disabled" else "Unprovisioned in this milestone — board state UNKNOWN",
                 color = ClawAmberLight, style = MaterialTheme.typography.bodySmall
             )
 
@@ -362,8 +384,8 @@ private fun RoomRelayControlCard(
                 title = "Ceiling Light",
                 metaStatus = if (hardwareMode) "Board-reported light: ${if (room.reportedKnown) { if (room.lightOn) "ON" else "OFF" } else "UNKNOWN"}" else room.lightModeStatus(nowMs, luxThreshold),
                 known = !hardwareMode || room.reportedKnown,
-                enabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true),
-                autoEnabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && hardwareState.sample?.automationAvailable != false),
+                enabled = !hardwareMode || (provisioned && room.reportedKnown && hardwareState.request?.active != true),
+                autoEnabled = !hardwareMode || (provisioned && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && (hardwareState.sample?.automationAvailable != false || hardwareState.sample?.featuresVersion in 2..3)),
                 isOn = room.lightOn,
                 isAuto = if (hardwareMode) room.reportedKnown && hardwareState.sample?.mode != "AWAY" && ((hardwareState.sample?.autoFlags ?: 0) and 1) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 1) == 0 else room.autoLight && nowMs >= room.manualLightHoldUntilMs,
                 onSelect = { action -> onActuate(room.id, "light", action) },
@@ -376,8 +398,8 @@ private fun RoomRelayControlCard(
                 title = "Ceiling Fan",
                 metaStatus = if (hardwareMode) "Board-reported fan: ${if (room.reportedKnown) { if (room.fanOn) "ON" else "OFF" } else "UNKNOWN"}" else room.fanModeStatus(nowMs, tempThreshold),
                 known = !hardwareMode || room.reportedKnown,
-                enabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true),
-                autoEnabled = !hardwareMode || (room.id == "bedroom" && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && hardwareState.sample?.automationAvailable != false),
+                enabled = !hardwareMode || (provisioned && room.reportedKnown && hardwareState.request?.active != true),
+                autoEnabled = !hardwareMode || (provisioned && room.reportedKnown && hardwareState.request?.active != true && hardwareState.sample?.controlPolicyVersion == 2 && hardwareState.sample?.mode == "HOME" && (hardwareState.sample?.automationAvailable != false || hardwareState.sample?.featuresVersion in 2..3)),
                 isOn = room.fanOn,
                 isAuto = if (hardwareMode) room.reportedKnown && hardwareState.sample?.mode != "AWAY" && ((hardwareState.sample?.autoFlags ?: 0) and 2) != 0 && ((hardwareState.sample?.manualFlags ?: 0) and 2) == 0 else room.autoFan && nowMs >= room.manualFanHoldUntilMs,
                 onSelect = { action -> onActuate(room.id, "fan", action) },

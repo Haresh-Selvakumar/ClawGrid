@@ -1,6 +1,10 @@
 #include "memory_runtime.h"
 #include <esp_heap_caps.h>
+#if CONFIG_IDF_TARGET_ESP32S3
 #include <esp32s3/spiram.h>
+#else
+#include <esp32/spiram.h>
+#endif
 
 static constexpr uint32_t kInternal = MALLOC_CAP_INTERNAL | MALLOC_CAP_8BIT;
 static constexpr uint32_t kExternal = MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT;
@@ -13,15 +17,23 @@ MemorySnapshot memory_snapshot() {
     s.internal_min = heap_caps_get_minimum_free_size(kInternal);
     s.internal_largest = heap_caps_get_largest_free_block(kInternal);
     // Arduino getPsramSize() sums heap-accounted bytes, excluding overhead.
+#if defined(CLAWGRID_NODE_C)
+    s.psram_total = 0;
+#else
     s.psram_total = psramFound() ? esp_spiram_get_size() : 0;
+#endif
     s.psram_free = heap_caps_get_free_size(kExternal);
     s.psram_largest = heap_caps_get_largest_free_block(kExternal);
     s.stack_free_bytes = uxTaskGetStackHighWaterMark(nullptr); // ESP-IDF reports bytes
     return s;
 }
 bool memory_hardware_matches() {
+#if defined(CLAWGRID_NODE_C)
+    return ESP.getFlashChipSize() >= 4u * 1024 * 1024; // No shared heap or PSRAM requirement.
+#else
     return ESP.getFlashChipSize() == 16u * 1024 * 1024 &&
            psramFound() && esp_spiram_get_size() == 8u * 1024 * 1024;
+#endif
 }
 void memory_log(const char *node, uint32_t rx_dropped, uint32_t tx_failed) {
     if (!Serial) return;

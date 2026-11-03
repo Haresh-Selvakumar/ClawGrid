@@ -22,6 +22,10 @@ def validate_image_mode(image,diagnostic,bench=False):
         raise RuntimeError('Application build marker does not match the explicitly requested output/fault mode')
 
 def build_environment(role,uart_console=False,diagnostic=False,bench=False,voice_experiment=None,led_indicators=False,led_active_high=False):
+    if role=='B-gateway':
+        if not uart_console or diagnostic or bench or voice_experiment or led_indicators or led_active_high:
+            raise RuntimeError('Three-board gateway requires normal inhibited B-gateway --uart-console')
+        return 'native_gateway_three_room'
     if led_active_high and not led_indicators:
         raise RuntimeError('Active-HIGH requires explicit --led-indicators')
     if led_indicators:
@@ -89,6 +93,8 @@ def prepare_pinned_model(project, build, sdk):
 
 
 def main(args):
+    if args.role=='B-gateway':
+        raise RuntimeError('Three-board deployment is blocked until C ROM identity, peer provisioning and preserved flash layout are verified. No write performed.')
     speech=args.role=='B-speech'; a=args.role=='A'
     port=args.port or ('COM8' if a else 'COM7')
     config=json.loads((ROOT/'local_credentials.json').read_text())
@@ -163,7 +169,7 @@ def main(args):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('--role',choices=['A','B','B-speech'],required=True); parser.add_argument('--port')
+    parser=argparse.ArgumentParser(description=__doc__); parser.add_argument('--role',choices=['A','B','B-speech','B-gateway'],required=True); parser.add_argument('--port')
     parser.add_argument('--app-only',action='store_true',help='Development app0 rewrite; requires the existing verified partition/boot/model images')
     parser.add_argument('--install-missing-speech-model',action='store_true',help='Normal B-speech app-only: fresh-read matching partition table and require fully blank model region before installing pinned assets; never overwrite existing models')
     mode=parser.add_mutually_exclusive_group()

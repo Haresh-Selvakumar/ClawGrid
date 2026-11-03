@@ -22,7 +22,7 @@ inline const char *target_action(TargetAction a) { const char *v[]={"OFF","ON","
 inline bool target_valid(const CommandTarget &t) {
     return (unsigned)t.mode<2 && (unsigned)t.room<4 && (unsigned)t.device<2 && (unsigned)t.action<4 &&
         (t.mode!=TargetMode::VirtualRooms || t.action!=TargetAction::Auto) &&
-        (t.mode!=TargetMode::PhysicalBedroom || t.room==TargetRoom::Bedroom);
+        (t.mode!=TargetMode::PhysicalBedroom || (t.room==TargetRoom::Bedroom || t.room==TargetRoom::LivingRoom));
 }
 inline bool same_target(const CommandTarget &a,const CommandTarget &b) {
     return a.mode==b.mode && a.room==b.room && a.device==b.device && a.action==b.action;
@@ -78,7 +78,7 @@ inline bool phone_proposal_fields(const char *body,CommandTarget &t,uint32_t &ca
     char source[24],mode[24],room[24],device[16],action[16],nonce[16],binding[16],extra;
     if(sscanf(body,"%23s %23s %23s %15s %15s %15s %15s %c",source,mode,room,device,action,nonce,binding,&extra)!=7 ||
        strcmp(source,"phone") || !parse_target(mode,room,device,action,t) ||
-       t.mode!=TargetMode::PhysicalBedroom || t.room!=TargetRoom::Bedroom || (t.device!=TargetDevice::Light && t.device!=TargetDevice::Fan) ||
+       t.mode!=TargetMode::PhysicalBedroom || (t.room!=TargetRoom::Bedroom && t.room!=TargetRoom::LivingRoom) || (t.device!=TargetDevice::Light && t.device!=TargetDevice::Fan) ||
        (t.action!=TargetAction::On && t.action!=TargetAction::Off)) return false;
     return parse_number(nonce,capture) && capture && parse_number(binding,boot) && boot;
 }

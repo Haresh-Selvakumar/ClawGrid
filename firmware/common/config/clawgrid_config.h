@@ -7,18 +7,36 @@
 #define CLAWGRID_CONFIG_H
 
 /* Node Identifiers */
-#define NODE_ID_VOICE_FASTPATH     0x0001  /* Node A */
-#define NODE_ID_INTELLIGENCE_STATE 0x0002  /* Node B */
-#define NODE_ID_BROADCAST          0xFFFF
-
-/* Wireless (ESP-NOW) Channel */
-#define CLAWGRID_WIFI_CHANNEL      1
-
-/* Node A (Voice & Fast-path) Pin Mapping (ESP32-S3-N16R8) */
-#define NODE_A_PIR_PIN             8       /* PIR OUT; verify 3.3V logic and common GND */
-#define NODE_A_DHT_PIN             7       /* DHT11 DATA, module powered from3V3 */
-#define NODE_A_RELAY_LIGHT_PIN     4       /* Separate single-channel light module */
-#define NODE_A_RELAY_FAN_PIN       5       /* Separate single-channel fan module */
+#ifndef CLAWGRID_ROOM_NODE_ID
+#define CLAWGRID_ROOM_NODE_ID 1
+#endif
+#ifndef CLAWGRID_ROOM_ID
+#define CLAWGRID_ROOM_ID 1
+#endif
+#if defined(CLAWGRID_NODE_C) && (CLAWGRID_ROOM_NODE_ID != 3 || CLAWGRID_ROOM_ID != 2)
+#error Node C must use unique node3/room2 identity; never copy the A identity
+#endif
+#ifndef CLAWGRID_LIGHT_INPUT
+#define CLAWGRID_LIGHT_INPUT 0
+#endif
+#define CLAWGRID_LIGHT_INPUT_PIN 6
+#define NODE_ID_VOICE_FASTPATH 0x0001
+#define NODE_ID_INTELLIGENCE_STATE 0x0002
+#define NODE_ID_ROOM_C 0x0003
+#define NODE_ID_BROADCAST 0xFFFF
+#define CLAWGRID_WIFI_CHANNEL 1
+#define NODE_A_PIR_PIN 8 /* Never acquired in current no-PIR builds. */
+#if defined(CLAWGRID_NODE_C)
+#define CLAWGRID_ROOM_LABEL "C"
+#define NODE_A_DHT_PIN 21
+#define NODE_A_RELAY_LIGHT_PIN 18
+#define NODE_A_RELAY_FAN_PIN 19
+#else
+#define CLAWGRID_ROOM_LABEL "A"
+#define NODE_A_DHT_PIN 7
+#define NODE_A_RELAY_LIGHT_PIN 4
+#define NODE_A_RELAY_FAN_PIN 5
+#endif
 /* Provisional GPIO-to-interface polarity, not verified module compatibility.
  * An intervening transistor may invert it. Check electrically before bench use. */
 #ifndef NODE_A_RELAY_ACTIVE_LOW
@@ -26,7 +44,7 @@
 #endif
 #define NODE_A_PIR_WARMUP_MS       60000u /* Then require 200 ms LOW before arming. */
 #ifndef CLAWGRID_PIR_AVAILABLE
-#define CLAWGRID_PIR_AVAILABLE     1
+#define CLAWGRID_PIR_AVAILABLE     0
 #endif
 #if CLAWGRID_PIR_AVAILABLE
 #define CLAWGRID_INPUT_PROFILE "ClawGrid:pir=available"

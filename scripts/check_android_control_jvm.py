@@ -18,7 +18,15 @@ def main():
     app = ROOT / 'ecosystem/android/app'
     classes = ROOT / '.android-tools/jvm-control'
     classes.mkdir(parents=True, exist_ok=True)
-    sources = [app / 'src/main/java/com/example/data/remote/HardwareRepository.kt',
+    sources = [app / 'src/main/java/com/example/data/remote/SensorEvaluation.kt',
+               app / 'src/main/java/com/example/domain/FinalPhysicalScope.kt',
+               app / 'src/test/java/com/example/SensorOrderTest.kt',
+               app / 'src/main/java/com/example/domain/SensorAutoSettings.kt',
+               app / 'src/test/java/com/example/SensorAutoTest.kt',
+               app / 'src/main/java/com/example/domain/PlanningMath.kt',
+               app / 'src/test/java/com/example/PlanningTest.kt',
+               app / 'src/test/java/com/example/RoomIsolationTest.kt',
+               app / 'src/main/java/com/example/data/remote/HardwareRepository.kt',
                app / 'src/main/java/com/example/data/remote/LocalVoiceRepository.kt',
                app / 'src/main/java/com/example/data/remote/GatewayAddress.kt',
                app / 'src/main/java/com/example/data/remote/PhoneVoiceDiagnostic.kt',
@@ -32,8 +40,8 @@ def main():
                     '-no-stdlib', '-no-reflect', '-jvm-target', '11', '-classpath', os.pathsep.join(dependencies),
                     '-d', str(classes), *map(str, sources)], check=True, cwd=ROOT)
     subprocess.run([str(JAVA), '-cp', os.pathsep.join([str(classes), *dependencies]),
-                    'org.junit.runner.JUnitCore', 'com.example.HardwareRepositoryTest',
-                    'com.example.HttpBoardApiTest', 'com.example.LocalVoiceTest', 'com.example.PhoneVoiceDiagnosticTest', 'com.example.PhoneOfflineVoiceTest'], check=True, cwd=ROOT)
+                    'org.junit.runner.JUnitCore', 'com.example.SensorOrderTest', 'com.example.SensorAutoTest', 'com.example.HardwareRepositoryTest',
+                    'com.example.HttpBoardApiTest', 'com.example.LocalVoiceTest', 'com.example.PhoneVoiceDiagnosticTest', 'com.example.PhoneOfflineVoiceTest', 'com.example.PlanningTest', 'com.example.RoomIsolationTest'], check=True, cwd=ROOT)
 
 
 if __name__ == '__main__':

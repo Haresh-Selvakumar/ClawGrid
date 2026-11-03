@@ -12,13 +12,26 @@
 // driver (ESP-IDF4.4.7 issue13419) or dynamic per-sample allocations.
 class Dht11Gpio {
 public:
+#if defined(CLAWGRID_NODE_C)
+    // SensorTask only, after read() disables the ISR; never change thresholds
+    // or publish invalid readings merely to diagnose a physical sensor.
+    DhtPulse diagnosticPulse(size_t index) const { return index<count_ ? pulses_[index] : DhtPulse{0,false}; }
+#endif
     bool begin() {
         const auto pin=(gpio_num_t)NODE_A_DHT_PIN;
         if(gpio_set_level(pin,1)!=ESP_OK || gpio_set_direction(pin,GPIO_MODE_INPUT_OUTPUT_OD)!=ESP_OK ||
            gpio_set_pull_mode(pin,GPIO_PULLUP_ONLY)!=ESP_OK) return false;
         // No other project input owns the GPIO ISR service. Fail unavailable
         // rather than assume an existing service's core/handler ownership.
+        // Classic C shares a core with radio interrupts. Captured failures show
+        // merged acknowledgement edges and delayed bit edges at default level1.
+        // Level3 still uses the same bounded C ISR; no interrupt masking/polling
+        // and no change to checksum, pulse-width or range validation.
+#if defined(CLAWGRID_NODE_C)
+        if(gpio_install_isr_service(ESP_INTR_FLAG_LEVEL3)!=ESP_OK) return false;
+#else
         if(gpio_install_isr_service(0)!=ESP_OK) return false;
+#endif
         if(gpio_set_intr_type(pin,GPIO_INTR_ANYEDGE)!=ESP_OK || gpio_isr_handler_add(pin,edge,this)!=ESP_OK) return false;
         gpio_intr_disable(pin); return true;
     }

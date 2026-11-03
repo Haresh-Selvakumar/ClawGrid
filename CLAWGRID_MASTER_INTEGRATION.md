@@ -1,3 +1,19 @@
+# CURRENT — three-board source built; hardware deployment BLOCKED — 1 November 2026 IST
+
+Read `docs/THREE_BOARD_HANDOFF_20261101.md` and `benchmarks/review/three-board-20261101/FINAL_CHECKPOINT.json` before acting. This source milestone supersedes earlier one-controller preparation notes; it does not supersede the last verified installed 28 October artifacts.
+
+User topology: B gateway (no sensors); A Room1 DHT11 DATA7, LM393 DO6/raw filtered input, active-HIGH light4/fan5; C Room2 DHT11 confirmed by user, proposed classic GPIO21/18/19 still provisional until actual chip/MAC identification. PIR/occupancy automation completely out of scope; temperature monitoring only.
+
+Implemented source: independent room/node-bound gateway reports/transactions/proposals, per-peer C auth hooks, separate provisional classic target/no S3 PSRAM dependency, Room1 digital light availability, independent Android room state/planning/estimates and explicit room-bound voice/manual confirmations. Existing Vosk source/model/0.7 gate, signer and A/B credentials preserved.
+
+Actually executed:109 host tests PASS;95 JVM tests PASS; A/B/provisional-classic-C full firmware builds PASS; APK1.0-three-room-20261101d build/signature/model/alignment/private-value checks PASS. No firmware flash, APK install, model/NVS write, actuator command or raw microphone retention. Exact hashes are in the linked handoff/checkpoint.
+
+BLOCKED: A COM8 cannot be configured (Windows device error31); B COM9 fresh ROM identity confirmed S3/e0:72:a1:f6:a9:68; C COM11/CH9102 ROM identity failed (wrong boot0x13/no-data), so chip/MAC/layout unknown. C private provisioning is absent. Current B/C staging candidates fail closed for Room2. Finish C preservation/layout and app-only guard; the B-gateway flasher currently deliberately refuses rollout. Do not bypass this or flash the provisional C partition table/image.
+
+End state: user confirmed all four LEDs OFF; no owned serial sessions. All10 requested new guided hardware test groups remain NOT RUN/BLOCKED. Next prerequisite is resolving USB/ROM identification (actual C module/button inspection, usable A programming interface), followed by C backup/provisioning and gated gateway-first rollout. No automatic retry, ON replay or rebuild of unchanged artifacts merely to resume.
+
+---
+
 # Final saved checkpoint — 28 October 2026 IST
 
 The declared LED demonstration has been implemented and observed. PIR and physical occupancy AUTO are excluded. Controller A uses active-HIGH light GPIO4 and fan GPIO5, each through its own series resistor to the LED anode, with cathode to GND. DHT11 DATA is GPIO7. Relays remain unused. The existing offline Vosk model is preserved.

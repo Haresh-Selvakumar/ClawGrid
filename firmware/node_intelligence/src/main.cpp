@@ -18,6 +18,7 @@
 #include "serial_bridge.h"
 #include "evidence_selftest.h"
 #include "command_target.h"
+#include "room_gateway.h"
 #include "serial_text_command.h"
 #include "dashboard_client.h"
 #include "pcm16.h"
@@ -28,32 +29,49 @@
 static RxMailbox s_rx;
 static httpd_handle_t s_http=nullptr;
 static portMUX_TYPE s_mux=portMUX_INITIALIZER_UNLOCKED;
-static RoomReport s_report;
+static RoomGateway s_gateway;
+// HTTP has one SDK task; LinkTask has one owner. Selectors are owned by their
+// respective task, not a shared mutable "selected room". Diagnostics is room1.
+static TaskHandle_t s_http_owner=nullptr,s_link_owner=nullptr;
+static unsigned s_http_room=0,s_link_room=0;
+static unsigned active_room() {
+    auto task=xTaskGetCurrentTaskHandle();
+    return task==s_link_owner?s_link_room:task==s_http_owner?s_http_room:0;
+}
+static PhysicalRoomLink &room_link() { return s_gateway.rooms[active_room()]; }
+static const uint8_t *room_mac(unsigned i) { return i?kNodeC:kNodeA; }
+static const uint8_t *room_key(unsigned i) { return i?kRoom2HmacKey:kHmacKey; }
+static bool room_provisioned(unsigned i) { return i==0 || kRoom2Provisioned; }
+#define s_report (room_link().report)
+#define s_received (room_link().received)
+#define s_have (room_link().have)
+#define s_last_seq (room_link().sequence)
+#define s_last_control (room_link().last_control)
+#define s_transaction (room_link().transaction)
+#define s_proposal (room_link().proposal)
+
 static SimState s_sim_report;
 static uint32_t s_sim_received=0,s_sim_sequence=0;
-static uint32_t s_received=0,s_last_seq=0,s_accepted=0,s_invalid=0,s_replayed=0,s_nonprogress=0;
+static uint32_t s_accepted=0,s_invalid=0,s_replayed=0,s_nonprogress=0;
 static std::atomic<uint32_t> s_seq{0},s_tx_failed{0};
 static RuntimeHealth s_health;
 static DiagnosticLog s_log;
 static TaskTiming s_link_timing;
 static StaticTask_t s_link_tcb;
 static StackType_t s_link_stack[6144];
-static uint32_t s_last_control=0;
-static bool s_have=false,s_radio=false,s_ok=false;
-struct Transaction {
-    ControlCommand command;
-    ControlAck ack;
-    uint32_t started=0,last_send=0,rtt_us=0,start_us=0;
-    uint8_t phase=0,attempts=0; // idle, pending, acknowledged, timeout
-};
-static Transaction s_transaction;
-// HTTP handlers execute on the one SDK HTTP task; proposal ownership stays there.
-static ProposalStore s_proposal;
-static char s_json[3072],s_body[128]; // HTTP task only; bounded speech diagnostics
+
+static bool s_radio=false,s_ok=false;
+using Transaction=RoomTransaction;
+static char s_json[4096],s_body[128]; // HTTP task only; bounded speech diagnostics
 static char s_serial[160]; static size_t s_serial_used=0; static bool s_serial_bad=false;
 static void receive(const uint8_t *mac,const uint8_t *data,int n) { s_rx.push(mac,data,n); }
 static esp_err_t json(httpd_req_t *req,int n) {
     if(n<0 || (size_t)n>=sizeof(s_json)) return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Response limit");
+    if(n>0 && s_json[n-1]=='}' && !strstr(s_json,"\"node_id\":")) {
+        int extra=snprintf(s_json+n-1,sizeof(s_json)-(size_t)n+1,",\"node_id\":%u}",RoomGateway::node(active_room()));
+        if(extra<0 || (size_t)extra>=sizeof(s_json)-(size_t)n+1) return httpd_resp_send_err(req,HTTPD_500_INTERNAL_SERVER_ERROR,"Response limit");
+        n=n-1+extra;
+    }
     httpd_resp_set_type(req,"application/json"); httpd_resp_set_hdr(req,"Cache-Control","no-store");
     return httpd_resp_send(req,s_json,n);
 }
@@ -84,19 +102,9 @@ static bool queue_command(ControlCommand c,uint32_t &id) {
 #if defined(CLAWGRID_LIGHT_PREFLIGHT)
     return false; // No actuator/serial control dispatch in a recognition-only image.
 #endif
-    uint32_t now=millis(); bool accepted=false;
-    bool healthy=s_health.healthy(kLinkReady);
+    if(!s_ok || !s_radio || !s_health.healthy(kLinkReady) || !room_provisioned(active_room())) return false;
     portENTER_CRITICAL(&s_mux);
-    if(s_ok && healthy && s_radio && s_have && (uint32_t)(now-s_received)<3000 &&
-       (!c.boot || c.boot==s_report.boot_id) && s_transaction.phase!=1) {
-        uint32_t last=s_report.last_command>s_last_control?s_report.last_command:s_last_control;
-        if(last!=UINT32_MAX) {
-            c.boot=s_report.boot_id; c.id=last+1; id=c.id;
-            c.issued_ms=s_report.uptime_ms+(now-s_received); c.ttl_ms=3000;
-            s_transaction={}; s_transaction.command=c; s_transaction.phase=1;
-            s_transaction.started=now; s_transaction.start_us=micros(); accepted=true;
-        }
-    }
+    bool accepted=s_gateway.queue(active_room(),c,millis(),micros(),id);
     portEXIT_CRITICAL(&s_mux); return accepted;
 }
 static esp_err_t root(httpd_req_t *req) {
@@ -170,19 +178,44 @@ static esp_err_t state_api(httpd_req_t *req) {
     portENTER_CRITICAL(&s_mux); RoomReport r=s_report; bool have=s_have;
     uint32_t age=millis()-s_received,accepted=s_accepted,invalid=s_invalid,replayed=s_replayed,nonprogress=s_nonprogress;
     portEXIT_CRITICAL(&s_mux); bool known=have&&age<3000;
-    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true,\"age_ms\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"physical_state\":\"not measured\"}",have?age:0,r.boot_id,r.uptime_ms,nonprogress));
+    if(!known) return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"%s\",\"node_id\":%u,\"known\":false,\"occupancy\":\"UNKNOWN\",\"light\":null,\"fan\":null,\"authenticated\":true,\"age_ms\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"physical_state\":\"not measured\"}",active_room()?"living_room":"bedroom",RoomGateway::node(active_room()),have?age:0,r.boot_id,r.uptime_ms,nonprogress));
     const uint64_t sensor_age=(uint64_t)r.temperature_age_ms+age;
     const bool sensor_valid=temperature_valid(r) && sensor_age<10000;
     const auto sensor_status=r.temperature_status==TemperatureStatus::Ok && !sensor_valid?TemperatureStatus::Stale:r.temperature_status;
-    char sensor_json[512];
+    static char sensor_json[2600]; // HTTP owner only; keep the expanded readback off its stack.
     if(sensor_valid) snprintf(sensor_json,sizeof(sensor_json),",\"telemetry_schema\":4,\"temperature_deci_c\":%d,\"humidity_deci_percent\":%u,\"temperature_age_ms\":%u,\"temperature_status\":\"OK\"",r.temperature_deci_c,r.humidity_deci,(unsigned)sensor_age);
     else snprintf(sensor_json,sizeof(sensor_json),",\"telemetry_schema\":4,\"temperature_deci_c\":null,\"humidity_deci_percent\":null,\"temperature_age_ms\":null,\"temperature_status\":\"%s\"",temperature_status_name(sensor_status));
     const char *output_profile=r.led_only_bench?(r.relay_active_low?"LED_INDICATORS_10K_ACTIVE_LOW":"LED_INDICATORS_10K_ACTIVE_HIGH"):r.physical_outputs_enabled?"GENERIC_ENABLED":"INHIBITED";
     const size_t sensor_len=strlen(sensor_json);
     snprintf(sensor_json+sensor_len,sizeof(sensor_json)-sensor_len,",\"control_policy_version\":%u,\"manual_hold_mode\":\"%s\",\"output_profile\":\"%s\"",r.control_policy_version,r.control_policy_version==2?"until_auto":"five_minutes",output_profile);
     const size_t availability_len=strlen(sensor_json);
-    snprintf(sensor_json+availability_len,sizeof(sensor_json)-availability_len,",\"pir_available\":%s,\"automation_available\":%s",r.pir_available?"true":"false",r.pir_available?"true":"false");
-    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"bedroom\",\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s%s}",r.pir_available?occupancy_name(r.occupancy):"UNAVAILABLE",r.pir_available?(r.motion?"true":"false"):"null",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false",sensor_json));
+    snprintf(sensor_json+availability_len,sizeof(sensor_json)-availability_len,",\"pir_available\":%s,\"automation_available\":%s",r.pir_available?"true":"false",(r.pir_available || r.features_version>=2)?"true":"false");
+    const size_t light_len=strlen(sensor_json);
+    snprintf(sensor_json+light_len,sizeof(sensor_json)-light_len,",\"light_input_available\":%s,\"light_input_raw\":%s,\"light_input_polarity\":\"UNVERIFIED\"",r.light_available?"true":"false",r.light_available?(r.light_raw?"true":"false"):"null");
+    if(r.features_version>=2 && active_room()==0) {
+        const size_t pos=strlen(sensor_json);
+        snprintf(sensor_json+pos,sizeof(sensor_json)-pos,",\"light_dark_high_verified\":true");
+    }
+    const size_t feature_len=strlen(sensor_json);
+    snprintf(sensor_json+feature_len,sizeof(sensor_json)-feature_len,
+        ",\"features_version\":%u,\"light_schedule_ms\":%u,\"fan_schedule_ms\":%u,\"light_schedule_action\":%u,\"fan_schedule_action\":%u,\"light_schedule_result\":%u,\"fan_schedule_result\":%u,\"light_control_source\":%u,\"fan_control_source\":%u,\"light_energy_cap_ms\":%u,\"fan_energy_cap_ms\":%u",
+        r.features_version,r.schedule_ms[0],r.schedule_ms[1],r.schedule_action[0],r.schedule_action[1],r.schedule_result[0],r.schedule_result[1],r.control_source[0],r.control_source[1],r.energy_cap_ms[0],r.energy_cap_ms[1]);
+    if(r.features_version>=2) for(int i=0;i<2;++i) {
+        const size_t pos=strlen(sensor_json); const char *dev=i?"fan":"light";
+        snprintf(sensor_json+pos,sizeof(sensor_json)-pos,
+            ",\"%s_sensor_config\":%u,\"%s_override_ms\":%u,\"%s_sensor_demand\":%u,\"%s_winner\":%u,\"%s_blocking\":%u,\"%s_override_action\":%u",
+            dev,r.sensor_config[i],dev,r.override_ms[i],dev,r.sensor_demand[i],dev,r.winner[i],dev,r.blocking[i],dev,r.override_action[i]);
+    }
+    if(r.features_version==3) {
+        const size_t pos=strlen(sensor_json);
+        snprintf(sensor_json+pos,sizeof(sensor_json)-pos,
+            ",\"light_sample_age_ms\":%llu,\"temperature_sample_age_ms\":%llu,\"sensor_snapshot_ms\":%u,\"sensor_order\":%u,\"evaluation_cycle\":%u,\"evaluation_started_us\":%u,\"evaluation_clock_valid\":%s,\"light_eval_step\":%u,\"fan_eval_step\":%u,\"light_eval_start_us\":%u,\"fan_eval_start_us\":%u,\"light_eval_elapsed_us\":%u,\"fan_eval_elapsed_us\":%u,\"light_sensor_requested\":%u,\"fan_sensor_requested\":%u,\"light_sensor_result\":%u,\"fan_sensor_result\":%u",
+            (unsigned long long)(r.light_age_ms==UINT32_MAX?UINT32_MAX:(uint64_t)r.light_age_ms+age),
+            (unsigned long long)(r.temperature_sample_age_ms==UINT32_MAX?UINT32_MAX:(uint64_t)r.temperature_sample_age_ms+age),
+            r.sensor_snapshot_ms,r.sensor_order,r.evaluation_cycle,r.evaluation_started_us,r.evaluation_clock_valid?"true":"false",
+            r.evaluation_step[0],r.evaluation_step[1],r.rule_started_us[0],r.rule_started_us[1],r.rule_elapsed_us[0],r.rule_elapsed_us[1],r.sensor_requested[0],r.sensor_requested[1],r.sensor_result[0],r.sensor_result[1]);
+    }
+    return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"%s\",\"node_id\":%u,\"known\":true,\"occupancy\":\"%s\",\"motion\":%s,\"light\":%s,\"fan\":%s,\"age_ms\":%u,\"reports\":%u,\"invalid\":%u,\"replayed\":%u,\"boot_id\":%u,\"sample_uptime_ms\":%u,\"nonprogress\":%u,\"authenticated\":true,\"mode\":\"%s\",\"auto_flags\":%u,\"manual_flags\":%u,\"grace_ms\":%u,\"light_timer_ms\":%u,\"fan_timer_ms\":%u,\"light_on_ms\":%u,\"fan_on_ms\":%u,\"last_command\":%u,\"physical_state\":\"not measured\",\"physical_outputs_enabled\":%s,\"relay_active_low_assumption\":%s%s}",active_room()?"living_room":"bedroom",RoomGateway::node(active_room()),r.pir_available?occupancy_name(r.occupancy):"UNAVAILABLE",r.pir_available?(r.motion?"true":"false"):"null",r.light?"true":"false",r.fan?"true":"false",age,accepted,invalid,replayed,r.boot_id,r.uptime_ms,nonprogress,r.mode?"AWAY":"HOME",r.auto_flags,r.manual_flags,r.grace_ms,r.timer_light_ms,r.timer_fan_ms,r.light_on_ms,r.fan_on_ms,r.last_command,r.physical_outputs_enabled?"true":"false",r.relay_active_low?"true":"false",sensor_json));
 }
 static esp_err_t transaction_api(httpd_req_t *req) {
     if(!authorized(req)) return unauthorized(req);
@@ -193,7 +226,7 @@ static esp_err_t control_api(httpd_req_t *req) {
     if(!authorized(req)) { httpd_resp_set_hdr(req,"Connection","close"); unauthorized(req); return ESP_FAIL; }
     if(!read_body(req)) return bad_body(req);
     ControlCommand c; uint32_t id=0;
-    if(!parse_fields(s_body,c)) { httpd_resp_set_status(req,"400 Bad Request"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Expected op device action value\"}")); }
+    if(!parse_api_control(s_body,c)) { httpd_resp_set_status(req,"400 Bad Request"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Expected boot ID op device action value for configuration\"}")); }
     if(!queue_command(c,id)) { httpd_resp_set_status(req,"409 Conflict"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Busy or Node A unavailable\"}")); }
     httpd_resp_set_status(req,"202 Accepted");
     return json(req,snprintf(s_json,sizeof(s_json),"{\"queued\":true,\"id\":%u,\"message\":\"Awaiting SafetyKernel acknowledgement\"}",id));
@@ -229,11 +262,15 @@ static esp_err_t proposal_api(httpd_req_t *req) {
     if(!from_phone && (!proposal_fields(s_body,source,target,job) || (strcmp(source,"manual") && strcmp(source,"speech")))) {
         s_proposal.consume(); return proposal_failure(req,ProposalResult::Invalid);
     }
+    if(target.mode==TargetMode::PhysicalBedroom && (unsigned)target.room!=active_room()) {
+        s_proposal.consume(); return proposal_failure(req,ProposalResult::Mismatch);
+    }
     bool fresh=proposal_controller(boot);
     if(from_phone && captured_boot!=boot) {
         s_proposal.consume(); return proposal_failure(req,ProposalResult::Mismatch);
     }
     bool from_speech=!strcmp(source,"speech");
+    if(from_speech && active_room()!=0) return proposal_failure(req,ProposalResult::Invalid);
     if(from_speech) {
         SpeechSnapshot s=speech_snapshot();
         if(!speech_matches(s,job,target,boot,fresh)) {
@@ -268,6 +305,7 @@ static esp_err_t confirm_api(httpd_req_t *req) {
     if(!read_body(req)) return bad_body(req);
     char first[24]; CommandTarget target; uint32_t requested=0,boot=0,id=0; ControlCommand c;
     if(!proposal_fields(s_body,first,target,requested,true)) return proposal_failure(req,ProposalResult::Invalid);
+    if(target.mode==TargetMode::PhysicalBedroom && (unsigned)target.room!=active_room()) return proposal_failure(req,ProposalResult::Mismatch);
     bool fresh=proposal_controller(boot);
     ProposalResult result=s_proposal.confirm(requested,target,boot,fresh,millis(),c);
     if(result!=ProposalResult::Ok) return proposal_failure(req,result);
@@ -413,13 +451,38 @@ static esp_err_t client_api(httpd_req_t *req) {
     httpd_resp_set_type(req,"application/javascript; charset=utf-8");
     return httpd_resp_send(req,kDashboardClient,sizeof(kDashboardClient)-1);
 }
+struct RoutedHandler { esp_err_t (*handler)(httpd_req_t*); bool scoped; };
+static RoutedHandler s_handlers[18];
+static esp_err_t room_route(httpd_req_t *req) {
+    s_http_owner=xTaskGetCurrentTaskHandle(); s_http_room=0;
+    auto *route=static_cast<RoutedHandler*>(req->user_ctx);
+    const size_t n=httpd_req_get_url_query_len(req);
+    if(n) {
+        char query[64],value[8];
+        if(n>=sizeof(query) || httpd_req_get_url_query_str(req,query,sizeof(query))!=ESP_OK) return bad_body(req);
+        if(httpd_query_key_value(query,"room",value,sizeof(value))==ESP_OK) {
+            if(strcmp(value,"1") && strcmp(value,"2")) return bad_body(req);
+            s_http_room=!strcmp(value,"2")?1:0;
+        } else if(strstr(query,"room=")) return bad_body(req);
+    }
+#if defined(CLAWGRID_ROOM1_DEMO_ONLY)
+    if(s_http_room) {
+        httpd_resp_set_status(req,"409 Conflict");
+        return json(req,snprintf(s_json,sizeof(s_json),"{\"room\":\"living_room\",\"node_id\":3,\"known\":false,\"error\":\"Room 2 unavailable/unverified; outside final physical acceptance\"}"));
+    }
+#endif
+    if(s_http_room && (!route->scoped || !kRoom2Provisioned)) {
+        httpd_resp_set_status(req,"409 Conflict"); return json(req,snprintf(s_json,sizeof(s_json),"{\"error\":\"Room2 unavailable or unsupported endpoint\"}"));
+    }
+    return route->handler(req);
+}
 static bool start_http() {
-    httpd_config_t c=HTTPD_DEFAULT_CONFIG(); c.stack_size=6144; c.core_id=1; c.max_open_sockets=2;
+    httpd_config_t c=HTTPD_DEFAULT_CONFIG(); c.stack_size=8192; c.core_id=1; c.max_open_sockets=2;
     c.max_uri_handlers=18; c.lru_purge_enable=true; c.recv_wait_timeout=1; c.send_wait_timeout=1;
     if(httpd_start(&s_http,&c)!=ESP_OK) return false;
     const char *paths[]={"/","/api/state","/api/memory","/api/transaction","/api/control","/api/voice","/api/rtos","/simulation","/api/simulation","/api/simulation/input","/api/speech","/api/speech/audio","/api/evidence","/api/proposal","/api/confirm","/api/client","/api/text","/api/speech/reference"};
     esp_err_t (*handlers[])(httpd_req_t*)={root,state_api,memory_api,transaction_api,control_api,voice_api,rtos_api,simulation_page,simulation_state_api,simulation_input_api,speech_state_api,speech_audio_api,evidence_api,proposal_api,confirm_api,client_api,text_api,speech_reference_api};
-    for(int i=0;i<18;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14||i==16||i==17)?HTTP_POST:HTTP_GET; r.handler=handlers[i];
+    for(int i=0;i<18;++i) { httpd_uri_t r={}; r.uri=paths[i]; r.method=((i>=4&&i<6)||i==9||i==11||i==13||i==14||i==16||i==17)?HTTP_POST:HTTP_GET; s_handlers[i]={handlers[i],i==1||i==2||i==3||i==4||i==6||i==13||i==14}; r.handler=room_route; r.user_ctx=&s_handlers[i];
         if(httpd_register_uri_handler(s_http,&r)!=ESP_OK) { httpd_stop(s_http); s_http=nullptr; return false; }
     }
     return true;
@@ -433,18 +496,23 @@ static void control_tick(uint32_t now) {
     }
     t=s_transaction; portEXIT_CRITICAL(&s_mux);
     if(send) { uint8_t p[kControlBytes]; encode_control(t.command,p);
-        if(!secure_send(kNodeA,MSG_TYPE_DEVICE_COMMAND,2,1,s_seq++,p,sizeof(p))) ++s_tx_failed;
+        if(!secure_send(room_mac(active_room()),MSG_TYPE_DEVICE_COMMAND,2,RoomGateway::node(active_room()),s_seq++,p,sizeof(p),room_key(active_room()))) ++s_tx_failed;
     }
     if(timeout) traffic_led_event(TrafficError);
     if(timeout) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":%u,\"phase\":3,\"attempts\":%u,\"outcome_known\":false}\n",t.command.id,t.attempts);
 }
 static void process_frame(const RxFrame &f) {
     clawgrid_header_t h; const uint8_t *p=nullptr;
-    if(!secure_decode(f.mac,kNodeA,f.bytes,f.length,h,p) || h.src_node!=1 || h.dst_node!=2) {
+    int incoming=!memcmp(f.mac,kNodeA,6)?0:kRoom2Provisioned&&!memcmp(f.mac,kNodeC,6)?1:-1;
+    if(incoming<0) { portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return; }
+    s_link_room=(unsigned)incoming;
+    if(!secure_decode(f.mac,room_mac(s_link_room),f.bytes,f.length,h,p,room_key(s_link_room)) ||
+       h.src_node!=RoomGateway::node(s_link_room) || h.dst_node!=2) {
         portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return;
     }
     traffic_led_event(TrafficRx);
     if(h.msg_type==MSG_TYPE_NODE_STATUS) {
+        if(s_link_room!=0) return;
         SimState state; if(!decode_sim_state(p,h.payload_len,state)) return;
         portENTER_CRITICAL(&s_mux);
         if(s_have && state.boot==s_report.boot_id && (!s_sim_received || state.boot!=s_sim_report.boot || sequence_newer(state.sequence,s_sim_report.sequence) || (state.sequence==s_sim_report.sequence && sequence_newer(state.at_ms,s_sim_report.at_ms)))) { s_sim_report=state; s_sim_received=millis(); }
@@ -453,23 +521,14 @@ static void process_frame(const RxFrame &f) {
         RoomReport r;
         if(!decode_room_report(p,h.payload_len,r)) { portENTER_CRITICAL(&s_mux); ++s_invalid; portEXIT_CRITICAL(&s_mux); return; }
         portENTER_CRITICAL(&s_mux);
-        if(s_have && (r.boot_id<s_report.boot_id || (r.boot_id==s_report.boot_id && !sequence_newer(h.seq_num,s_last_seq)))) ++s_replayed;
-        else if(!room_report_advances(r,s_report)) ++s_nonprogress;
-        else {
-            if(s_have && r.boot_id!=s_report.boot_id) { s_last_control=0; if(s_transaction.phase==1) s_transaction.phase=3; }
-            s_report=r; s_last_seq=h.seq_num; s_have=true; s_received=millis(); ++s_accepted;
-        }
+        if(s_gateway.report(h.src_node,r,h.seq_num,millis())) ++s_accepted;
+        else ++s_replayed;
         portEXIT_CRITICAL(&s_mux);
     } else if(h.msg_type==MSG_TYPE_COMMAND_ACK) {
         ControlAck a; if(!decode_ack(p,h.payload_len,a)) return;
         bool accepted=false; Transaction t;
         portENTER_CRITICAL(&s_mux);
-        uint8_t expected[kControlBytes]; encode_control(s_transaction.command,expected);
-        if(s_transaction.phase==1 && a.boot==s_transaction.command.boot && a.id==s_transaction.command.id && !memcmp(a.request,expected,kControlBytes)) {
-            s_transaction.ack=a; s_transaction.phase=2; s_transaction.rtt_us=micros()-s_transaction.start_us;
-            if(a.status!=ControlStatus::WrongBoot && a.status!=ControlStatus::Replay) s_last_control=a.id;
-            accepted=true;
-        }
+        accepted=s_gateway.ack(h.src_node,a,millis(),micros());
         t=s_transaction; portEXIT_CRITICAL(&s_mux);
         if(accepted) traffic_led_event(a.status==ControlStatus::Applied ? TrafficAck : TrafficError);
         if(accepted) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"transaction\",\"id\":%u,\"phase\":2,\"status\":%u,\"attempts\":%u,\"rtt_us\":%u,\"processing_us\":%u,\"light\":%s,\"fan\":%s,\"outcome_known\":true}\n",a.id,(unsigned)a.status,t.attempts,t.rtt_us,a.processing_us,a.light?"true":"false",a.fan?"true":"false");
@@ -479,12 +538,14 @@ static void diagnostic_service() {
     // LinkTask continues independently during an HTTP or memory diagnostic.
 }
 static void link_task(void*) {
+    s_link_owner=xTaskGetCurrentTaskHandle();
     s_health.ready(kLinkReady,s_link_timing);
     TickType_t release=xTaskGetTickCount(); uint32_t expected=micros();
     for(;;) {
         uint32_t start=micros();
         RxFrame f; for(int i=0;i<4&&s_rx.pop(f);++i) process_frame(f);
-        control_tick(millis());
+        for(s_link_room=0;s_link_room<2;++s_link_room) control_tick(millis());
+        s_link_room=0;
         if(s_link_timing.watchdog.load()) esp_task_wdt_reset();
         s_link_timing.record(start,expected,5000); expected+=5000;
         vTaskDelayUntil(&release,pdMS_TO_TICKS(5));
@@ -534,13 +595,14 @@ static void serial_tick() {
     }
 }
 void setup() {
-    s_proposal.seed(esp_random()&0x7fffffffu);
+    for(auto &room:s_gateway.rooms) room.proposal.seed(esp_random()&0x7fffffffu);
     Serial.begin(115200); traffic_led_begin(); s_rx.begin(); s_log.begin(); neural_agent_init(); s_ok=runtime_selftest()&&neural_agent_selftest()&&security_selftest()&&s_health.begin();
     Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"B\",\"schema\":5,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
     Serial.printf("{\"kind\":\"console_transport\",\"transport\":\"%s\"}\n",native_serial_transport());
     WiFi.mode(WIFI_AP_STA); WiFi.setSleep(false);
     bool ap=WiFi.softAP(kApSsid,kApPassword,CLAWGRID_WIFI_CHANNEL,false,2);
     s_radio=ap && esp_now_init()==ESP_OK && secure_peer(kNodeA);
+    if(s_radio && kRoom2Provisioned) s_radio=secure_peer(kNodeC,kRoom2Lmk);
     if(s_radio) { esp_now_register_recv_cb(receive); esp_now_register_send_cb(traffic_send_complete); }
     if(s_ok) {
         s_link_timing.handle=xTaskCreateStaticPinnedToCore(link_task,"LinkTask",sizeof(s_link_stack),nullptr,3,s_link_stack,&s_link_tcb,0);

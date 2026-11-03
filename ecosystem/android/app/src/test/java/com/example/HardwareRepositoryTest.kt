@@ -350,7 +350,7 @@ class HardwareRepositoryTest {
     @Test fun hardwareTemperatureTileUsesFreshMeasuredRoomRatherThanUnavailablePlaceholder() = runBlocking {
         sample.put("telemetry_schema", 4).put("temperature_status", "OK").put("temperature_deci_c", 289).put("temperature_age_ms", 500)
         repo.poll(); val ui = repo.state.value.temperaturePresentation(now)
-        assertTrue(ui.available); assertEquals("28.9 °C", ui.valueText); assertTrue(ui.detail.contains("monitoring only"))
+        assertTrue(ui.available); assertEquals("28.9 °C", ui.valueText); assertTrue(ui.detail.contains("physical sensor"))
         now += 3000; assertFalse(repo.state.value.temperaturePresentation(now).available)
         assertEquals("Unavailable", repo.state.value.temperaturePresentation(now).valueText)
         sample = report(uptime = 105).put("temperature_status", "TIMEOUT"); repo.poll()

@@ -158,13 +158,13 @@ fun ClawGridAppRoot(
     if (uiState.mode == TelemetryMode.HARDWARE_NODE_A && uiState.hardwareState.request?.phase == RequestPhase.PROPOSED) {
         AlertDialog(
             onDismissRequest = viewModel::cancelHardwareProposal,
-            title = { Text("Confirm Bedroom ${uiState.hardwareState.request?.device} ${uiState.hardwareState.request?.action}") },
+            title = { Text("Confirm ${if(uiState.hardwareRoom == "bedroom") "Room 1" else "Room 2"} ${uiState.hardwareState.request?.device} ${uiState.hardwareState.request?.action}") },
             text = { Text((when (uiState.hardwareState.request?.source) {
                 "phone" -> "Recognized offline on this phone; embedded control. Capture ${uiState.hardwareState.request?.speechJob}, controller boot ${uiState.hardwareState.request?.boot}. "
                 "speech" -> "Legacy ESP speech job ${uiState.hardwareState.request?.speechJob}. "
                 else -> "Manual request. "
-            }) + "Target: Bedroom / ${uiState.hardwareState.request?.device} / ${uiState.hardwareState.request?.action}. This only proposes the physical_bedroom target through SafetyKernel. ${if (uiState.hardwareState.sample?.controlPolicyVersion == 2) "Manual mode holds until AUTO; saved manual mode boots OFF. Policy persistence commits separately after five seconds." else "Legacy controller manual hold is five minutes; AUTO unavailable."} Three-second dwell remains. Confirmation submits the command; matching ACK and fresh readback are required. Outputs must remain inhibited until the LED wiring is verified; physical load not measured.") },
-            confirmButton = { TextButton(onClick = viewModel::confirmHardwareLight) { Text("Confirm") } },
+            }) + "Target: ${if(uiState.hardwareRoom == "bedroom") "Room 1" else "Room 2"} / ${uiState.hardwareState.request?.device} / ${uiState.hardwareState.request?.action}. This proposes the selected physical room through SafetyKernel. ${if (uiState.hardwareState.sample?.controlPolicyVersion == 2) "Manual mode holds until AUTO; saved manual mode boots OFF. Policy persistence commits separately after five seconds." else "Legacy controller manual hold is five minutes; AUTO unavailable."} Three-second dwell remains. Confirmation submits the command; matching ACK and fresh readback are required. Outputs must remain inhibited until the LED wiring is verified; physical load not measured.") },
+            confirmButton = { TextButton(onClick = { viewModel.confirmHardwareLight(uiState.hardwareRoom, uiState.hardwareState.request?.proposal ?: 0) }) { Text("Confirm") } },
             dismissButton = { TextButton(onClick = viewModel::cancelHardwareProposal) { Text("Cancel") } }
         )
     }
@@ -256,6 +256,14 @@ fun ClawGridAppRoot(
                         )
 
                         if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) {
+                            Row {
+                                TextButton(onClick={ viewModel.selectHardwareRoom("bedroom") }) { Text("Room 1 / Node A") }
+                                TextButton(onClick={ viewModel.selectHardwareRoom("living_room") }) { Text("Room 2 / Node C") }
+                            }
+                            Text("Selected: ${if(uiState.hardwareRoom == "bedroom") "Room 1" else "Room 2"}. Light input: " +
+                                if(uiState.hardwareState.connected && uiState.hardwareState.sample?.lightInputAvailable == true)
+                                    "LM393 ${if(uiState.hardwareState.sample?.lightInputRaw == true) "dark (HIGH)" else "bright (LOW)"}; filtered digital input, not lux"
+                                else "Unavailable", color=ClawTextMuted)
                             HardwareRequestStatus(uiState.hardwareState)
                         }
 
@@ -266,7 +274,12 @@ fun ClawGridAppRoot(
                         )
 
                         if (uiState.mode == TelemetryMode.HARDWARE_NODE_A && uiState.activeTab in listOf(ClawGridTab.RELAYS, ClawGridTab.OVERVIEW)) {
+                            com.example.ui.components.SensorEvaluationPanel(uiState.hardwareState,uiState.voiceBusy,viewModel::configureSensorOrder)
                             PhonePushToTalk(uiState, viewModel::startPhoneVoice, viewModel::stopPhoneVoice, viewModel::cancelPhoneVoice, viewModel::selectVoiceRoom, viewModel::dismissVoicePreview)
+                        }
+
+                        if (uiState.mode == TelemetryMode.HARDWARE_NODE_A && uiState.activeTab in listOf(ClawGridTab.RELAYS, ClawGridTab.OVERVIEW)) {
+                            com.example.ui.components.ControlPlanningPanel(uiState.hardwareState, uiState.voiceBusy, uiState.hardwareRoom, viewModel::configureDevicePlan, viewModel::configureDeviceCountdown, viewModel::configureSensorAuto, viewModel::configureDeviceMode)
                         }
 
                         // 3. Active Screen Content
@@ -477,7 +490,7 @@ private fun ClawGridSidebarContent(
 
             HorizontalDivider(color = ClawBorder)
 
-            // User / Node Widget matching screenshot ("CG" avatar + "ClawGrid V2.0" + "Hardware Mode · Bedroom Node A")
+            // User / Node Widget matching screenshot ("CG" avatar + "ClawGrid V2.0" + "Hardware Mode · Room controllers A / C")
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -511,7 +524,7 @@ private fun ClawGridSidebarContent(
                     )
                     Text(
                         text = if (uiState.mode == TelemetryMode.HARDWARE_NODE_A) {
-                            "Hardware Mode · Bedroom Node A"
+                            "Hardware Mode · Room controllers A / C"
                         } else {
                             "4-Room Simulation · SafetyKernel"
                         },

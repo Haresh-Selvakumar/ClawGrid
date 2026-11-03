@@ -7,6 +7,10 @@
 #include <atomic>
 #include <stdio.h>
 
+#if CLAWGRID_STATUS_LED_PIN < 0
+void traffic_led_event(TrafficEvent) {}
+void traffic_led_begin() {}
+#else
 // One WS2812-compatible onboard RGB LED. Never use relay, USB or memory pins.
 static_assert(CLAWGRID_STATUS_LED_PIN == 48 || CLAWGRID_STATUS_LED_PIN == 38,
               "Select the verified onboard RGB LED pin: GPIO48 or GPIO38");
@@ -74,3 +78,5 @@ void traffic_led_begin() {
     printf("{\"kind\":\"traffic_led\",\"ready\":%s,\"pin\":%u,\"type\":\"WS2812_GRB\"}\n",
            ok ? "true" : "false", (unsigned)CLAWGRID_STATUS_LED_PIN);
 }
+
+#endif

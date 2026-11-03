@@ -2,14 +2,17 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <string.h>
+#include "sensor_rules.h"
 
 // Explicit bytes: no compiler padding or host endianness is stored in flash.
 struct PolicyConfig {
     bool away=false, light_auto=true, fan_auto=false;
     uint32_t grace_ms=120000;
+    uint32_t sensor_config[2]={SensorRuleConfig().packed(),SensorRuleConfig().packed()};
+    bool temperature_first=false;
     uint8_t manual_flags=0; // Stored under a separate backward-compatible NVS key.
     bool operator==(const PolicyConfig &b) const {
-        return away==b.away && light_auto==b.light_auto && fan_auto==b.fan_auto && grace_ms==b.grace_ms && manual_flags==b.manual_flags;
+        return away==b.away && light_auto==b.light_auto && fan_auto==b.fan_auto && grace_ms==b.grace_ms && manual_flags==b.manual_flags && sensor_config[0]==b.sensor_config[0] && sensor_config[1]==b.sensor_config[1] && temperature_first==b.temperature_first;
     }
     bool operator!=(const PolicyConfig &b) const { return !(*this==b); }
 };
@@ -46,4 +49,28 @@ inline void encode_manual_policy(uint8_t flags,uint8_t *p) {
 inline bool decode_manual_policy(const uint8_t *p,size_t n,uint8_t &flags) {
     if(!p || n!=kManualRecordBytes || memcmp(p,"CGM",3) || p[3]!=1 || p[4]>3 || p[5] || p[6] || p[7] || policy_get32(p+8)!=policy_crc(p,8)) return false;
     flags=p[4]; return true;
+}
+
+// New optional key; original policy/manual blobs and all provisioning retained.
+static constexpr size_t kSensorPolicyBytes=16;
+inline void encode_sensor_policy(const PolicyConfig &c,uint8_t *p) {
+    memset(p,0,kSensorPolicyBytes); memcpy(p,"CGA",3); p[3]=1;
+    policy_put32(p+4,c.sensor_config[0]); policy_put32(p+8,c.sensor_config[1]);
+    policy_put32(p+12,policy_crc(p,12));
+}
+inline bool decode_sensor_policy(const uint8_t *p,size_t n,PolicyConfig &c) {
+    SensorRuleConfig a,b;
+    if(n!=kSensorPolicyBytes || memcmp(p,"CGA",3) || p[3]!=1 || policy_get32(p+12)!=policy_crc(p,12) ||
+       !SensorRuleConfig::unpack(policy_get32(p+4),a) || !SensorRuleConfig::unpack(policy_get32(p+8),b)) return false;
+    c.sensor_config[0]=a.packed(); c.sensor_config[1]=b.packed(); return true;
+}
+
+static constexpr size_t kSensorOrderBytes=12;
+inline void encode_sensor_order(bool temperature_first,uint8_t *p) {
+    memset(p,0,kSensorOrderBytes); memcpy(p,"CGO",3); p[3]=1; p[4]=temperature_first;
+    policy_put32(p+8,policy_crc(p,8));
+}
+inline bool decode_sensor_order(const uint8_t *p,size_t n,bool &out) {
+    if(!p || n!=kSensorOrderBytes || memcmp(p,"CGO",3) || p[3]!=1 || p[4]>1 || p[5] || p[6] || p[7] || policy_get32(p+8)!=policy_crc(p,8)) return false;
+    out=p[4]; return true;
 }

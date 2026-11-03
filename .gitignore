@@ -57,10 +57,22 @@ local-artifacts/
 # Source defaults for the explicit MN7 evaluation, not generated local SDK config.
 !speech/sdkconfig.mn7.defaults
 
-# Bundled offline phone model required by the current Android app.
-!ecosystem/android/app/src/main/assets/model.zip
+# Private three-board peer material and local preservation evidence.
+firmware/common/config/private_room2_config.h
+planning-patch-backup-*/
 
-# Local raw diagnostics and generated test runs.
+# Pinned local host compiler and its generated cache.
+.host-tools/
+
+# Publication exclusions and required offline phone model.
+!ecosystem/android/app/src/main/assets/offline-voice/model.zip
 benchmarks/raw/
 benchmarks/*pytest*/
 benchmarks/pc-voice-verified/
+output/
+deliverables/
+ecosystem/web-baseline/
+
+# Generated local IDE and Room 2 SDK configuration.
+.vscode/settings.json
+native/sdkconfig.room_c_esp32

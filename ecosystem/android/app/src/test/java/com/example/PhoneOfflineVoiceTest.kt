@@ -27,7 +27,7 @@ class PhoneOfflineVoiceTest {
         for ((phrase, on) in expected) {
             val command = PhoneVoicePolicy.parse(listOf(final(phrase)), "bedroom")!!
             assertEquals(on, command.on)
-            assertEquals("Bedroom / light / ${if (on) "ON" else "OFF"}", command.label)
+            assertEquals("Room 1 / light / ${if (on) "ON" else "OFF"}", command.label)
         }
     }
     @Test fun exactVariantsPunctuationAndStructuredTarget() {
@@ -63,7 +63,7 @@ class PhoneOfflineVoiceTest {
             val fanPhrase = phrase.replace("light", "fan")
             val command = PhoneVoicePolicy.parse(listOf(final(fanPhrase)), "bedroom")!!
             assertEquals("fan", command.device); assertEquals(on, command.on)
-            assertEquals("Bedroom / fan / ${if (on) "ON" else "OFF"}", command.label)
+            assertEquals("Room 1 / fan / ${if (on) "ON" else "OFF"}", command.label)
             assertNull(PhoneVoicePolicy.parse(listOf(final(fanPhrase, 0.69999)), "bedroom"))
             assertNull(PhoneVoicePolicy.parse(listOf(final(fanPhrase)), "kitchen"))
         }
@@ -164,7 +164,7 @@ class PhoneOfflineVoiceTest {
     @Test fun acceptedDecisionCarriesOnlyTypedTargetAndConfidenceMetadata() {
         val decision = PhoneVoicePolicy.decide(listOf(final("turn off bedroom light", 0.7)), "bedroom")
         assertEquals(PhoneVoiceReason.ACCEPTED, decision.reason)
-        assertEquals("Bedroom / light / OFF", decision.command!!.label)
+        assertEquals("Room 1 / light / OFF", decision.command!!.label)
         assertEquals(4, decision.wordCount); assertEquals(0.7, decision.minimumConfidence!!, 0.0)
         assertFalse(decision.metadata.contains("turn off"))
     }

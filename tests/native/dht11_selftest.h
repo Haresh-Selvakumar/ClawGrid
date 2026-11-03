@@ -35,7 +35,7 @@ inline bool dht_wire_test() {
     p[48]=7; if(decode_room_report(p,sizeof(p),d)) return false; p[48]=1;
     wire_put32(p+52,10000); if(decode_room_report(p,sizeof(p),d)) return false;
     wire_put32(p+52,2500); p[0]=4; p[49]=0;
-    if(!decode_room_report(p,sizeof(p),d) || d.control_policy_version!=1 || !temperature_valid(d)) return false;
+    if(!decode_room_report(p,56,d) || d.control_policy_version!=1 || !temperature_valid(d)) return false;
     // Schema3 remains readable during B-first rollout; no old/new reading leaks.
     p[0]=3; return decode_room_report(p,44,d) && d.temperature_status==TemperatureStatus::NotReady && d.temperature_age_ms==UINT32_MAX && d.temperature_deci_c==0;
 }

@@ -4,6 +4,8 @@
 #include "esp_ota_ops.h"
 #if defined(CLAWGRID_NODE_A)
 #include "../../firmware/node_voice/src/main.cpp"
+#elif defined(CLAWGRID_THREE_ROOM_GATEWAY)
+#include "../../firmware/node_gateway/src/main.cpp"
 #elif defined(CLAWGRID_NODE_B)
 #include "../../firmware/node_intelligence/src/main.cpp"
 #else
@@ -19,6 +21,9 @@ extern "C" void app_main(void) {
     if(status!=ESP_OK) { native_serial_begin(); printf("NVS initialization failed: %s\n",esp_err_to_name(status)); return; }
     setup();
     printf("%s\n", CLAWGRID_PAIR_ID);
+#if defined(CLAWGRID_NODE_C) || defined(CLAWGRID_THREE_ROOM_GATEWAY)
+    printf("%s\n", CLAWGRID_C_ID);
+#endif
     xTaskCreateStaticPinnedToCore(diagnostics,"Diagnostics",sizeof(diagnostic_stack),nullptr,1,diagnostic_stack,&diagnostic_tcb,1);
     // Only confirm a staged image once its essential tasks have registered.
     const esp_partition_t *running=esp_ota_get_running_partition();

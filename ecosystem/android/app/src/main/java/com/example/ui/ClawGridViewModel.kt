@@ -74,6 +74,8 @@ data class ClawGridUiState(
     val logSourceFilter: String = "ALL",
     val unreadAlertsCount: Int = 0,
     val hardwareState: HardwareState = HardwareState(),
+    val hardwareRoom: String = "bedroom",
+    val roomHardwareStates: Map<String, HardwareState> = emptyMap(),
     val voiceReady: Boolean = false,
     val voiceModelReady: Boolean = false,
     val voiceRoom: String? = null,
@@ -81,7 +83,7 @@ data class ClawGridUiState(
     val voiceRecording: Boolean = false,
     val voiceMicReady: Boolean = false,
     val voiceAwaitingRelease: Boolean = false,
-    val voiceMessage: String = "First complete manual light ACK + board readback for this boot",
+    val voiceMessage: String = "Select a room and hold to talk when the controller is connected",
     val voiceCaptureInfo: String = "",
     val voiceDiagnostics: String = "",
     val voiceLastResult: String = "",
@@ -96,7 +98,11 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     private val auditDao = db.auditEventDao()
     private val roomDao = db.roomSnapshotDao()
     private var gatewayApis = WifiGatewayApis(application, GatewayAddress.DEFAULT, "")
-    private var hardware = HardwareRepository(gatewayApis, android.os.SystemClock::elapsedRealtime)
+    private fun createHardwareRooms() = com.example.domain.FinalPhysicalScope.rooms.associateWith {
+        HardwareRepository(gatewayApis, android.os.SystemClock::elapsedRealtime, it)
+    }
+    private var hardwareRooms = createHardwareRooms()
+    private var hardware = hardwareRooms.getValue("bedroom")
     private val phoneRecognizer = OfflinePhoneRecognizer(application)
     private val voice = PhoneVoiceSession(android.os.SystemClock::elapsedRealtime)
     private var voiceContext: PhoneVoiceContext? = null
@@ -123,7 +129,7 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
             _uiState.update { it.copy(voiceMessage = "Preparing bundled offline English model on phone…") }
             try {
                 val vocabulary = phoneRecognizer.prepare()
-                _uiState.update { it.copy(voiceModelReady = true, voiceVocabulary = "Model vocabulary checked: " + vocabulary.entries.joinToString { (word, id) -> "$word=$id" }, voiceMessage = "Offline phone model ready. Select Bedroom and verify manual OFF ACK/readback for this boot.") }
+                _uiState.update { it.copy(voiceModelReady = true, voiceVocabulary = "Model vocabulary checked: " + vocabulary.entries.joinToString { (word, id) -> "$word=$id" }, voiceMessage = "Offline phone model ready. Select a room, then hold to talk.") }
             } catch (e: kotlinx.coroutines.CancellationException) { throw e
             } catch (_: Exception) {
                 _uiState.update { it.copy(voiceMessage = "Offline model could not load. Manual controls remain available; no cloud fallback.") }
@@ -137,7 +143,7 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         startDeterministicTickLoop()
         viewModelScope.launch {
             while (true) {
-                if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) hardware.poll()
+                if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) for(repo in hardwareRooms.values) repo.poll()
                 delay(500)
             }
         }
@@ -145,11 +151,21 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
 
     private fun bindHardware() {
         hardwareCollection?.cancel()
-        hardwareCollection = viewModelScope.launch {
-            hardware.state.collect { hw ->
-                if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) renderHardware(hw)
+        hardwareCollection=viewModelScope.launch {
+            for((room,repo) in hardwareRooms) launch {
+                repo.state.collect { hw ->
+                    _uiState.update { it.copy(roomHardwareStates=it.roomHardwareStates+(room to hw)) }
+                    if(_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) renderHardware(hardware.state.value)
+                }
             }
         }
+    }
+    fun selectHardwareRoom(room: String) {
+        if(room !in hardwareRooms || _uiState.value.voiceBusy || hardware.state.value.request?.phase in listOf(RequestPhase.SENDING,RequestPhase.PENDING)) return
+        cancelPhoneVoice(); hardware.cancelProposal()
+        hardware=hardwareRooms.getValue(room)
+        _uiState.update { it.copy(hardwareRoom=room,voiceRoom=null) }
+        renderHardware(hardware.state.value)
     }
 
     private fun renderHardware(hw: HardwareState) {
@@ -159,17 +175,20 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         if (_uiState.value.voicePreview != null && (!fresh || sample?.boot != previewBoot || android.os.SystemClock.elapsedRealtime() >= previewExpires)) cancelPhoneVoice()
         _uiState.update { state -> state.copy(
             hardwareState = hw,
-            voiceReady = hardware.voiceReady() && state.voiceModelReady && state.voiceRoom == "bedroom" && sample?.voiceOutputModeAllowed() == true,
-            rooms = state.rooms.map { room -> room.copy(
-                pirEnabled = false, presenceEnabled = false,
-                zoneLabel = if (room.id == "bedroom") "Physical Bedroom · PIR unavailable" else "Unprovisioned",
-                state = if (fresh && room.id == "bedroom") runCatching { OccupancyState.valueOf(sample!!.occupancy) }.getOrDefault(OccupancyState.UNKNOWN) else OccupancyState.UNKNOWN,
-                tempC = if (fresh && room.id == "bedroom") sample?.temperatureAt(android.os.SystemClock.elapsedRealtime()) ?: Double.NaN else Double.NaN,
-                lux = -1, reportedKnown = fresh && room.id == "bedroom",
-                lightOn = fresh && room.id == "bedroom" && sample!!.light,
-                fanOn = fresh && room.id == "bedroom" && sample!!.fan,
-                autoLight = false, autoFan = false, manualLightHoldUntilMs = 0, manualFanHoldUntilMs = 0
-            ) },
+            voiceReady = hardware.voiceReady() && state.voiceModelReady && state.voiceRoom == hardware.room && sample?.voiceOutputModeAllowed() == true,
+            rooms = state.rooms.map { room ->
+                val roomState=hardwareRooms[room.id]?.state?.value
+                val report=roomState?.sample
+                val current=roomState?.connected == true && report?.fresh(android.os.SystemClock.elapsedRealtime()) == true
+                room.copy(
+                    name=if(room.id == "bedroom") "Room 1 · Node A" else if(room.id == "living_room") "Room 2 · Node C" else room.name,
+                    pirEnabled=false,presenceEnabled=false,
+                    zoneLabel=if(room.id in hardwareRooms) "Physical · occupancy unavailable" else if(room.id=="living_room") "Outside final physical acceptance" else "Unprovisioned",
+                    state=OccupancyState.UNKNOWN,
+                    tempC=if(current) report?.temperatureAt(android.os.SystemClock.elapsedRealtime()) ?: Double.NaN else Double.NaN,
+                    lux=-1,reportedKnown=current,lightOn=current && report!!.light,fanOn=current && report!!.fan,
+                    autoLight=false,autoFan=false,manualLightHoldUntilMs=0,manualFanHoldUntilMs=0)
+            },
             telemetryHistory = emptyList(), timers = emptyList(), isRoomTourRunning = false,
             hardwareTelemetry = HardwareRealtimeTelemetry(
                 connected = fresh, stale = !fresh,
@@ -187,15 +206,60 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         tier1Status = "UNKNOWN", tier2Status = "UNKNOWN", tier3Status = "UNAVAILABLE",
         sramFreeKib = Double.NaN, minFreeSramKib = Double.NaN, psramFreeKib = 0, tasks = emptyList())
 
-    fun confirmHardwareLight() { viewModelScope.launch { hardware.confirm() } }
+    fun configureDevicePlan(room: String, device: String, action: Int, value: Long, cap: Boolean, expectedBoot: Long) {
+        if(_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || _uiState.value.voiceBusy || room != _uiState.value.hardwareRoom) return
+        val owner=hardwareRooms[room] ?: return
+        viewModelScope.launch {
+            if(hardware === owner && _uiState.value.hardwareRoom == room)
+                owner.configurePlan(device,action,value,cap,expectedBoot)
+        }
+    }
+
+    fun configureSensorOrder(temperatureFirst: Boolean, expectedBoot: Long) {
+        if(_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || _uiState.value.voiceBusy || _uiState.value.hardwareRoom!="bedroom") return
+        val owner=hardwareRooms.getValue("bedroom")
+        viewModelScope.launch { if(hardware === owner) owner.configureSensorOrder(temperatureFirst,expectedBoot) }
+    }
+
+    fun configureSensorAuto(room: String, device: String, packed: Long, expectedBoot: Long) {
+        if(_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || _uiState.value.voiceBusy || room != _uiState.value.hardwareRoom) return
+        val owner=hardwareRooms[room] ?: return
+        viewModelScope.launch { if(hardware === owner && _uiState.value.hardwareRoom==room)
+            owner.configureSensorAuto(device,com.example.domain.SensorAutoSettings.unpack(packed),expectedBoot) }
+    }
+    fun configureDeviceMode(room: String, device: String, auto: Boolean, expectedBoot: Long) {
+        if(_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || _uiState.value.voiceBusy || room != _uiState.value.hardwareRoom) return
+        val owner=hardwareRooms[room] ?: return
+        viewModelScope.launch { if(hardware === owner && _uiState.value.hardwareRoom==room)
+            owner.configureDeviceMode(device,auto,expectedBoot) }
+    }
+
+    fun configureDeviceCountdown(room: String, device: String, value: Long, expectedBoot: Long) {
+        if(_uiState.value.mode != TelemetryMode.HARDWARE_NODE_A || _uiState.value.voiceBusy || room != _uiState.value.hardwareRoom) return
+        val owner=hardwareRooms[room] ?: return
+        viewModelScope.launch {
+            if(hardware === owner && _uiState.value.hardwareRoom == room)
+                owner.configureCountdown(device,value,expectedBoot)
+        }
+    }
+
+    fun confirmHardwareLight(room: String, proposal: Long) {
+        val owner=hardwareRooms[room] ?: return
+        viewModelScope.launch {
+            if(hardware === owner && _uiState.value.hardwareRoom == room && owner.state.value.request?.proposal == proposal)
+                owner.confirm()
+        }
+    }
     fun cancelHardwareProposal() { hardware.cancelProposal() }
     fun dismissVoicePreview() { cancelPhoneVoice() }
 
     fun selectVoiceRoom(room: String?) {
-        if (room != null && room != "bedroom") return
+        if (room != null && room !in hardwareRooms) return
+        if(room != null && room != hardware.room) selectHardwareRoom(room)
+        if(room != null && room != hardware.room) return
         if (hardware.state.value.request?.phase in listOf(RequestPhase.SENDING, RequestPhase.PENDING)) return
         cancelPhoneVoice()
-        _uiState.update { it.copy(voiceRoom = room, voiceMessage = if (room == "bedroom") "Selected Bedroom. Say LIGHT ON/OFF or FAN ON/OFF; review before confirmation." else "Select a room before recording.") }
+        _uiState.update { it.copy(voiceRoom = room, voiceMessage = if (room != null) "Selected ${if(room == "bedroom") "Room 1" else "Room 2"}. Say LIGHT ON/OFF or FAN ON/OFF; review before confirmation." else "Select a room before recording.") }
         renderHardware(hardware.state.value)
     }
 
@@ -397,7 +461,7 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
                 val state = _uiState.value
 
                 if (state.mode == TelemetryMode.HARDWARE_NODE_A) {
-                    hardware.age()
+                    hardwareRooms.values.forEach { it.age() }
                     renderHardware(hardware.state.value)
                     _uiState.update { it.copy(nowMs = now) }
                     continue
@@ -535,7 +599,7 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         val previous = _uiState.value
         if (previous.mode == mode) return
         cancelPhoneVoice()
-        hardware.reset()
+        hardwareRooms.values.forEach { it.reset() }
         if (previous.mode == TelemetryMode.SIMULATION_4_ROOM) simulationState = previous
         val next = if (mode == TelemetryMode.SIMULATION_4_ROOM) simulationState ?: createInitialUiState(true)
             else createInitialUiState().copy(policy = gatewaySettings)
@@ -558,12 +622,14 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
         fromTimer: Boolean = false
     ) {
         if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) {
-            if (roomId != "bedroom" || device !in listOf("light", "fan") || fromTimer) {
+            if (roomId !in hardwareRooms || device !in listOf("light", "fan") || fromTimer) {
                 showToast("Not supported in this milestone", "Hardware: Bedroom light/fan ON/OFF and capability-verified AUTO. Timers/scenes remain pending.", "WARN")
                 return
             }
             cancelPhoneVoice()
             viewModelScope.launch {
+                if(roomId != hardware.room) selectHardwareRoom(roomId)
+                if(roomId != hardware.room) return@launch
                 if (action == ActuatorAction.AUTO) hardware.prepareAuto(device)
                 else hardware.prepare(action == ActuatorAction.ON, device)
             }
@@ -614,6 +680,36 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun applyScene(sceneName: String) {
+        if (_uiState.value.mode == TelemetryMode.HARDWARE_NODE_A) {
+            val action=mapOf("HOME" to 0,"AWAY" to 1,"SLEEP" to 2,"ALL_OFF" to 3)[sceneName] ?: return
+            val owners=hardwareRooms.filterKeys { action!=0 || it=="bedroom" }.values
+            if(_uiState.value.voiceBusy || owners.any { it.state.value.request?.active == true }) { showToast("Scene busy", "Wait for the current request to finish.", "WARN"); return }
+            val targets=hardwareRooms.filterKeys { action!=0 || it=="bedroom" }.values.map { repo -> repo to repo.state.value.sample?.takeIf { repo.state.value.connected && it.fresh(android.os.SystemClock.elapsedRealtime()) }?.boot }
+            if(targets.any { it.second == null }) { showToast("Scene unavailable", "Target rooms need fresh controller state.", "WARN"); return }
+            cancelPhoneVoice()
+            viewModelScope.launch {
+                for((repo,boot) in targets) {
+                    suspend fun confirmed(operation: suspend () -> Unit): Boolean {
+                        val previousRequest=repo.state.value.request
+                        operation()
+                        val deadline=android.os.SystemClock.elapsedRealtime()+6000
+                        while(repo.state.value.request?.active==true && android.os.SystemClock.elapsedRealtime()<deadline) delay(100)
+                        return repo.state.value.request !== previousRequest && repo.state.value.request?.boot==boot && repo.state.value.request?.phase==RequestPhase.REPORTED
+                    }
+                    val applied=if(action==0) {
+                        confirmed { repo.configureScene(3,boot!!) } &&
+                        confirmed { repo.configureDeviceMode("light",true,boot!!) } &&
+                        confirmed { repo.configureDeviceMode("fan",true,boot!!) }
+                    } else confirmed { repo.configureScene(action,boot!!) }
+                    if(!applied) {
+                        showToast("Scene incomplete", "${repo.room}: rejected or unconfirmed. Earlier room actions may have applied; inspect each room.", "WARN")
+                        return@launch
+                    }
+                }
+                showToast("Scene acknowledged", "$sceneName: targeted controllers acknowledged with fresh readback.", "SUCCESS")
+            }
+            return
+        }
         if (_uiState.value.mode != TelemetryMode.SIMULATION_4_ROOM) return
         val now = System.currentTimeMillis()
         val state = _uiState.value
@@ -1128,11 +1224,17 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
             val hw = _uiState.value.hardwareState
             val sensorNow = android.os.SystemClock.elapsedRealtime()
             val temperature = hw.temperaturePresentation(sensorNow)
-            return listOf(SensorDiagnosticRow("PIR_BEDROOM", "bedroom", "Bedroom", "Digital PIR",
-                "UNAVAILABLE", "Removed from milestone", false, "PIR removed; occupancy AUTO unavailable", false),
-                SensorDiagnosticRow("TEMP_BEDROOM", "bedroom", "Bedroom", "DHT11", temperature.valueText,
-                    if (temperature.available) "${hw.sample!!.temperatureAge!! + (sensorNow - hw.sample.received).coerceAtLeast(0)} ms" else "Unavailable",
-                    temperature.available, temperature.detail, false))
+            val room=_uiState.value.hardwareRoom
+            val label=if(room == "bedroom") "Room 1 / Node A" else "Room 2 / Node C"
+            val light=hw.connected && hw.sample?.fresh(sensorNow)==true && hw.sample.lightInputAvailable
+            return listOf(
+                SensorDiagnosticRow("TEMP_$room",room,label,"DHT11",temperature.valueText,
+                    if(temperature.available) "${hw.sample!!.temperatureAge!! + (sensorNow-hw.sample.received).coerceAtLeast(0)} ms" else "Unavailable",
+                    temperature.available,temperature.detail,false),
+                SensorDiagnosticRow("LIGHT_$room",room,label,"LM393 digital DO",
+                    if(light) if(hw.sample!!.lightInputRaw==true) "HIGH" else "LOW" else "UNAVAILABLE",
+                    if(light) "Fresh controller report" else "Unavailable",light,
+                    if(light) if(hw.sample!!.featuresVersion==2) "Verified dark HIGH / bright LOW; filtered digital input, not lux" else "Raw comparator threshold; polarity unverified; not measured lux" else "No available light sensing",false))
         }
         val rows = mutableListOf<SensorDiagnosticRow>()
         _uiState.value.rooms.forEach { r ->
@@ -1216,11 +1318,13 @@ class ClawGridViewModel(application: Application) : AndroidViewModel(application
                 return
             }
             cancelPhoneVoice()
-            hardware.reset()
+            hardwareRooms.values.forEach { it.reset() }
             gatewaySettings = gatewaySettings.copy(hardwareUrl = url, hardwareToken = newPolicy.hardwareToken)
             _uiState.update { it.copy(policy = gatewaySettings) }
             gatewayApis = WifiGatewayApis(getApplication(), url, newPolicy.hardwareToken)
-            hardware = HardwareRepository(gatewayApis, android.os.SystemClock::elapsedRealtime)
+            hardwareRooms.values.forEach { it.reset() }
+            hardwareRooms=createHardwareRooms()
+            hardware=hardwareRooms.getValue("bedroom")
             bindHardware()
             renderHardware(hardware.state.value)
             showToast("Gateway settings applied", "Token stays in memory. Persistent board policy unchanged.")

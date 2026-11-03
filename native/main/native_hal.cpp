@@ -1,8 +1,14 @@
 #include "native_hal.h"
+#if CONFIG_IDF_TARGET_ESP32S3
 #include "hal/usb_serial_jtag_ll.h"
+#endif
 #include "driver/uart.h"
 #include "esp_flash.h"
+#if CONFIG_IDF_TARGET_ESP32S3
 #include "esp32s3/spiram.h"
+#else
+#include "esp32/spiram.h"
+#endif
 #include "esp_netif.h"
 #include "esp_event.h"
 #include "lwip/sockets.h"
@@ -65,7 +71,7 @@ int NativeSerial::read() { return available()?received_[index_++]:-1; }
 size_t NativeSerial::print(const char *text) {
     if(!serial_ready) return 0;
 #if CONFIG_ESP_CONSOLE_UART
-    // A bounded diagnostic line is at most 2047 bytes (~178 ms at 115200).
+    // A bounded diagnostic line is at most 4095 bytes (~356 ms at 115200).
     // Hardware UART transmission has no host-consumption/CTS dependency.
     int sent=uart_write_bytes(UART_NUM_0,text,strlen(text));
     return sent>0?(size_t)sent:0;
@@ -95,13 +101,18 @@ size_t NativeSerial::print(const char *text) {
 }
 size_t NativeSerial::printf(const char *format,...) {
     // A fresh line lets host parsers recover from a truncated boot/USB message.
-    char text[2048]; text[0]='\n'; va_list args; va_start(args,format); int n=vsnprintf(text+1,sizeof(text)-1,format,args); va_end(args);
+    char text[4096]; text[0]='\n'; va_list args; va_start(args,format); int n=vsnprintf(text+1,sizeof(text)-1,format,args); va_end(args);
     if(n<0 || n>=(int)sizeof(text)-1) return 0;
     return print(text);
 }
 uint32_t NativeESP::getFlashChipSize() { uint32_t bytes=0; esp_flash_get_size(nullptr,&bytes); return bytes; }
+#if defined(CLAWGRID_NODE_C)
+uint32_t NativeESP::getPsramSize() { return 0; }
+bool psramFound() { return false; }
+#else
 uint32_t NativeESP::getPsramSize() { return psramFound()?esp_spiram_get_size():0; }
 bool psramFound() { return esp_spiram_is_initialized(); }
+#endif
 std::string IPAddress::toString() const {
     char text[20]; snprintf(text,sizeof(text),"%u.%u.%u.%u",(unsigned)(value_>>24),(unsigned)(value_>>16)&255,(unsigned)(value_>>8)&255,(unsigned)value_&255); return text;
 }

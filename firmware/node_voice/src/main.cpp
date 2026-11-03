@@ -9,6 +9,7 @@
 #include "rx_mailbox.h"
 #include "pir_tracker.h"
 #include "dht11_gpio.h"
+#include "digital_light.h"
 #include "runtime_selftest.h"
 #include "automation_selftest.h"
 #include "security_selftest.h"
@@ -38,6 +39,7 @@ static StaticTask_t s_control_tcb,s_link_tcb;
 static StackType_t s_control_stack[6144],s_link_stack[6144];
 static portMUX_TYPE s_audit_mux=portMUX_INITIALIZER_UNLOCKED;
 static PirTracker s_pir;
+static DigitalLightFilter s_light_input;
 static Automation s_automation;
 static CommandGate s_gate;
 static ControlAck s_cached_ack;
@@ -45,14 +47,34 @@ static bool s_radio=false,s_ok=false;
 static uint32_t s_boot=0;
 static void sensor_task(void*) {
     Dht11Gpio sensor; const bool driver_ok=sensor.begin();
+#if defined(CLAWGRID_NODE_C)
+    unsigned diagnostic_frames=0;
+#endif
     s_sensor_timing.watchdog.store(esp_task_wdt_add(nullptr)==ESP_OK);
     s_log.write("{\"kind\":\"temperature_config\",\"model\":\"DHT11\",\"data_pin\":%u,\"supply_mv\":3300,\"period_ms\":2500,\"capture\":\"bounded_GPIO_edges\",\"driver_ready\":%s}\n",NODE_A_DHT_PIN,driver_ok?"true":"false");
     vTaskDelay(pdMS_TO_TICKS(2000)); // Sensor power-up settling; never in ControlTask.
     for(;;) {
         const uint32_t now=millis(); TemperatureSample value;
-        if(driver_ok) value=sensor.read(now); else value.status=TemperatureStatus::DriverError;
+        if(driver_ok) value=sensor.read(now); else { value.status=TemperatureStatus::DriverError; value.sampled_ms=now; }
         s_temperature.latest(value); ++s_sensor_timing.jobs;
         s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"temperature_sample\",\"input\":\"PHYSICAL_DHT11\",\"status\":\"%s\",\"pulse_count\":%u,\"valid\":%s,\"temperature_deci_c_when_valid\":%d}\n",temperature_status_name(value.status),value.pulse_count,value.status==TemperatureStatus::Ok?"true":"false",value.status==TemperatureStatus::Ok?value.deci_c:0);
+#if defined(CLAWGRID_NODE_C)
+        // At most three invalid frames per boot, split below the fixed log-line
+        // capacity. Positive durations are HIGH, negative are LOW, in us.
+        if(driver_ok && value.status!=TemperatureStatus::Ok && diagnostic_frames<3) {
+            ++diagnostic_frames;
+            for(size_t first=0;first<value.pulse_count && first<100;first+=20) {
+                char widths[160]={}; size_t used=0;
+                for(size_t i=first;i<value.pulse_count && i<first+20 && i<100;++i) {
+                    const auto pulse=sensor.diagnosticPulse(i);
+                    const int n=snprintf(widths+used,sizeof(widths)-used,"%s%d",i==first?"":",",pulse.high?(int)pulse.us:-(int)pulse.us);
+                    if(n<0 || (size_t)n>=sizeof(widths)-used) break;
+                    used+=(size_t)n;
+                }
+                s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"dht_timing\",\"frame\":%u,\"first\":%u,\"signed_widths_us\":[%s]}\n",diagnostic_frames,(unsigned)first,widths);
+            }
+        }
+#endif
         if(s_sensor_timing.watchdog.load()) esp_task_wdt_reset();
         vTaskDelay(pdMS_TO_TICKS(2500)); // Manufacturer requires >2 seconds between reads.
     }
@@ -96,26 +118,41 @@ static void control_task(void*) {
     for(;;) {
         if(s_stall_control.load()) for(;;) vTaskDelay(pdMS_TO_TICKS(1000));
         uint32_t start=micros(),now=millis();
+        const bool before_safety[2]={safety_kernel_get_device(0)->is_on,safety_kernel_get_device(1)->is_on};
         safety_kernel_tick_periodic(now);
+        for(int i=0;i<2;++i) if(before_safety[i] && !safety_kernel_get_device(i)->is_on)
+            s_automation.note_safety_cutoff(i);
         bool changed=CLAWGRID_PIR_AVAILABLE && s_pir.sample(digitalRead(NODE_A_PIR_PIN)==HIGH,now);
         s_pir_ready.store(CLAWGRID_PIR_AVAILABLE && s_pir.ready()); s_pir_warmup_remaining.store(CLAWGRID_PIR_AVAILABLE?s_pir.warmup_remaining(now):0);
         if(changed) s_log.write("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"motion_event\",\"input\":\"PHYSICAL_DIGITAL_GPIO\",\"room\":\"bedroom\",\"at_ms\":%u,\"motion\":%s}\n",now,s_pir.motion()?"true":"false");
+        RoomReport input; input.uptime_ms=now;
+        if(!CLAWGRID_PIR_AVAILABLE) {
+            if(CLAWGRID_LIGHT_INPUT) s_light_input.sample(digitalRead(CLAWGRID_LIGHT_INPUT_PIN)==HIGH,now);
+            s_temperature.pop(temperature);
+            report_temperature(input,temperature,now);
+            input.light_available=CLAWGRID_LIGHT_INPUT && s_light_input.available(now);
+            input.light_raw=input.light_available && s_light_input.raw();
+            input.light_age_ms=CLAWGRID_LIGHT_INPUT?s_light_input.age(now):UINT32_MAX;
+            s_automation.sensor_inputs(input);
+        }
+        // Process bounded explicit commands first: manual priority cancels due schedules.
+        ControlCommand c; for(int i=0;i<2&&s_commands.pop(c);++i) control(c,now);
         if(s_ok&&s_health.healthy(kControlReady|kLinkReady))
             s_automation.tick(now,changed&&s_pir.motion(),CLAWGRID_PIR_AVAILABLE?s_pir.occupancy(now,s_automation.grace):Occupancy::Unknown,CLAWGRID_PIR_AVAILABLE);
-        ControlCommand c; for(int i=0;i<2&&s_commands.pop(c);++i) control(c,now);
         SimInput sim; if(s_sim_inputs.pop(sim)) s_house.input(sim,s_boot,now);
         uint32_t sim_start=micros(); SimState simulated=s_house.tick(s_boot,now);
         simulated.processing_us=micros()-sim_start;
         simulated.physical_outputs_enabled=CLAWGRID_PHYSICAL_OUTPUTS; s_sim_states.latest(simulated);
-        RoomReport r; r.boot_id=s_boot; r.uptime_ms=now; r.pir_available=CLAWGRID_PIR_AVAILABLE;
+        RoomReport r=input; r.boot_id=s_boot; r.uptime_ms=now; r.room_id=CLAWGRID_ROOM_ID;
+        r.pir_available=CLAWGRID_PIR_AVAILABLE;
         r.motion=CLAWGRID_PIR_AVAILABLE && s_pir.motion();
         r.occupancy=CLAWGRID_PIR_AVAILABLE?s_pir.occupancy(now,s_automation.grace):Occupancy::Unknown; r.last_command=s_gate.last;
         r.light=safety_kernel_get_device(0)->is_on; r.fan=safety_kernel_get_device(1)->is_on;
         r.physical_outputs_enabled=CLAWGRID_PHYSICAL_OUTPUTS;
         r.relay_active_low=NODE_A_RELAY_ACTIVE_LOW;
         r.led_only_bench=CLAWGRID_LED_ONLY_BENCH;
-        s_temperature.pop(temperature); report_temperature(r,temperature,now);
-        s_automation.report(r,now); if(!CLAWGRID_PIR_AVAILABLE) r.auto_flags=0; s_state.latest(r);
+        if(CLAWGRID_PIR_AVAILABLE) { s_temperature.pop(temperature); report_temperature(r,temperature,now); }
+        s_automation.report(r,now); if(!CLAWGRID_PIR_AVAILABLE && r.features_version<2) r.auto_flags=0; s_state.latest(r);
         PolicyConfig policy=s_automation.policy();
         if(policy!=published) { s_policy_updates.latest(policy); published=policy; }
         if(s_control_timing.watchdog.load()) esp_task_wdt_reset();
@@ -136,7 +173,7 @@ static void link_task(void*) {
         for(int i=0;i<4&&s_rx.pop(f);++i) {
             if(s_muted.load()) continue;
             clawgrid_header_t h; const uint8_t *p=nullptr; ControlCommand c;
-            if(!secure_decode(f.mac,kNodeB,f.bytes,f.length,h,p) || h.src_node!=2 || h.dst_node!=1) { ++s_rejected; continue; }
+            if(!secure_decode(f.mac,kNodeB,f.bytes,f.length,h,p) || h.src_node!=2 || h.dst_node!=CLAWGRID_ROOM_NODE_ID) { ++s_rejected; continue; }
             traffic_led_event(TrafficRx);
             if(h.msg_type==MSG_TYPE_SENSOR_EVENT) {
                 SimInput input; if(decode_sim_input(p,h.payload_len,input)) s_sim_inputs.latest(input); else ++s_rejected;
@@ -150,20 +187,20 @@ static void link_task(void*) {
         for(int i=0;i<2&&s_acks.pop(a);++i) {
             if(s_muted.load() || s_drop_ack.exchange(false)) continue;
             uint8_t p[kAckBytes]; encode_ack(a,p);
-            if(!secure_send(kNodeB,MSG_TYPE_COMMAND_ACK,1,2,sequence++,p,sizeof(p))) ++s_tx_failed;
+            if(!secure_send(kNodeB,MSG_TYPE_COMMAND_ACK,CLAWGRID_ROOM_NODE_ID,2,sequence++,p,sizeof(p))) ++s_tx_failed;
         }
         if(s_state.pop(report)) have=true;
         static uint32_t last_sim=0;
         if(s_radio && !s_muted.load() && (uint32_t)(now-last_sim)>=100) {
             SimState simulated;
             if(s_sim_states.pop(simulated)) { uint8_t bytes[kSimStateBytes]; encode_sim_state(simulated,bytes);
-                if(!secure_send(kNodeB,MSG_TYPE_NODE_STATUS,1,2,sequence++,bytes,sizeof(bytes))) ++s_tx_failed;
+                if(!secure_send(kNodeB,MSG_TYPE_NODE_STATUS,CLAWGRID_ROOM_NODE_ID,2,sequence++,bytes,sizeof(bytes))) ++s_tx_failed;
                 last_sim=now;
             }
         }
-        if(s_radio && have && room_report_publishable(report,last_report,millis()) && !s_muted.load() && ((uint32_t)(now-last_send)>=1000 || report.motion!=last_report.motion)) {
+        if(s_radio && have && room_report_publishable(report,last_report,millis()) && !s_muted.load() && ((uint32_t)(now-last_send)>=(report.features_version==3?250u:1000u) || report.motion!=last_report.motion)) {
             uint8_t p[kRoomReportBytes]; encode_room_report(report,p);
-            if(!secure_send(kNodeB,MSG_TYPE_ROOM_STATE,1,2,sequence++,p,sizeof(p))) ++s_tx_failed;
+            if(!secure_send(kNodeB,MSG_TYPE_ROOM_STATE,CLAWGRID_ROOM_NODE_ID,2,sequence++,p,sizeof(p))) ++s_tx_failed;
             last_send=now; last_report=report;
         }
         if(s_link_timing.watchdog.load()) esp_task_wdt_reset();
@@ -173,7 +210,7 @@ static void link_task(void*) {
 }
 void setup() {
     Serial.begin(115200); traffic_led_begin(); s_log.begin(); s_commands.begin(); s_acks.begin(); s_state.begin(); s_rx.begin();
-    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"A\",\"schema\":5,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
+    Serial.printf("{\"kind\":\"firmware_mode\",\"node\":\"" CLAWGRID_ROOM_LABEL "\",\"schema\":9,\"build_mode\":\"%s\"}\n",CLAWGRID_BUILD_MODE);
     Serial.printf("{\"kind\":\"console_transport\",\"transport\":\"%s\"}\n",native_serial_transport());
     Serial.printf("{\"kind\":\"load_profile\",\"declared_profile\":\"%s\",\"physically_verified\":false}\n",CLAWGRID_LOAD_PROFILE);
     s_policy_updates.begin();
@@ -185,14 +222,20 @@ void setup() {
     registry &= safety_kernel_register_device("bedroom","fan",DEVICE_TYPE_FAN,CLAWGRID_PHYSICAL_OUTPUTS?NODE_A_RELAY_FAN_PIN:-1,NODE_A_RELAY_ACTIVE_LOW)==1;
     registry &= s_house.begin();
     bool storage=s_store.begin(s_boot,s_saved_policy);
+    if(!CLAWGRID_PIR_AVAILABLE) s_automation.enable_sensor_rules(CLAWGRID_LIGHT_INPUT);
+    s_automation.set_evaluation_clock(micros);
     if(storage) s_automation.restore_policy(s_saved_policy);
     s_ok=storage&&safety&&automation&&house&&registry&&runtime_selftest()&&security_selftest()&&s_health.begin();
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"persistence_boot\",\"ok\":%s,\"boot\":%u}\n",storage?"true":"false",s_boot);
     Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"boot_recovery\",\"reset_reason\":%u,\"boot\":%u,\"physical_outputs_enabled\":%s}\n",(unsigned)esp_reset_reason(),s_boot,CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
+    if(CLAWGRID_LIGHT_INPUT) pinMode(CLAWGRID_LIGHT_INPUT_PIN,0); // DO, no pull or AO acquisition
     if(CLAWGRID_PIR_AVAILABLE) { pinMode(NODE_A_PIR_PIN,INPUT_PULLDOWN); s_pir.begin(millis(),NODE_A_PIR_WARMUP_MS); }
     Serial.printf("{\"kind\":\"input_availability\",\"profile\":\"%s\",\"pir_available\":%s,\"automation_available\":%s}\n",CLAWGRID_INPUT_PROFILE,CLAWGRID_PIR_AVAILABLE?"true":"false",CLAWGRID_PIR_AVAILABLE?"true":"false");
     if(CLAWGRID_PIR_AVAILABLE) Serial.printf("{\"kind\":\"physical_input_config\",\"pin\":%u,\"pull\":\"DOWN\",\"warmup_ms\":%u,\"filter_ms\":200,\"requires_low_baseline\":true,\"relay_active_low_assumption\":%s}\n",NODE_A_PIR_PIN,NODE_A_PIR_WARMUP_MS,NODE_A_RELAY_ACTIVE_LOW?"true":"false");
     WiFi.mode(WIFI_STA); WiFi.setSleep(false);
+    #if defined(CLAWGRID_NODE_C)
+    if(!kRoom2Provisioned) { s_ok=false; Serial.print("{\"kind\":\"provisioning\",\"room2\":false}\n"); }
+#endif
     s_radio=esp_wifi_set_channel(CLAWGRID_WIFI_CHANNEL,WIFI_SECOND_CHAN_NONE)==ESP_OK && esp_now_init()==ESP_OK && secure_peer(kNodeB);
     if(s_radio) { esp_now_register_recv_cb(receive); esp_now_register_send_cb(traffic_send_complete); }
     if(s_ok) {
@@ -224,20 +267,20 @@ void loop() {
             s_stall_control.store(true);
         }
         if(c=='X' && !CLAWGRID_DIAGNOSTIC_FAULTS)
-            Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");
+            Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"" CLAWGRID_ROOM_LABEL "\",\"armed\":false}\n");
         if(c=='P') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"policy_saved\",\"boot\":%u,\"reset_reason\":%u,\"grace_ms\":%u,\"auto_flags\":%u,\"saved_manual_flags\":%u,\"away\":%s,\"physical_outputs_enabled\":%s}\n",s_boot,(unsigned)esp_reset_reason(),s_saved_policy.grace_ms,s_saved_policy.light_auto|(s_saved_policy.fan_auto<<1),s_saved_policy.manual_flags,s_saved_policy.away?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false");
         if(c=='q') { uint8_t channel=0; wifi_second_chan_t secondary; bool channel_ok=esp_wifi_get_channel(&channel,&secondary)==ESP_OK; Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"task_health\",\"boot\":%u,\"control_jobs\":%u,\"link_jobs\":%u,\"control_stalled\":%s,\"diagnostic_faults_enabled\":%s,\"physical_outputs_enabled\":%s,\"pir_ready\":%s,\"pir_warmup_remaining_ms\":%u,\"wifi_channel_known\":%s,\"wifi_channel\":%u,\"sensor_jobs\":%u,\"sensor_watchdog\":%s}\n",s_boot,s_control_timing.jobs.load(),s_link_timing.jobs.load(),s_stall_control.load()?"true":"false",CLAWGRID_DIAGNOSTIC_FAULTS?"true":"false",CLAWGRID_PHYSICAL_OUTPUTS?"true":"false",s_pir_ready.load()?"true":"false",s_pir_warmup_remaining.load(),channel_ok?"true":"false",channel,s_sensor_timing.jobs.load(),s_sensor_timing.watchdog.load()?"true":"false"); }
         if(c=='d' || c=='O') {
             if(!CLAWGRID_DIAGNOSTIC_FAULTS) {
-                Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"A\",\"armed\":false}\n");
+                Serial.print("{\"kind\":\"fault_injection_disabled\",\"node\":\"" CLAWGRID_ROOM_LABEL "\",\"armed\":false}\n");
             } else {
             if(c=='d') s_drop_ack.store(true);
             else { s_mute_start.store(millis()); s_muted.store(true); }
             Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"fault_armed\",\"type\":\"%c\"}\n",c);
             }
         }
-        if(c=='t') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"selftest\",\"node\":\"A\",\"passed\":%s,\"rtos_ready\":%s}\n",(s_ok&&runtime_selftest()&&s_health.healthy(kControlReady|kLinkReady))?"true":"false",s_health.healthy(kControlReady|kLinkReady)?"true":"false");
-        if(c=='m') memory_probe("A");
+        if(c=='t') Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"selftest\",\"node\":\"" CLAWGRID_ROOM_LABEL "\",\"passed\":%s,\"rtos_ready\":%s}\n",(s_ok&&runtime_selftest()&&s_health.healthy(kControlReady|kLinkReady))?"true":"false",s_health.healthy(kControlReady|kLinkReady)?"true":"false");
+        if(c=='m') memory_probe(CLAWGRID_ROOM_LABEL);
         if(c=='a') {
             AuditEvent events[32]; uint32_t count;
             portENTER_CRITICAL(&s_audit_mux); count=s_automation.event_count; memcpy(events,s_automation.events,sizeof(events)); portEXIT_CRITICAL(&s_audit_mux);
@@ -248,10 +291,10 @@ void loop() {
     }
     static uint32_t last=0; uint32_t now=millis();
     if((uint32_t)(now-last)>=5000) {
-        last=now; memory_log("A",s_rx.dropped(),s_tx_failed.load());
-        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"A\",\"rejected\":%u,\"duplicates\":%u,\"last_command\":%u,\"command_dropped\":%u,\"radio\":%s}\n",s_rejected.load(),s_duplicates.load(),s_last_command.load(),s_command_dropped.load(),s_radio?"true":"false");
-        s_control_timing.log("A","ControlTask",1,5,5,s_log.dropped.load());
-        s_link_timing.log("A","LinkTask",0,3,5,s_log.dropped.load());
+        last=now; memory_log(CLAWGRID_ROOM_LABEL,s_rx.dropped(),s_tx_failed.load());
+        if(Serial) Serial.printf("{\"source\":\"HARDWARE_MEASURED\",\"kind\":\"safety\",\"node\":\"" CLAWGRID_ROOM_LABEL "\",\"rejected\":%u,\"duplicates\":%u,\"last_command\":%u,\"command_dropped\":%u,\"radio\":%s}\n",s_rejected.load(),s_duplicates.load(),s_last_command.load(),s_command_dropped.load(),s_radio?"true":"false");
+        s_control_timing.log(CLAWGRID_ROOM_LABEL,"ControlTask",1,5,5,s_log.dropped.load());
+        s_link_timing.log(CLAWGRID_ROOM_LABEL,"LinkTask",0,3,5,s_log.dropped.load());
     }
     vTaskDelay(pdMS_TO_TICKS(5));
 }

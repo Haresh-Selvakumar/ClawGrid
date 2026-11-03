@@ -5,7 +5,7 @@ import java.util.Locale
 
 data class PhoneVoiceCommand(val on: Boolean, val device: String = "light", val room: String = "bedroom") {
     val action get() = if (on) "ON" else "OFF"
-    val label get() = "Bedroom / $device / ${if (on) "ON" else "OFF"}"
+    val label get() = "${if(room == "bedroom") "Room 1" else "Room 2"} / $device / ${if (on) "ON" else "OFF"}"
 }
 enum class PhoneVoiceReason { ACCEPTED, SILENCE, UNSUPPORTED_WORDS, LOW_CONFIDENCE, INVALID_RESULT, ROOM_REQUIRED }
 data class PhoneVoiceDecision(val reason: PhoneVoiceReason, val command: PhoneVoiceCommand? = null,
@@ -44,7 +44,7 @@ object PhoneVoicePolicy {
     }
     val phrases = lightPhrases + lightPhrases.mapKeys { (phrase, _) -> phrase.replace("light", "fan") }
     fun allowedPhrases(room: String?, device: String = "light"): List<String> =
-        if (room == "bedroom" && device in listOf("light", "fan")) phrases.keys.filter { device in it.split(' ') } else emptyList()
+        if (room in listOf("bedroom", "living_room") && device in listOf("light", "fan")) phrases.keys.filter { device in it.split(' ') && (room == "bedroom" || "bedroom" !in it.split(' ')) } else emptyList()
     // Explicit rejection paths prevent the small decoder graph from containing
     // only actuator commands. These phrases never become actionable intents.
     val rejectionPhrases = listOf("what time is it", "don't turn the light on", "don't turn the fan on",
@@ -65,7 +65,7 @@ object PhoneVoicePolicy {
             count: Int = 0, minimum: Double? = null, why: String): PhoneVoiceDecision =
             PhoneVoiceDecision(reason, command, count, minimum,
                 PhoneTranscriptPreview(exact.toList(), normalized, reason, why, command))
-        if (selectedRoom != "bedroom") return outcome(PhoneVoiceReason.ROOM_REQUIRED, why = "No supported room/device selected; no command is eligible.")
+        if (selectedRoom == null || selectedRoom !in listOf("bedroom", "living_room")) return outcome(PhoneVoiceReason.ROOM_REQUIRED, why = "No supported room/device selected; no command is eligible.")
         if (finalSegments.size !in 1..16) return outcome(PhoneVoiceReason.INVALID_RESULT, why = "Invalid number of final segments.")
         return try {
             val words = mutableListOf<String>()
@@ -128,6 +128,8 @@ object PhoneVoicePolicy {
                 why = "Missing or unsupported device in the COMPLETE utterance.")
             if (words.none { it in listOf("on", "off") }) return outcome(PhoneVoiceReason.UNSUPPORTED_WORDS, count = words.size, minimum = minimum,
                 why = "Missing ON/OFF action in the COMPLETE utterance.")
+            if(selectedRoom != "bedroom" && "bedroom" in words) return outcome(PhoneVoiceReason.UNSUPPORTED_WORDS,
+                count=words.size, minimum=minimum, why="Spoken bedroom conflicts with explicitly selected Room 2; no redirection.")
             val on = phrases[text] ?: return outcome(PhoneVoiceReason.UNSUPPORTED_WORDS, count = words.size, minimum = minimum,
                 why = "The COMPLETE normalized final text is not in the Bedroom / light or fan phrase list. No substring, synonym or fuzzy matching is used.")
             if (minimum < MIN_WORD_CONFIDENCE) return outcome(PhoneVoiceReason.LOW_CONFIDENCE, count = words.size, minimum = minimum,
@@ -144,15 +146,15 @@ class PhoneVoiceSession(private val clock: () -> Long) {
     private var revision = 0L
     fun cancel() { revision++ }
     fun begin(room: String?, hardware: HardwareRepository, capture: Long): PhoneVoiceContext {
-        require(room == "bedroom" && capture in 1..0xffffffffL && hardware.voiceReady())
+        require(room != null && room in listOf("bedroom", "living_room") && room == hardware.room && capture in 1..0xffffffffL && hardware.voiceReady())
         val sample = hardware.state.value.sample!!
         require(sample.voiceOutputModeAllowed())
         return PhoneVoiceContext(room, sample.boot, capture, clock() + 30000, ++revision)
     }
     fun current(context: PhoneVoiceContext, room: String?, hardware: HardwareRepository): Boolean {
         val state = hardware.state.value
-        return context.revision == revision && context.room == room && clock() < context.expires &&
+        return context.revision == revision && context.room == room && context.room == hardware.room && clock() < context.expires &&
             state.connected && state.sample?.fresh(clock()) == true && state.sample.boot == context.boot &&
-            state.sample.voiceOutputModeAllowed() && state.manualVerifiedBoot == context.boot
+            state.sample.voiceOutputModeAllowed()
     }
 }

@@ -1,3 +1,73 @@
+# Latest scope — ROOM1 ONLY; sensor-evaluation order update in progress — 2 November 2026 IST
+
+Read `docs/ROOM1_SENSOR_ORDER_20261102.md` and `benchmarks/review/room1-sensor-order-20261102/CHECKPOINT.json` first. Room2 is outside final physical acceptance: unavailable/unverified UI only. Stop its stability/deployment/acceptance work; preserve its source/evidence/provisioning. It is not an active blocker for the Room1-only demonstration.
+
+New independent setting: Light sensor first / Temperature sensor first, distinct from per-device Schedules first / Sensors first source priority. Both rules service one coherent latest-input snapshot every bounded cycle, with actual ordinals/start/elapsed/result evidence. Host92/JVM114pass; A/B firmware and APK-e built. A/B-only guarded rollout PASS, with application readback and protected full-flash preservation. APK-e installed/hashmatched. Fresh A boot74 command0 reports both Room1 outputs OFF, MANUAL flags3/AUTO0, fresh DHT11/LM393 and actual Light step1/Fan step2 timing. No owned serial session. Short phone acceptance is pending the requested user ready reply; no AUTO or order-change acceptance is claimed yet. Inspect running processes/checkpoint before taking serial ownership. Preserve earlier passed Room1 evidence and original model/signer/credentials. No C build, deployment or live test.
+
+---
+
+# Latest — app thresholds and Room1 sensor AUTO verified; C remains BLOCKED — 2 November 2026 IST
+
+Read `docs/SENSOR_AUTO_THRESHOLDS_20261102.md`, `benchmarks/review/sensor-auto-20261102/CHECKPOINT.json` and `FINAL_RESULTS.json` first. These supersede older current-version/boot and monitoring-only scope below. B then A guarded app-only update/readback/full-flash preservation PASS; APK1.0-sensor-auto-20261102d installed/hashmatched. C newtarget built/guardchecked but NOT deployed; its earlier watchdog cause remains unresolved.
+
+Room1 observedPASS: editable real-temperature fan thresholds27/26→ON and30/29→OFF; user lightAUTO darkHIGH/brightLOW; clean manualOFF cancels pendingON before fallback and holdsOFF under fresh sensorON demand; fanSchedulesfirst15slease→sensorOFF; Sensorsfirstoverride/noON; fresh60scountdown earlier than120scap; corrected60scap earlier than120scountdown. Separate userLEDconfirmations retained. Initial interrupted setup and missing-response cap capture remainNOTPASS/INCOMPLETE and are superseded only by their successful isolated/corrected captures. No C ON host tests. User-intended C lightON1/OFF2 in earlier mixed phonewindow is retained without misclassification.
+
+Final confirmedstate: Aboot73/cmd78, Cboot5/cmd2, allfourOFF; A MANUAL flags3/AUTOflags0; noarmed schedules/countdowns/caps/leases. Fan preferred28°C ON/26°C OFF, Schedulesfirst, override60s; do not silently enableAUTO. Original phonekeepawake0; allownedserialclosed and noobserverworker. CurrentAPK SHA256bf91cf4445d3420d4f63d89aa9d0ef09a7afd1a6b808b7094853b04f0057107e. Actualfirmwarehashes and all evidence paths in linkedhandoff/ARTIFACTS.json.
+
+Cstability/liveAUTO/voice BLOCKED. Remainingnegative speech NOTRUN; newboot73/currentAPK microphone acceptance not rerun (historical Aboot72voicePASS retained). Light-specific priority/timing, hardware reboot of edited/persistedconfiguration, inducedsensorfaultAUTO and full late/dwell/reconnect/endurance remainunproven beyond documentedhost/prior evidence. Project remainsINCOMPLETE; do not call staged C image a watchdogfix or reflash unchanged artifacts merely to resume.
+
+---
+
+# Latest resume — voice gate resolved; Room 1 voice observed; C stability BLOCKED — 2 November 2026 IST
+
+Read `docs/VOICE_STABILITY_RESUME_20261102.md` and `benchmarks/review/three-board-acceptance-20261102/CHECKPOINT.json` first. This entry supersedes older current-version, voice NOT_RUN, unfinished C capture and serial-ownership claims below. Historical sections are retained.
+
+Room 1 voice gate required current-app-session manual proof, established through normal OFF #20/light and #21/fan on Aboot72. Hold to talk became ready with no source change. Real spoken light ON22/OFF23 and fan ON24/OFF25 have matching ACK/fresh readback; user reports working/only intended LED in response to targeted instructions and explicitly confirms both OFF commands were spoken. Cboot5/command0 stayedOFF. Isolated cancellation has36 samples with unchanged counters/allOFF plus user report. No broad speech accuracy claim or retained audio. Negation/unsupported/ambiguous/unsupported-room negatives remainNOT_RUN: user says no more tests; do not request more trials without new direction.
+
+C-watchdog-followup completed84 records over~178.077seconds and closed serial. Reset7 is ESP-IDF4.4.7 ESP_RST_WDT/other watchdogs, not proof of a particular task. No contemporaneous C panic/backtrace or core dump retained; core dumps disabled. Quiet windows/current advancing counters do not resolve cause. No justified repair/reflash; C ON acceptance and Room2 voice remainBLOCKED. See resume-C-stability-assessment.json.
+
+Fresh installed APK-c SHA256125eccf8d4cf5bc988e3476cf5e74846bc870d20a0c6b6e09d9ac891c813ba99 matches; keep-awake original0 restored/verified. All owned serial closed/no observer remains. Final retained12:22:56IST: Aboot72/cmd25, Cboot5/cmd0, alloutputsOFF, noarmed schedules/countdowns. A_lightcap60000ms persists; A_fan/Ccaps0. Sensor/command/schedule campaigns not restarted. Project remainsINCOMPLETE. Exact HOST_MEASURED/HARDWARE_MEASURED/USER_REPORTED evidence is in resume-voice-results.json, resume-voice-gate-assessment.json, resume-C-stability-assessment.json and resume-phone-runtime.json.
+
+---
+
+# CURRENT — three boards deployed; sensor acceptance in progress — 2 November 2026 IST
+
+Read `docs/THREE_BOARD_HANDOFF_20261102.md` and `benchmarks/review/three-board-20261102/ACCEPTANCE_CHECKPOINT.json`. Older source-only/BLOCKED entries below are historical. A=CH343 COM10/S3/e0:72:a1:f5:bc:b0; B=CH343 COM9/S3/e0:72:a1:f6:a9:68; C=CH9102 COM11/classic ESP32-D0WD-V3/80:f3:da:63:58:fc/4MB. C preserves its actual legacy partition table and app offset0x100000. All backups and original A/B credentials/signer/Vosk preserved.
+
+Current A image e7ffd52a0dd351a40d45070a592b0096f9e15105aee55419dc9f88f125f7cd06; B d82e8fa66e72a35e0e6a56e86ab88cbd209b0d1e89ab7c54af2eba1ae25f0273; C capture-priority 1bbcd5b971233ae02bdd9a65635ab9d0f029a49b8d48c97333aa875cfb611e57. Guarded app-only readback/full-flash preservation passed. Current APK1.0-three-room-20261102a SHA2561bad8be832e2f35bb091f02afa494c4731853f526de0ff38b4bed51bb68fcdb9 installed/hash matched, signer/alignment/model/privacy checks PASS. It fixes Room2's hardcoded disabled controls and per-card repository binding; user confirms controls work.
+
+Room1 manual light/fan software/user evidence passed, Room2 stayed unchanged. Fan OFF#4 dwell-rejected; finalOFF#5 applied. Broad Room2 controls-working report is not isolated per-LED acceptance. A boot72, latest C boot4; both rooms fresh/authenticated/OFF at last read.
+
+User sensor priority COMPLETE for observed windows: C DHT11 capture-priority update yielded35/35 valid physical frames over90seconds and41/41 fresh authenticated gateway statusOK samples. C boot4; phone user-confirmed working. Decoder unchanged. Earlier intermittent failures retained; no calibration/long-endurance claim. See SENSOR_FINAL_CHECKPOINT.json.
+
+Room1 LM393 GPIO6 polarity established by user conditions plus fresh hardware evidence: covered/darkHIGH (4/4), torch/brightLOW (4/4). Potentiometer unchanged, no lux measurement or daylight automation; firmware metadata remainsUNVERIFIED until explicit configuration. Evidence LM393-polarity-verdict.json.
+
+All four LEDs user-confirmedOFF, both rooms fresh OFF throughout final92second API capture. All owned serial sessions CLOSED. Remaining original acceptance: isolated Room2 manual/isolation capture, schedules/replacement/cancel/manual priority/phone-disconnected execution, OFF caps/labelled estimates, room-targeted Vosk confirm/cancel, full disconnection/stale/recovery coverage. No need to rebuild/reflash unchanged images merely to resume.
+
+---
+
+# CURRENT — three-board source built; hardware deployment BLOCKED — 1 November 2026 IST
+
+Read `docs/THREE_BOARD_HANDOFF_20261101.md` and `benchmarks/review/three-board-20261101/FINAL_CHECKPOINT.json` before acting. This source milestone supersedes earlier one-controller preparation notes; it does not supersede the last verified installed 28 October artifacts.
+
+User topology: B gateway (no sensors); A Room1 DHT11 DATA7, LM393 DO6/raw filtered input, active-HIGH light4/fan5; C Room2 DHT11 confirmed by user, proposed classic GPIO21/18/19 still provisional until actual chip/MAC identification. PIR/occupancy automation completely out of scope; temperature monitoring only.
+
+Implemented source: independent room/node-bound gateway reports/transactions/proposals, per-peer C auth hooks, separate provisional classic target/no S3 PSRAM dependency, Room1 digital light availability, independent Android room state/planning/estimates and explicit room-bound voice/manual confirmations. Existing Vosk source/model/0.7 gate, signer and A/B credentials preserved.
+
+Actually executed:109 host tests PASS;95 JVM tests PASS; A/B/provisional-classic-C full firmware builds PASS; APK1.0-three-room-20261101d build/signature/model/alignment/private-value checks PASS. No firmware flash, APK install, model/NVS write, actuator command or raw microphone retention. Exact hashes are in the linked handoff/checkpoint.
+
+BLOCKED: A COM8 cannot be configured (Windows device error31); B COM9 fresh ROM identity confirmed S3/e0:72:a1:f6:a9:68; C COM11/CH9102 ROM identity failed (wrong boot0x13/no-data), so chip/MAC/layout unknown. C private provisioning is absent. Current B/C staging candidates fail closed for Room2. Finish C preservation/layout and app-only guard; the B-gateway flasher currently deliberately refuses rollout. Do not bypass this or flash the provisional C partition table/image.
+
+End state: user confirmed all four LEDs OFF; no owned serial sessions. All10 requested new guided hardware test groups remain NOT RUN/BLOCKED. Next prerequisite is resolving USB/ROM identification (actual C module/button inspection, usable A programming interface), followed by C backup/provisioning and gated gateway-first rollout. No automatic retry, ON replay or rebuild of unchanged artifacts merely to resume.
+
+---
+
+# Source-only planning/energy extension — 1 November 2026 IST
+
+Software changes and host validation are documented in `docs/PLANNING_ENERGY_HANDOFF_20261101.md`. No boards/phone were accessed; no target binaries were built or deployed here. Installed-device status remains the historical 28 October checkpoint below. Updated B is required before updated A because of radio schema6. Source-only upload omits existing Android UI components/model/build dependencies: merge the guarded patch into the complete local tree. Sensor additions remain deferred.
+
+---
+
 # Final saved checkpoint — 28 October 2026 IST
 
 The declared LED demonstration has been implemented and observed. PIR and physical occupancy AUTO are excluded. Controller A uses active-HIGH light GPIO4 and fan GPIO5, each through its own series resistor to the LED anode, with cathode to GND. DHT11 DATA is GPIO7. Relays remain unused. The existing offline Vosk model is preserved.

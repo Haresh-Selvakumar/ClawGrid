@@ -2,7 +2,7 @@
 #include "state_wire.h"
 #include <string.h>
 
-enum class ControlOp : uint8_t { Device=1, Scene=2, Timer=3, Policy=4, Resume=5, Simulation=6 };
+enum class ControlOp : uint8_t { Device=1, Scene=2, Timer=3, Policy=4, Resume=5, Simulation=6, Schedule=7, Energy=8, SensorConfig=9, DeviceMode=10, SensorOrder=11 };
 enum class ControlStatus : uint8_t { Applied=0, Denied=1, Invalid=2, Replay=3, WrongBoot=4, Disabled=5, Expired=6 };
 struct ControlCommand {
     uint32_t boot=0, id=0, value=0;
@@ -22,9 +22,25 @@ inline bool parse_control_text(const char *text,ControlCommand &c) {
         while(*p>='0'&&*p<='9') {value=value*10+(*p++-'0');if(value>UINT32_MAX)return false;}
         fields[count++]=(uint32_t)value;
     }
-    if(count!=4 || fields[0]<(unsigned)ControlOp::Device || fields[0]>(unsigned)ControlOp::Simulation ||
+    if(count!=4 || fields[0]<(unsigned)ControlOp::Device || fields[0]>(unsigned)ControlOp::SensorOrder ||
        fields[1]>(fields[0]==(unsigned)ControlOp::Simulation?7u:2u) || fields[2]>3) return false;
     c={};c.op=(ControlOp)fields[0];c.device=fields[1];c.action=fields[2];c.value=fields[3];return true;
+}
+// HTTP configuration is bound to the controller boot reviewed by the user.
+inline bool parse_api_control(const char *text,ControlCommand &c) {
+    if(!text) return false;
+    uint32_t boot=0;
+    if(!strncmp(text,"boot ",5)) {
+        text+=5; uint64_t v=0; bool any=false;
+        while(*text>='0' && *text<='9') {
+            any=true; v=v*10+(*text++-'0'); if(v>UINT32_MAX) return false;
+        }
+        if(!any || !v || *text!=' ') return false;
+        boot=(uint32_t)v; ++text;
+    }
+    if(!parse_control_text(text,c)) return false;
+    c.boot=boot;
+    return boot || (c.op!=ControlOp::Schedule && c.op!=ControlOp::Energy && c.op!=ControlOp::SensorConfig && c.op!=ControlOp::DeviceMode && c.op!=ControlOp::SensorOrder);
 }
 static constexpr size_t kControlBytes=24, kAckBytes=40;
 inline void encode_control(const ControlCommand &c, uint8_t *p) {
@@ -33,7 +49,7 @@ inline void encode_control(const ControlCommand &c, uint8_t *p) {
     wire_put32(p+16,c.issued_ms); wire_put32(p+20,c.ttl_ms);
 }
 inline bool decode_control(const uint8_t *p,size_t n,ControlCommand &c) {
-    if (!p || n!=kControlBytes || p[11] || p[8]<1 || p[8]>6) return false;
+    if (!p || n!=kControlBytes || p[11] || p[8]<1 || p[8]>11) return false;
     c.boot=wire_get32(p); c.id=wire_get32(p+4); c.op=(ControlOp)p[8];
     c.device=p[9]; c.action=p[10]; c.value=wire_get32(p+12);
     c.issued_ms=wire_get32(p+16); c.ttl_ms=wire_get32(p+20);

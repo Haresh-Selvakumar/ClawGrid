@@ -53,15 +53,17 @@ fun PhonePushToTalk(uiState: ClawGridUiState, onStart: () -> Unit, onStop: () ->
         Text("Offline on-phone recognition · embedded control", color = ClawTextMain, style = MaterialTheme.typography.titleMedium)
         Text("App ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})", color = ClawTextMuted, style = MaterialTheme.typography.bodySmall)
         Text("Bundled Vosk English model · audio stays on phone · no transcript recording or cloud fallback", color = ClawTextMuted, style = MaterialTheme.typography.bodySmall)
-        Button(onClick = { onRoom(if (uiState.voiceRoom == "bedroom") null else "bedroom") },
-            enabled = uiState.hardwareState.request?.phase !in listOf(com.example.data.remote.RequestPhase.SENDING, com.example.data.remote.RequestPhase.PENDING)) {
-            Text(if (uiState.voiceRoom == "bedroom") "Bedroom selected · tap to clear" else "Select Bedroom")
+        for((room,label) in listOf("bedroom" to "Room 1 · Node A", "living_room" to "Room 2 · Node C")) {
+            Button(onClick={ onRoom(if(uiState.voiceRoom == room) null else room) },
+                enabled=uiState.hardwareState.request?.phase !in listOf(com.example.data.remote.RequestPhase.SENDING,com.example.data.remote.RequestPhase.PENDING)) {
+                Text(if(uiState.voiceRoom == room) "$label selected" else "Select $label")
+            }
         }
         Text(when {
             !uiState.voiceModelReady -> "Offline model preparing or unavailable; manual controls remain available."
-            uiState.voiceRoom == null -> "Choose Bedroom explicitly. Other rooms are unavailable in this milestone."
-            !uiState.voiceReady -> "Require fresh supported board state and manual light ACK + fresh readback for this boot. Fan voice also requires manual fan ACK + readback."
-            else -> "Hold, wait for Speak now, say LIGHT ON/OFF or FAN ON/OFF, then release (4 seconds maximum). Review the complete Bedroom / device / action and explicitly Confirm."
+            uiState.voiceRoom == null -> "Choose a room explicitly."
+            !uiState.voiceReady -> "Waiting for fresh supported controller state for the selected room."
+            else -> "Hold, wait for Speak now, say LIGHT ON/OFF or FAN ON/OFF, then release (4 seconds maximum). Review the complete selected room / device / action and explicitly Confirm."
         }, color = ClawTextMuted)
         if (!permission) Button(onClick = { launcher.launch(Manifest.permission.RECORD_AUDIO) }) { Text("Allow microphone for push-to-talk") }
         Surface(modifier = Modifier.fillMaxWidth().semantics {

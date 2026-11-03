@@ -288,7 +288,7 @@ fun ClawGridTopHeader(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ModeSegmentButton(
-                        text = "Hardware (Node A)",
+                        text = "Hardware (Room 1 and Room 2)",
                         selected = isHardware,
                         dotColor = ClawEmerald,
                         onClick = { onSwitchMode(TelemetryMode.HARDWARE_NODE_A) },
@@ -416,7 +416,7 @@ fun ContextModeBanner(
                 ) {
                     Text(
                         text = if (isHardware) {
-                            "📡 Real-Time Hardware Mode (Bedroom Node A)"
+                            "📡 Real-Time Hardware Mode (${if (uiState.hardwareRoom == "bedroom") "Room 1 / Node A" else "Room 2 / Node C"})"
                         } else {
                             "🏠 4-Room Interactive Simulation Mode"
                         },
@@ -644,7 +644,7 @@ fun ClawGridKpiGrid(
         ) {
             // KPI 3: AVG ROOM TEMP & LUX
             KpiCardContainer(
-                title = if (isHardware) "BEDROOM TEMPERATURE" else "AVG ROOM TEMP & LUX",
+                title = if (isHardware) "${if (uiState.hardwareRoom == "bedroom") "ROOM 1" else "ROOM 2"} TEMPERATURE" else "AVG ROOM TEMP & LUX",
                 mainValue = if (isHardware) hardwareTemperature.valueText else "${"%.1f".format(avgTemp)} °C",
                 badgeText = if (isHardware) hardwareTemperature.detail else "$avgLux lx Avg",
                 badgeTone = if (isHardware && hardwareTemperature.available) PillTone.EMERALD else PillTone.AMBER,
@@ -682,7 +682,7 @@ fun ClawGridKpiGrid(
                 badgeText = if (isHardware) { if (uiState.hardwareTelemetry.connected) "Age ${uiState.hardwareTelemetry.freshnessMs}ms" else "STALE / DISCONNECTED" } else "WSS (${uiState.supabaseStatus.wsRttMs}ms)",
                 badgeTone = PillTone.EMERALD,
                 subtitle = if (isHardware) {
-                    "A task/watchdog health unavailable"
+                    "Selected controller task/watchdog health unavailable"
                 } else {
                     "${uiState.policy.dwellSeconds}s Dwell · 0 Faults"
                 },

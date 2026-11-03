@@ -59,7 +59,7 @@ android {
       signingConfig = signingConfigs.getByName("release")
     }
     debug {
-      versionNameSuffix = "-voice-led-no-pir-20261028j"
+      versionNameSuffix = "-schedule-guards-20261102j"
       // Do not remove or modify this signingConfig assignment. It is necessary for Android apps in
       // AI Studio.
       signingConfig = signingConfigs.getByName("debug")

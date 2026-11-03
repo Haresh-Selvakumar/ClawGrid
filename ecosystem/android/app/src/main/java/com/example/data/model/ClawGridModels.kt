@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 enum class TelemetryMode(val label: String, val badgeText: String) {
-    HARDWARE_NODE_A("Hardware (Node A)", "HARDWARE (NODE A)"),
+    HARDWARE_NODE_A("Hardware (Room 1 and Room 2)", "HARDWARE"),
     SIMULATION_4_ROOM("4-Room Simulation", "SYNTHETIC SIMULATION")
 }
 

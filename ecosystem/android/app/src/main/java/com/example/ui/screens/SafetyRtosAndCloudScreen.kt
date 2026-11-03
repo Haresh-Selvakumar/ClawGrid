@@ -520,7 +520,7 @@ private fun PolicyConfigurationCard(
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if (hardwareMode) "Connection settings only. Physical PIR and occupancy AUTO are unavailable in this milestone. Manual light/fan requests require confirmation, matching ACK and fresh readback; saved manual modes boot OFF. DHT11 is monitoring only." else "Simulation settings only; environmental thresholds do not change board policy.",
+                        text = if (hardwareMode) "Connection settings only. Physical PIR and occupancy AUTO are unavailable in this milestone. Manual light/fan requests require confirmation, matching ACK and fresh readback; saved manual modes boot OFF. Edit physical fan ON/OFF temperatures in Rooms & Relays: select the room, then fan, then AUTO settings. These require updated controller firmware and do not enable AUTO by themselves." else "Simulation settings only; environmental thresholds do not change board policy.",
                         style = MaterialTheme.typography.bodySmall,
                         color = ClawTextMuted
                     )
